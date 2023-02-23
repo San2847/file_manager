@@ -1,0 +1,46 @@
+.heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0.5rem;
+  align-items: center;
+}
+
+.headingName {
+  font-size: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.closeButton {
+  color: #252525;
+  transition: all;
+  transition-duration: 300ms;
+  cursor: pointer;
+}
+.closeButton:hover {
+  color: #000000;
+  transform: scale(1.1);
+}
+
+.tabsContainer {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.eachTab {
+  width: 50%;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 3px solid #eeeeee;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.activeTab {
+  border-bottom: 3px solid #003566;
+  background-color: #e4e4f1;
+}
+
+.content{
+    padding: 0.5rem;
+}

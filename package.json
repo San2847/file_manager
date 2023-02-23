@@ -1,6 +1,7 @@
 {
   "name": "file-manager-fe",
   "version": "0.1.0",
+  "homepage": "https://pro.idesign.market/file-beta/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.2",
@@ -16,6 +17,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "react-uuid": "^2.0.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "web-vitals": "^2.1.4"

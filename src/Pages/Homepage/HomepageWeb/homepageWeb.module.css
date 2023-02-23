@@ -1,0 +1,126 @@
+.container {
+  height: 100%;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 1rem;
+  position: relative;
+}
+.uploadingFilesBox {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  width: 15rem;
+  background-color: #ffffff;
+  transition: all;
+  transition-duration: 500ms;
+  box-shadow: 4px 0 10px #00000030;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  z-index: 10000;
+}
+
+.filesHeading {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.actionButtons {
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #cccde5;
+  background-color: #ffffff;
+  border-radius: 8px;
+  color: #003566;
+  padding: 0 0.5rem;
+  height: 2rem;
+  width: fit-content;
+}
+
+.tabContainer {
+  background-color: #003566;
+  padding: 0.5rem;
+  border-radius: 8px 8px 0 0;
+}
+.allTabs {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0.125rem;
+  width: fit-content;
+}
+.inactiveTab {
+  background-color: #ffffff;
+  color: #797979;
+  font-size: 14px;
+  padding: 0.15rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  margin-right: 0.125rem;
+  align-items: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+}
+.inactiveTab:hover {
+  background-color: #0035661f;
+}
+.activeTab {
+  background-color: #003566;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 0.15rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.125rem;
+}
+
+.internalTabContainer {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 0.125rem;
+  display: flex;
+  margin-top: 0.5rem;
+}
+.activeInternalTab {
+  background-color: #003566;
+  padding: 0.25rem 2rem;
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+}
+.inactiveInternalTab {
+  background-color: #ffffff;
+  padding: 0.25rem 2rem;
+  font-size: 12px;
+  color: #797979;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filesTableContainer {
+  height: 100%;
+  transition: all;
+  transition-duration: 500ms;
+  position: relative;
+}
+.detVerContainer {
+  border: 1px solid #e6e6e6;
+  transition: all;
+  transition-duration: 500ms;
+  overflow: hidden;
+}

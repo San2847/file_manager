@@ -7,3 +7,8 @@ export const routingArray = [
     element: <Homepage />,
   },
 ];
+
+export const apiLinks = {
+  s3api: "https://s3-service.idesign.market",
+  pmt: "https://pmt.idesign.market",
+};

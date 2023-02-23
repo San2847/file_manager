@@ -1,0 +1,48 @@
+.modalHeading {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.renameInput {
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.renameInput input {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #e6e6e6;
+  border-radius: 8px;
+  outline: none;
+  padding-left: 1rem;
+}
+.renameInput input:focus {
+  border: 2px solid #003566;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  border: none;
+  border-radius: 8px;
+  height: 2.5rem;
+  padding: 0 1rem;
+  background-color: #f2f2f2;
+  color: #999999;
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+.renameButton {
+  border: none;
+  border-radius: 8px;
+  height: 2.5rem;
+  padding: 0 1rem;
+  background-color: #003566;
+  color: #ffffff;
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
