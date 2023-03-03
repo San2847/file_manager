@@ -8,21 +8,69 @@ import styles from "./filesTable.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import { HiEllipsisVertical } from "react-icons/hi2";
-import { handleDetailsVersionBox, selectFileCheckbox, selectFileFolderToBeRenamed, setModalState } from "../../../Redux/slices/filemanagerSlice";
+import {
+  handleDetailsVersionBox,
+  saveArrayForApproval,
+  saveFileToNewVersion,
+  saveFolderToBeDeleted,
+  savePrepareDeleteArr,
+  selectFileCheckbox,
+  selectFileFolderToBeRenamed,
+  setFilesGoingFor,
+  setModalState,
+} from "../../../Redux/slices/filemanagerSlice";
 import FeedbackCard from "../FeedbackCard/FeedbackCard";
 import { Dropdown } from "react-bootstrap";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import RenameModal from "../RenameModal/RenameModal";
+import { postReq } from "../../../Services/api";
+import { apiLinks } from "../../../constants/constants";
+import { getFiles } from "../../../Services/commonFunctions";
+import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
   const { fileCheckBoxArr, detailsVersionBox, detailsVersionTab, loading } = useSelector((state) => state.filemanager);
 
-  const [fakeFilesArr, setFakeFilesArr] = useState(fakeFiles);
   const [addedFilesArr, setAddedFilesArr] = useState([]);
 
   const [openedFolder, setOpenedFolder] = useState("");
+
+  const [spaceName, setSpaceName] = useState("");
+  const [drawType, setDrawType] = useState("");
+  const [spaceNameTest, setSpaceNameTest] = useState("");
+  const [drawTypeTest, setDrawTypeTest] = useState("");
+  const [showInput, setShowInput] = useState("");
+
+  const spaceDrawInput = (event) => {
+    const { name, value } = event.target;
+    if (name === "spaceName") {
+      setSpaceName(value);
+    } else if (name === "drawType") {
+      setDrawType(value);
+    }
+  };
+  const spaceDrawSubmit = async (elem, event, inElem) => {
+    if (spaceNameTest !== spaceName || drawTypeTest !== drawType) {
+      const { name } = event.target;
+      let obj = {};
+      if (name === "spaceName") {
+        obj["spaceName"] = spaceName;
+      } else if (name === "drawType") {
+        obj["drawingType"] = drawType;
+      }
+      const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${elem._id}&fileId=${inElem ? inElem._id : elem.fileDetails[0]._id}`, obj);
+      if (res && !res.error) {
+        getFiles(1);
+        setShowInput("");
+        setDrawType("");
+        setSpaceName("");
+      } else {
+        console.log(res.error);
+      }
+    }
+  };
 
   const openFolderOrSelectFile = (elem) => {
     if (elem.fileDetails.length > 1) {
@@ -56,9 +104,24 @@ const FilesTable = ({ fileData }) => {
     return `${day}-${month}-${year}`;
   };
 
-  const deleteFileOrFolder = async (item) => {
-    console.log(item)
-  }
+  const deleteSingleFileOrFolder = async (item) => {
+    dispatch(setModalState({ modal: "deleteModal", state: true }));
+    dispatch(savePrepareDeleteArr([{ id: item._id, fileId: item.fileDetails[0]._id }]));
+  };
+  const deleteOnlyFolder = async (item) => {
+    dispatch(setModalState({ modal: "deleteFolderModal", state: true }));
+    dispatch(saveFolderToBeDeleted(item._id));
+  };
+
+  const uploadNewVersion = (item, outItem) => {
+    if (false) {
+      dispatch(saveFileToNewVersion({ container: item, file: outItem }));
+      dispatch(setModalState({ modal: "versionConfirmation", state: true }));
+    } else {
+      dispatch(saveFileToNewVersion({ container: item, file: outItem }));
+      dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
+    }
+  };
 
   useEffect(() => {
     if (fileCheckBoxArr) {
@@ -69,7 +132,6 @@ const FilesTable = ({ fileData }) => {
     }
   }, [fileCheckBoxArr]);
 
-  const [prepareDeleteArr, setPrepareDeleteArr] = useState([]);
   useEffect(() => {
     let x = fileCheckBoxArr.map((curElem) => {
       return {
@@ -77,12 +139,13 @@ const FilesTable = ({ fileData }) => {
         fileId: curElem.fileOrFold._id,
       };
     });
-    setPrepareDeleteArr([...x]);
+    dispatch(savePrepareDeleteArr([...x]));
   }, [fileCheckBoxArr]);
 
   return (
     <>
       <RenameModal />
+      <DeleteFolderModal />
       <div className="d-flex mb-2 px-2">
         <div style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "1.5rem", display: "flex", alignItems: "center" }}>
           Name
@@ -161,15 +224,74 @@ const FilesTable = ({ fileData }) => {
                       {detailsVersionTab === "" && (
                         <>
                           <div style={{ width: "15%", fontSize: "14px", color: "#333333", fontWeight: "400", paddingRight: "0.25rem" }}>
-                            {curElem.fileDetails.length === 1 && <input type="text" className={styles.eachCardInput} />}
+                            {curElem.fileDetails.length === 1 &&
+                              (showInput === curElem._id ? (
+                                <input
+                                  autoFocus
+                                  type="text"
+                                  className={styles.eachCardInput}
+                                  name="spaceName"
+                                  value={spaceName}
+                                  onChange={spaceDrawInput}
+                                  onBlur={(event) => spaceDrawSubmit(curElem, event)}
+                                  onClick={(event) => event.stopPropagation()}
+                                  onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                      spaceDrawSubmit(curElem, event);
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSpaceName(curElem.fileDetails[0].spaceName ? curElem.fileDetails[0].spaceName : "-");
+                                    setSpaceNameTest(curElem.fileDetails[0].spaceName ? curElem.fileDetails[0].spaceName : "-");
+                                    setDrawType(curElem.fileDetails[0].drawingType ? curElem.fileDetails[0].drawingType : "-");
+                                    setDrawTypeTest(curElem.fileDetails[0].drawingType ? curElem.fileDetails[0].drawingType : "-");
+                                    setShowInput(curElem._id);
+                                  }}
+                                >
+                                  {curElem.fileDetails[0].spaceName ? curElem.fileDetails[0].spaceName : "-"}
+                                </div>
+                              ))}
                           </div>
                           <div style={{ width: "15%", fontSize: "14px", color: "#333333", fontWeight: "400", paddingRight: "0.25rem" }}>
-                            {curElem.fileDetails.length === 1 && <input type="text" className={styles.eachCardInput} />}
+                            {curElem.fileDetails.length === 1 &&
+                              (showInput === curElem._id ? (
+                                <input
+                                  type="text"
+                                  className={styles.eachCardInput}
+                                  name="drawType"
+                                  value={drawType}
+                                  onChange={spaceDrawInput}
+                                  onBlur={(event) => spaceDrawSubmit(curElem, event)}
+                                  onClick={(event) => event.stopPropagation()}
+                                  onKeyDown={(event) => {
+                                    if (event.key === "Enter") {
+                                      spaceDrawSubmit(curElem, event);
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSpaceName(curElem.fileDetails[0].spaceName ? curElem.fileDetails[0].spaceName : "-");
+                                    setSpaceNameTest(curElem.fileDetails[0].spaceName ? curElem.fileDetails[0].spaceName : "-");
+                                    setDrawType(curElem.fileDetails[0].drawingType ? curElem.fileDetails[0].drawingType : "-");
+                                    setDrawTypeTest(curElem.fileDetails[0].drawingType ? curElem.fileDetails[0].drawingType : "-");
+                                    setShowInput(curElem._id);
+                                  }}
+                                >
+                                  {curElem.fileDetails[0].drawingType ? curElem.fileDetails[0].drawingType : "-"}
+                                </div>
+                              ))}
                           </div>
                         </>
                       )}
                       <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>
-                        {curElem.fileDetails.length > 1 ? makeDateString(curElem.updatedAt) : curElem.fileDetails[0].updatedAt ? makeDateString(curElem.fileDetails[0].updatedAt) : "-"}
+                        {curElem.fileDetails.length > 1 ? makeDateString(curElem.updatedAt) : curElem.fileDetails[0].updateTime ? makeDateString(curElem.fileDetails[0].updateTime) : "-"}
                       </div>
                       <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>{curElem.fileDetails.length > 1 ? "" : "Approved"}</div>
                       {detailsVersionTab === "" && (
@@ -228,7 +350,8 @@ const FilesTable = ({ fileData }) => {
                           <Dropdown.Menu rootCloseEvent={() => setOpenedDrop("")}>
                             <Dropdown.Item
                               style={{ fontSize: "12px" }}
-                              onClick={() => {
+                              onClick={(event) => {
+                                event.stopPropagation();
                                 if (curElem.fileDetails.length > 1) {
                                   dispatch(selectFileFolderToBeRenamed({ container: curElem, fileOrFold: curElem, type: "folder" }));
                                 } else {
@@ -250,7 +373,15 @@ const FilesTable = ({ fileData }) => {
                                 >
                                   Version History
                                 </Dropdown.Item>
-                                <Dropdown.Item style={{ fontSize: "12px" }}>Upload new version</Dropdown.Item>
+                                <Dropdown.Item
+                                  style={{ fontSize: "12px" }}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    uploadNewVersion(curElem, curElem.fileDetails[0]);
+                                  }}
+                                >
+                                  Upload new version
+                                </Dropdown.Item>
                                 <Dropdown.Item
                                   style={{ fontSize: "12px" }}
                                   onClick={(event) => {
@@ -262,8 +393,42 @@ const FilesTable = ({ fileData }) => {
                                 </Dropdown.Item>
                               </>
                             )}
+                            <Dropdown.Item
+                              style={{ fontSize: "12px" }}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                dispatch(setFilesGoingFor("approval"));
+                                dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
+                                dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                              }}
+                            >
+                              Send for Approval
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              style={{ fontSize: "12px" }}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                dispatch(setFilesGoingFor("execution"));
+                                dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
+                                dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                              }}
+                            >
+                              Send for Execution
+                            </Dropdown.Item>
                             <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
-                            <Dropdown.Item style={{ fontSize: "12px", color: "red" }} onClick={() => deleteFileOrFolder(curElem)}>Delete {curElem.fileDetails.length > 1 ? "Folder" : "File"}</Dropdown.Item>
+                            <Dropdown.Item
+                              style={{ fontSize: "12px", color: "red" }}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (curElem.fileDetails.length > 1) {
+                                  deleteOnlyFolder(curElem);
+                                } else {
+                                  deleteSingleFileOrFolder(curElem);
+                                }
+                              }}
+                            >
+                              Delete {curElem.fileDetails.length > 1 ? "Folder" : "File"}
+                            </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       </div>
@@ -315,10 +480,67 @@ const FilesTable = ({ fileData }) => {
                                     {detailsVersionTab === "" && (
                                       <>
                                         <div style={{ width: "15%", fontSize: "14px", color: "#333333", fontWeight: "400", paddingRight: "0.25rem" }}>
-                                          <input type="text" className={styles.eachCardInput} />
+                                          {showInput === cur._id ? (
+                                            <input
+                                              autoFocus
+                                              type="text"
+                                              className={styles.eachCardInput}
+                                              name="spaceName"
+                                              value={spaceName}
+                                              onChange={spaceDrawInput}
+                                              onBlur={(event) => spaceDrawSubmit(curElem, event, cur)}
+                                              onClick={(event) => event.stopPropagation()}
+                                              onKeyDown={(event) => {
+                                                if (event.key === "Enter") {
+                                                  spaceDrawSubmit(curElem, event, cur);
+                                                }
+                                              }}
+                                            />
+                                          ) : (
+                                            <div
+                                              onClick={(event) => {
+                                                event.stopPropagation();
+                                                setSpaceName(cur.spaceName ? cur.spaceName : "-");
+                                                setSpaceNameTest(cur.spaceName ? cur.spaceName : "-");
+                                                setDrawType(cur.drawingType ? cur.drawingType : "-");
+                                                setDrawTypeTest(cur.drawingType ? cur.drawingType : "-");
+                                                setShowInput(cur._id);
+                                              }}
+                                            >
+                                              {cur.spaceName ? cur.spaceName : "-"}
+                                            </div>
+                                          )}
                                         </div>
                                         <div style={{ width: "15%", fontSize: "14px", color: "#333333", fontWeight: "400", paddingRight: "0.25rem" }}>
-                                          <input type="text" className={styles.eachCardInput} />
+                                          {showInput === cur._id ? (
+                                            <input
+                                              type="text"
+                                              className={styles.eachCardInput}
+                                              name="drawType"
+                                              value={drawType}
+                                              onChange={spaceDrawInput}
+                                              onBlur={(event) => spaceDrawSubmit(curElem, event, cur)}
+                                              onClick={(event) => event.stopPropagation()}
+                                              onKeyDown={(event) => {
+                                                if (event.key === "Enter") {
+                                                  spaceDrawSubmit(curElem, event, cur);
+                                                }
+                                              }}
+                                            />
+                                          ) : (
+                                            <div
+                                              onClick={(event) => {
+                                                event.stopPropagation();
+                                                setSpaceName(cur.spaceName ? cur.spaceName : "-");
+                                                setSpaceNameTest(cur.spaceName ? cur.spaceName : "-");
+                                                setDrawType(cur.drawingType ? cur.drawingType : "-");
+                                                setDrawTypeTest(cur.drawingType ? cur.drawingType : "-");
+                                                setShowInput(cur._id);
+                                              }}
+                                            >
+                                              {cur.drawingType ? cur.drawingType : "-"}
+                                            </div>
+                                          )}
                                         </div>
                                       </>
                                     )}

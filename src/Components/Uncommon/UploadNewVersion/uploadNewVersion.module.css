@@ -1,0 +1,47 @@
+.yesButton {
+  border: none;
+  background-color: #003566;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #ffffff;
+}
+.noButton {
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #888888;
+}
+
+.heading {
+  font-weight: 500;
+}
+.smallHeading {
+  font-size: 14px;
+  font-weight: 500;
+}
+.addMore {
+  font-size: 12px;
+  font-weight: 500;
+  color: #003566;
+  cursor: pointer;
+}
+
+.fileContainer {
+  height: 2.5rem;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
+  border-radius: 30px;
+  padding: 0 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.filePill {
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+}

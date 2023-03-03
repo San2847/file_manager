@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
 
   fileFolderArr: [],
+  onlyFilesArr: [],
 
   fileTypeTab: "all",
   internalTab: "internal",
@@ -15,9 +16,22 @@ const initialState = {
   uploadFileModal: false,
   shareFilesToModal: false,
   renameModal: false,
+  deleteModal: false,
+  sendApprovalModal: false,
+  deleteFolderModal: false,
+  versionConfirmation: false,
+  uploadNewVersion: false,
 
   fileUploadProgress: 0,
   fileFolderToBeRenamed: {},
+  fileToNewVersion: [],
+
+  reduxPrepareDeleteArr: [],
+  folderToBeDeleted: "",
+
+  arrayForApproval: [],
+
+  filesGoingFor: "",
 };
 
 export const filemanagerSlice = createSlice({
@@ -30,6 +44,9 @@ export const filemanagerSlice = createSlice({
 
     saveFileAndFolder: (state, action) => {
       state.fileFolderArr = action.payload;
+    },
+    saveOnlyFiles: (state, action) => {
+      state.onlyFilesArr = action.payload;
     },
 
     selectFileTypeTab: (state, action) => {
@@ -52,6 +69,9 @@ export const filemanagerSlice = createSlice({
         state.fileCheckBoxArr = y;
       }
     },
+    clearFileCheckbox: (state) => {
+      state.fileCheckBoxArr = [];
+    },
 
     handleDetailsVersionBox: (state, action) => {
       state.detailsVersionTab = action.payload.tab;
@@ -73,20 +93,71 @@ export const filemanagerSlice = createSlice({
     selectFileFolderToBeRenamed: (state, action) => {
       state.fileFolderToBeRenamed = action.payload;
     },
+
+    savePrepareDeleteArr: (state, action) => {
+      state.reduxPrepareDeleteArr = [...action.payload];
+    },
+
+    saveFolderToBeDeleted: (state, action) => {
+      state.folderToBeDeleted = action.payload;
+    },
+
+    saveArrayForApproval: (state, action) => {
+      let x = state.arrayForApproval.map((curElem) => {
+        return curElem.file._id;
+      });
+      if (!x.includes(action.payload.file._id)) {
+        state.arrayForApproval = [...state.arrayForApproval, action.payload];
+      } else {
+        let y = state.arrayForApproval.filter((curElem) => {
+          return curElem.file._id !== action.payload.file._id;
+        });
+        state.arrayForApproval = [...y];
+      }
+    },
+    clearArrayForApproval: (state) => {
+      state.arrayForApproval = [];
+    },
+
+    setFilesGoingFor: (state, action) => {
+      state.filesGoingFor = action.payload;
+    },
+
+    saveFileToNewVersion: (state, action) => {
+      let x = state.fileToNewVersion.map((curElem) => {
+        return curElem.file._id;
+      });
+      if (!x.includes(action.payload.file._id)) {
+        state.fileToNewVersion = [...state.fileToNewVersion, action.payload];
+      } else {
+        let y = state.fileToNewVersion.filter((curElem) => {
+          return curElem.file._id !== action.payload.file._id;
+        });
+        state.fileToNewVersion = [...y];
+      }
+    },
   },
 });
 
 export const {
   setLoadingState,
   saveFileAndFolder,
+  saveOnlyFiles,
   selectFileTypeTab,
   selectInternalTab,
   selectFileCheckbox,
+  clearFileCheckbox,
   handleDetailsVersionBox,
   changeDetVerTab,
   setModalState,
   setFileUploadProgress,
   selectFileFolderToBeRenamed,
+  savePrepareDeleteArr,
+  saveArrayForApproval,
+  saveFolderToBeDeleted,
+  clearArrayForApproval,
+  setFilesGoingFor,
+  saveFileToNewVersion,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

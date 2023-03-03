@@ -1,0 +1,85 @@
+.fileCardContainer {
+  height: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.eachCard {
+  display: flex;
+  padding: 0 0.5rem;
+  height: 2.5rem;
+  align-items: center;
+  border: 1px solid #e6e6e6;
+  background-color: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+}
+.eachCard:hover {
+  transform: scale(1.01);
+  background-color: #00356610;
+}
+
+.customCheckbox {
+  border: 1px solid #333333;
+  height: 0.8rem;
+  width: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.5rem;
+  border-radius: 2px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+  background-color: #ffffff;
+}
+.customCheckbox:hover {
+  transform: scale(1.05);
+}
+.customCheckbox:active {
+  transform: scale(0.95);
+}
+.activeCheckbox {
+  border: 1px solid #003566;
+  height: 0.8rem;
+  width: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.5rem;
+  border-radius: 2px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+  background-color: #003566;
+}
+.activeCheckbox:hover {
+  transform: scale(1.05);
+}
+.activeCheckbox:active {
+  transform: scale(0.95);
+}
+
+.fileName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 0.25rem;
+  text-decoration: none;
+  color: #333333;
+}
+
+.eachCardInput {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-bottom: 1px solid #dfdfdf;
+  background-color: #f0f0f0;
+  outline: none;
+  padding-left: 0.5rem;
+}

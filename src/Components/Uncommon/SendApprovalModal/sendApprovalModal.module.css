@@ -1,0 +1,116 @@
+.heading {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.selectMember {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff !important;
+  border: 1px solid #cccccc !important;
+  color: #333333 !important;
+}
+.selectMember:hover {
+  background-color: #fafafa !important;
+  color: #333333 !important;
+  border: 1px solid #cccccc !important;
+}
+
+.filePillContainer {
+  border: 1px solid #cccccc;
+  width: 100%;
+  min-height: 2.25rem;
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+.filePill {
+  background-color: #f2f2f2;
+  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  transition: all;
+  transition-duration: 300ms;
+  cursor: pointer;
+  margin: 0.25rem;
+  max-width: 10rem;
+}
+.filePill:hover {
+  background-color: #0035661d;
+}
+
+.checkBox {
+  height: 0.8rem;
+  width: 0.8rem;
+  border: 2px solid #1c1b1f;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+.activeCheckBox {
+  background-color: #003566;
+  border: 2px solid #003566;
+}
+
+.cancelButton {
+  border: 1px solid #cccde5;
+  height: 2rem;
+  font-size: 14px;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #7d7d82;
+  background-color: #f2f2f2;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+}
+.sendButton {
+  border: 1px solid #003566;
+  height: 2rem;
+  font-size: 14px;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  background-color: #003566;
+  border-radius: 6px;
+}
+
+.channelPill {
+  background-color: #ffffff;
+  color: #003566;
+  border: 1px solid #003566;
+  border-radius: 20px;
+  font-size: 12px;
+  height: 1.3rem;
+  padding: 0 0.5rem;
+  margin-right: 0.25rem;
+  cursor: pointer;
+}
+.activeChannelPill {
+  background-color: #003566;
+  color: #ffffff;
+}
+
+.messageBox {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.messageBox textarea {
+  width: 100%;
+  resize: none;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+}

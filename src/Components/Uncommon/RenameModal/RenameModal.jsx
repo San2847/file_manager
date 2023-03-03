@@ -16,16 +16,16 @@ const RenameModal = () => {
     if (fileFolderToBeRenamed.type === "outside" || fileFolderToBeRenamed.type === "inside") {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.container._id}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
       if (res && !res.error) {
-        getFiles();
         dispatch(setModalState({ modal: "renameModal", state: false }));
+        getFiles(1);
       } else {
         console.log(res.error);
       }
     } else {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/rename-folder?id=${fileFolderToBeRenamed.fileOrFold._id}`, { folderName: itemName });
       if (res && !res.error) {
-        getFiles();
         dispatch(setModalState({ modal: "renameModal", state: false }));
+        getFiles(1);
       } else {
         console.log(res.error);
       }

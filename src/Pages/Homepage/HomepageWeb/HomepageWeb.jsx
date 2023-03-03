@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, version } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "../../../Components/Common/Breadcrumb/Breadcrumb";
-import { selectFileTypeTab, selectInternalTab, setFileUploadProgress, setModalState } from "../../../Redux/slices/filemanagerSlice";
+import { clearFileCheckbox, savePrepareDeleteArr, selectFileTypeTab, selectInternalTab, setFilesGoingFor, setFileUploadProgress, setModalState } from "../../../Redux/slices/filemanagerSlice";
 import styles from "./homepageWeb.module.css";
 import FilesTable from "../../../Components/Uncommon/FilesTable/FilesTable";
 import FileDetailsAndVersion from "../../../Components/Uncommon/FileDetailsAndVersion/FileDetailsAndVersion";
-import { AiOutlineFile } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlineFile } from "react-icons/ai";
 import { RiFolder2Line } from "react-icons/ri";
 import UploadFileModal from "../../../Components/Uncommon/UploadFileModal/UploadFileModal";
 import { postReq, putReq } from "../../../Services/api";
@@ -14,10 +14,26 @@ import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
 import { getFiles } from "../../../Services/commonFunctions";
+import OnlyFilesTable from "../../../Components/Uncommon/OnlyFilesTable/OnlyFilesTable";
+import { BsShare } from "react-icons/bs";
+import { FaRegTrashAlt } from "react-icons/fa";
+import DeleteFilesModal from "../../../Components/Uncommon/DeleteFilesModal/DeleteFilesModal";
+import SendApprovalModal from "../../../Components/Uncommon/SendApprovalModal/SendApprovalModal";
+import VersionConfirmation from "../../../Components/Uncommon/VersionConfirmation/VersionConfirmation";
+import UploadNewVersion from "../../../Components/Uncommon/UploadNewVersion/UploadNewVersion";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
-  const { fileTypeTab, internalTab, detailsVersionTab, fileUploadProgress, fileFolderArr } = useSelector((state) => state.filemanager);
+  const { fileTypeTab, internalTab, detailsVersionTab, fileUploadProgress, fileFolderArr, onlyFilesArr, fileCheckBoxArr, reduxPrepareDeleteArr, versionConfirmation } = useSelector(
+    (state) => state.filemanager
+  );
+
+  const statusObj = {
+    all: 1,
+    approved: 2,
+    discussion: 0,
+    execution: 3,
+  };
 
   const [uploadingFile, setUploadingFile] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
@@ -58,9 +74,13 @@ const HomepageWeb = () => {
       }
       if (i === files.length - 1) {
         setUploadingFile(0);
-        getFiles();
+        getFiles(1);
       }
     }
+  };
+
+  const openDeleteModal = () => {
+    dispatch(setModalState({ modal: "deleteModal", state: true }));
   };
 
   const uploadFolder = async (event) => {
@@ -96,7 +116,7 @@ const HomepageWeb = () => {
         sendObj["fileDetails"] = [...arr];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendObj);
         if (upRes && !upRes.error) {
-          getFiles();
+          getFiles(1);
         } else {
           console.log(upRes.error);
         }
@@ -105,14 +125,39 @@ const HomepageWeb = () => {
   };
 
   useEffect(() => {
-    getFiles();
-  }, []);
+    if (fileTypeTab) {
+      getFiles(statusObj[fileTypeTab]);
+    }
+  }, [fileTypeTab]);
 
   return (
     <>
+      <SendApprovalModal />
       <UploadFileModal />
+      <DeleteFilesModal />
+      <VersionConfirmation />
+      <UploadNewVersion />
       <div className="container-box">
         <div className={styles.container}>
+          {/* multiple files selected option box */}
+          <div className={styles.multipleFilesOptionBox} style={{ right: fileCheckBoxArr.length > 0 ? "50px" : "-150px" }}>
+            <div className={styles.optionBoxText}>
+              {fileCheckBoxArr.length} {fileCheckBoxArr.length > 1 ? "files" : "file"} selected
+            </div>
+            <div className="d-flex justify-content-between w-100">
+              <div className={styles.eachOption}>
+                <BsShare />
+              </div>
+              {/* <div className={styles.eachOption} onClick={deleteMultipleFiles}> */}
+              <div className={styles.eachOption} onClick={openDeleteModal}>
+                <FaRegTrashAlt />
+              </div>
+              <div className={styles.eachOption}>
+                <AiOutlineDownload fontSize={18} />
+              </div>
+            </div>
+          </div>
+          {/* multiple files selected option box */}
           <div className={styles.uploadingFilesBox} style={uploadingFile > 0 ? { height: "4rem" } : { height: "0" }}>
             <div style={{ padding: "1rem", display: "flex", flexDirection: "column", alignItems: "flex-start", width: "100%" }}>
               <div className="mb-2">Uploading Files ({`${uploadingFile}/${totalFiles}`}):</div>
@@ -129,21 +174,7 @@ const HomepageWeb = () => {
                 <input className="d-none" ref={uploadFileRef} onChange={uploadFile} multiple type="file" name="" id="" />
                 <input className="d-none" ref={uploadFolderRef} webkitdirectory="true" onChange={uploadFolder} type="file" name="" id="" />
                 <Dropdown>
-                  <Dropdown.Toggle
-                    style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #CCCDE5",
-                      color: "#003566",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      padding: "0 0.5rem",
-                      marginRight: "0.5rem",
-                      height: "2rem",
-                      width: "fit-content",
-                    }}
-                  >
-                    New Upload
-                  </Dropdown.Toggle>
+                  <Dropdown.Toggle className={styles.actionButtons}>New Upload</Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item className="d-flex align-items-center" onClick={() => uploadFileRef.current.click()}>
                       <AiOutlineFile style={{ marginRight: "0.25rem" }} /> Upload File
@@ -153,7 +184,13 @@ const HomepageWeb = () => {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                <button className={`${styles.actionButtons}`} onClick={() => dispatch(setModalState({ modal: "uploadFileModal", state: true }))}>
+                <button
+                  className={`${styles.actionButtons}`}
+                  onClick={() => {
+                    dispatch(setFilesGoingFor("approval"));
+                    dispatch(setModalState({ modal: "uploadFileModal", state: true }));
+                  }}
+                >
                   Get New Approval
                 </button>
               </div>
@@ -197,7 +234,7 @@ const HomepageWeb = () => {
                   </div>
                 </div>
               </div>
-              <FilesTable fileData={fileFolderArr} />
+              {fileTypeTab === "all" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} />}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
               <FileDetailsAndVersion />
