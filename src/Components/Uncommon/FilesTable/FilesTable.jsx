@@ -279,9 +279,11 @@ const FilesTable = ({ fileData }) => {
             <>
               {fileData &&
                 fileData.map((curElem) => {
-                  let unreadFeeds = curElem?.fileDetails && curElem?.fileDetails[0]?.feedBack.filter((curF) => {
-                    return curF.isRead === false;
-                  });
+                  let unreadFeeds =
+                    curElem?.fileDetails &&
+                    curElem?.fileDetails[0]?.feedBack.filter((curF) => {
+                      return curF.isRead === false;
+                    });
                   return (
                     <>
                       <div style={openedDrop === curElem._id ? { backgroundColor: "#f2f2f2", position: "relative", zIndex: "1000" } : { backgroundColor: "#f7f7f7" }}>
@@ -474,7 +476,7 @@ const FilesTable = ({ fileData }) => {
                                     }}
                                   />
                                 ))}
-                              {unreadFeeds.length > 0 && (
+                              {unreadFeeds && unreadFeeds?.length > 0 && (
                                 <div
                                   style={{
                                     fontSize: "8px",
@@ -489,7 +491,7 @@ const FilesTable = ({ fileData }) => {
                                     marginLeft: "0.25rem",
                                   }}
                                 >
-                                  {unreadFeeds.length}
+                                  {unreadFeeds && unreadFeeds?.length}
                                 </div>
                               )}
                             </div>
@@ -796,7 +798,7 @@ const FilesTable = ({ fileData }) => {
                                                 }}
                                               />
                                             )}
-                                            {unreadFeeds.length > 0 && (
+                                            {unreadFeeds && unreadFeeds?.length > 0 && (
                                               <div
                                                 style={{
                                                   fontSize: "8px",
@@ -811,7 +813,7 @@ const FilesTable = ({ fileData }) => {
                                                   marginLeft: "0.25rem",
                                                 }}
                                               >
-                                                {unreadFeeds.length}
+                                                {unreadFeeds && unreadFeeds?.length}
                                               </div>
                                             )}
                                           </div>
