@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fakeFiles } from "../../../constants/fakeJson";
 import styles from "./filesTable.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
-import { RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
+import { RiChatNewLine, RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import {
   handleDetailsVersionBox,
@@ -174,6 +174,50 @@ const FilesTable = ({ fileData }) => {
     }
   };
 
+  const [openedGiveFeed, setOpenedGiveFeed] = useState("");
+  const openGiveFeed = (event, obj) => {
+    event.stopPropagation();
+    if (openedGiveFeed.file && openedGiveFeed.file._id === obj.file._id) {
+      setOpenedGiveFeed("");
+    } else {
+      setOpenedGiveFeed(obj);
+    }
+  };
+
+  const [feedbackText, setFeedbackText] = useState("");
+  const [fileFeedArr, setFileFeedArr] = useState([]);
+  const inputFeedback = (event) => {
+    setFeedbackText(event.target.value);
+  };
+  const submitFeedback = async () => {
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${openedGiveFeed.container._id}&fileId=${openedGiveFeed.file._id}`, { sendBy: getUserId(), message: feedbackText });
+    if (res && !res.error) {
+      getFiles(1);
+      setFileFeedArr([...res.data.fileDetails[0].feedBack]);
+      setOpenedGiveFeed("");
+      setFeedbackText("");
+      console.log(res.data);
+    } else {
+      console.log(res.error);
+    }
+  };
+  const getFileFeedback = async (fileObj) => {
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
+    if (res && !res.error) {
+      setFileFeedArr([...res.data]);
+    } else {
+      console.log(res.error);
+    }
+  };
+  const readFeedback = async (fileObj) => {
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
+    if (res && !res.error) {
+      console.log(res);
+    } else {
+      console.log(res.error);
+    }
+  };
+
   useEffect(() => {
     if (fileCheckBoxArr) {
       let x = fileCheckBoxArr.map((curElem) => {
@@ -235,9 +279,12 @@ const FilesTable = ({ fileData }) => {
             <>
               {fileData &&
                 fileData.map((curElem) => {
+                  let unreadFeeds = curElem.fileDetails[0].feedBack.filter((curF) => {
+                    return curF.isRead === false;
+                  });
                   return (
                     <>
-                      <div style={openedDrop === curElem._id ? { backgroundColor: "#f2f2f2", position: "relative", zIndex: "1000" } : { backgroundColor: "#f2f2f2" }}>
+                      <div style={openedDrop === curElem._id ? { backgroundColor: "#f2f2f2", position: "relative", zIndex: "1000" } : { backgroundColor: "#f7f7f7" }}>
                         <div
                           className={curElem.folderName ? (openedFolder !== `folder-${curElem._id}` ? styles.folderCardNotOpened : styles.folderCard) : styles.eachCard}
                           onClick={() => openFolderOrSelectFile(curElem)}
@@ -383,17 +430,56 @@ const FilesTable = ({ fileData }) => {
                               style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}
                             >
                               {!curElem.folderName &&
-                                (openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? (
+                                (curElem.fileDetails[0].isSendForApproval === false ? (
+                                  openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? (
+                                    <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                  ) : (
+                                    <RiChatQuoteLine
+                                      onClick={(event) => {
+                                        openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                        getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                        readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                      }}
+                                    />
+                                  )
+                                ) : curElem.fileDetails[0].feedBack.length === 0 ? (
+                                  curElem.fileDetails[0].isSendForExecution === false ? (
+                                    <div className="d-flex">
+                                      <div className={styles.approveTick} title="Approve" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
+                                        <BsCheck />
+                                      </div>
+                                      <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
+                                        <RiChatNewLine />
+                                      </div>
+                                    </div>
+                                  ) : openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? (
+                                    <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                  ) : (
+                                    <RiChatQuoteLine
+                                      onClick={(event) => {
+                                        openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                        getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                        readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                      }}
+                                    />
+                                  )
+                                ) : openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? (
                                   <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
                                 ) : (
-                                  <RiChatQuoteLine onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                  <RiChatQuoteLine
+                                    onClick={(event) => {
+                                      openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                      getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                      readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                    }}
+                                  />
                                 ))}
-                              {!curElem.folderName && (
+                              {unreadFeeds.length > 0 && (
                                 <div
                                   style={{
                                     fontSize: "8px",
-                                    backgroundColor: "#FBCCFF",
-                                    color: "#E61BF7",
+                                    backgroundColor: "#DD2E44",
+                                    color: "#ffffff",
                                     width: "0.8rem",
                                     height: "0.8rem",
                                     display: "flex",
@@ -403,7 +489,7 @@ const FilesTable = ({ fileData }) => {
                                     marginLeft: "0.25rem",
                                   }}
                                 >
-                                  2
+                                  {unreadFeeds.length}
                                 </div>
                               )}
                             </div>
@@ -520,8 +606,22 @@ const FilesTable = ({ fileData }) => {
                         {!curElem.folderName && (
                           <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? { height: "10rem" } : { height: "0" }}>
                             <div className={styles.feedbackContainer}>
-                              <FeedbackCard />
-                              <FeedbackCard />
+                              {fileFeedArr &&
+                                fileFeedArr.map((eachFeed, index) => {
+                                  return <FeedbackCard feedData={eachFeed} currentVer={index === 0} />;
+                                })}
+                            </div>
+                          </div>
+                        )}
+                        {!curElem.folderName && (
+                          <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === curElem.fileDetails[0]._id ? { height: "12rem" } : { height: "0" }}>
+                            <div className={styles.feedbackContainer}>
+                              <textarea name="feedbackText" rows="5" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
+                              <div className="d-flex justify-content-end">
+                                <button className={styles.submitFeed} onClick={submitFeedback}>
+                                  Submit Feedback
+                                </button>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -531,6 +631,9 @@ const FilesTable = ({ fileData }) => {
                             <div style={{ height: "100%", overflowY: "scroll" }}>
                               {curElem.fileDetails &&
                                 curElem.fileDetails.map((cur) => {
+                                  let unreadFeeds = cur.feedBack.filter((curF) => {
+                                    return curF.isRead === false;
+                                  });
                                   return (
                                     <>
                                       <div className={styles.eachInsideCard} onClick={() => dispatch(selectFileCheckbox({ container: curElem, fileOrFold: cur, type: "inside" }))}>
@@ -630,16 +733,86 @@ const FilesTable = ({ fileData }) => {
                                           </>
                                         )}
                                         <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>{cur.lastUpdated}</div>
-                                        <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>Approved</div>
+                                        <div
+                                          style={{
+                                            width: detailsVersionTab === "" ? "15%" : "20%",
+                                            fontSize: "12px",
+                                            color: "#333333",
+                                            fontWeight: "400",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                          }}
+                                          title={getFileStatus(cur)}
+                                        >
+                                          {getFileStatus(cur)}
+                                        </div>
                                         {detailsVersionTab === "" && (
                                           <div
                                             className={styles.commentButton}
-                                            style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", cursor: "pointer" }}
+                                            style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}
                                           >
-                                            {openedInfo.file && openedInfo.file._id === cur._id ? (
+                                            {cur.isSendForApproval === false ? (
+                                              openedInfo.file && openedInfo.file._id === cur._id ? (
+                                                <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              ) : (
+                                                <RiChatQuoteLine
+                                                  onClick={(event) => {
+                                                    openInfo(event, { container: curElem, file: cur });
+                                                    getFileFeedback({ container: curElem, file: cur });
+                                                    readFeedback({ container: curElem, file: cur });
+                                                  }}
+                                                />
+                                              )
+                                            ) : cur.feedBack.length === 0 ? (
+                                              cur.isSendForExecution === false ? (
+                                                <div className="d-flex">
+                                                  <div className={styles.approveTick} title="Approve" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
+                                                    <BsCheck />
+                                                  </div>
+                                                  <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
+                                                    <RiChatNewLine />
+                                                  </div>
+                                                </div>
+                                              ) : openedInfo.file && openedInfo.file._id === cur._id ? (
+                                                <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              ) : (
+                                                <RiChatQuoteLine
+                                                  onClick={(event) => {
+                                                    openInfo(event, { container: curElem, file: cur });
+                                                    getFileFeedback({ container: curElem, file: cur });
+                                                    readFeedback({ container: curElem, file: cur });
+                                                  }}
+                                                />
+                                              )
+                                            ) : openedInfo.file && openedInfo.file._id === cur._id ? (
                                               <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
                                             ) : (
-                                              <RiChatQuoteLine onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              <RiChatQuoteLine
+                                                onClick={(event) => {
+                                                  openInfo(event, { container: curElem, file: cur });
+                                                  getFileFeedback({ container: curElem, file: cur });
+                                                  readFeedback({ container: curElem, file: cur });
+                                                }}
+                                              />
+                                            )}
+                                            {unreadFeeds.length > 0 && (
+                                              <div
+                                                style={{
+                                                  fontSize: "8px",
+                                                  backgroundColor: "#DD2E44",
+                                                  color: "#ffffff",
+                                                  width: "0.8rem",
+                                                  height: "0.8rem",
+                                                  display: "flex",
+                                                  justifyContent: "center",
+                                                  alignItems: "center",
+                                                  borderRadius: "50%",
+                                                  marginLeft: "0.25rem",
+                                                }}
+                                              >
+                                                {unreadFeeds.length}
+                                              </div>
                                             )}
                                           </div>
                                         )}
@@ -695,6 +868,28 @@ const FilesTable = ({ fileData }) => {
                                               </Dropdown.Item>
                                               <Dropdown.Item
                                                 style={{ fontSize: "12px" }}
+                                                onClick={(event) => {
+                                                  event.stopPropagation();
+                                                  dispatch(setFilesGoingFor("approval"));
+                                                  dispatch(saveArrayForApproval({ container: curElem, file: cur }));
+                                                  dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                                }}
+                                              >
+                                                Send for Approval
+                                              </Dropdown.Item>
+                                              <Dropdown.Item
+                                                style={{ fontSize: "12px" }}
+                                                onClick={(event) => {
+                                                  event.stopPropagation();
+                                                  dispatch(setFilesGoingFor("execution"));
+                                                  dispatch(saveArrayForApproval({ container: curElem, file: cur }));
+                                                  dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                                }}
+                                              >
+                                                Send for Execution
+                                              </Dropdown.Item>
+                                              <Dropdown.Item
+                                                style={{ fontSize: "12px" }}
                                                 onClick={() => dispatch(handleDetailsVersionBox({ item: { container: curElem, file: cur }, tab: "details" }))}
                                               >
                                                 File Details
@@ -710,8 +905,20 @@ const FilesTable = ({ fileData }) => {
 
                                       <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === cur._id ? { height: "10rem" } : { height: "0" }}>
                                         <div className={styles.feedbackContainer}>
-                                          <FeedbackCard />
-                                          <FeedbackCard />
+                                          {fileFeedArr &&
+                                            fileFeedArr.map((eachFeed, index) => {
+                                              return <FeedbackCard feedData={eachFeed} currentVer={index === 0} />;
+                                            })}
+                                        </div>
+                                      </div>
+                                      <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === cur._id ? { height: "12rem" } : { height: "0" }}>
+                                        <div className={styles.feedbackContainer}>
+                                          <textarea name="feedbackText" rows="5" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
+                                          <div className="d-flex justify-content-end">
+                                            <button className={styles.submitFeed} onClick={submitFeedback}>
+                                              Submit Feedback
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </>

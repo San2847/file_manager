@@ -10,6 +10,7 @@
   cursor: pointer;
   transition: all;
   transition-duration: 300ms;
+  margin-bottom: 0.5rem;
 }
 .eachCard:hover {
   background-color: #00356610;
@@ -139,8 +140,6 @@
 }
 
 .feedbackBox {
-  height: 10rem;
-  margin-bottom: 0.5rem;
   overflow-y: hidden;
   transition: height;
   transition-duration: 500ms;
@@ -165,4 +164,50 @@
 }
 .spaceDrawDiv:hover {
   background-color: #dfdfdf;
+}
+
+.approveTick {
+  background-color: #26ab75;
+  border-radius: 50%;
+  height: 1.5rem;
+  width: 1.5rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.25rem;
+}
+.addFeed {
+  background-color: #0077b6;
+  font-size: 14px;
+  border-radius: 50%;
+  height: 1.5rem;
+  width: 1.5rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.feedbackInput {
+  width: 100%;
+  resize: none;
+  border: 1px solid #21212166;
+  border-radius: 6px;
+  outline: none;
+  padding: 0.5rem;
+}
+.submitFeed {
+  background-color: #003566;
+  border-radius: 6px;
+  color: #ffffff;
+  border: none;
+  font-size: 14px;
+  height: 2rem;
+  padding: 0 1rem;
+  transition: all;
+  transition-duration: 300ms;
+}
+.submitFeed:hover {
+  background-color: #26ab75;
 }

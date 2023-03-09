@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "./feedbackCard.module.css";
 import feedbackIcon from "../../../Assets/feedbackIcon.svg";
+import { createDateString } from "../../../Services/commonFunctions";
 
-const FeedbackCard = () => {
+const FeedbackCard = ({ feedData, currentVer }) => {
   return (
     <div className={styles.eachFeedback}>
       <div className="d-flex justify-content-between align-items-center mb-2">
@@ -22,24 +23,26 @@ const FeedbackCard = () => {
             <img src={feedbackIcon} alt="" style={{ height: "0.9rem" }} />
           </div>
           <div style={{ fontSize: "16px", fontWeight: "500", marginRight: "0.5rem" }}>BOQ 1</div>
-          <div
-            style={{
-              backgroundColor: "#D6D8FF",
-              padding: "0 1rem",
-              borderRadius: "30px",
-              fontSize: "10px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "#484FFB",
-            }}
-          >
-            Current Version
-          </div>
+          {currentVer && (
+            <div
+              style={{
+                backgroundColor: "#D6D8FF",
+                padding: "0 1rem",
+                borderRadius: "30px",
+                fontSize: "10px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "#484FFB",
+              }}
+            >
+              Current Version
+            </div>
+          )}
         </div>
-        <div style={{ fontSize: "10px", color: "#333333CC" }}>12 Dec 2020</div>
+        <div style={{ fontSize: "10px", color: "#333333CC" }}>{feedData ? createDateString(feedData.dateTime) : ""}</div>
       </div>
-      <div style={{ fontSize: "14px" }}>feedback content here</div>
+      <div style={{ fontSize: "14px" }}>{feedData && feedData.message}</div>
     </div>
   );
 };
