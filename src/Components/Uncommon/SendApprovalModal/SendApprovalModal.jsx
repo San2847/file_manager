@@ -6,11 +6,55 @@ import styles from "./sendApprovalModal.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdClose } from "react-icons/io";
 import { setModalState, saveArrayForApproval, clearArrayForApproval } from "../../../Redux/slices/filemanagerSlice";
+import { postReq } from "../../../Services/api";
+import { apiLinks } from "../../../constants/constants";
+import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 
 const SendApprovalModal = () => {
   const dispatch = useDispatch();
   const { sendApprovalModal, arrayForApproval, filesGoingFor } = useSelector((state) => state.filemanager);
   const [notify, setNotify] = useState(false);
+
+  const [selectedTeamMember, setSelectedTeamMember] = useState({});
+
+  const teamMemberArr = [{ name: "Testing", _id: "62da389aa1b06a08f6f0d037" }];
+
+  const submitFilesForApprovalOrExecution = async () => {
+    const obj = {};
+    if (filesGoingFor === "approval") {
+      obj["approvalRequestTo"] = selectedTeamMember._id;
+    } else {
+      obj["executionRequestTo"] = selectedTeamMember._id;
+    }
+    let arr = [];
+    arrayForApproval.forEach((curElem) => {
+      arr.push({ id: curElem.container._id, fileId: curElem.file._id });
+    });
+    obj["files"] = arr;
+    if (filesGoingFor === "approval") {
+      const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-approval`, obj);
+      if (res && !res.error) {
+        dispatch(clearArrayForApproval());
+        dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
+        setSelectedTeamMember({});
+        saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for approval" });
+        getFiles(1);
+      } else {
+        console.log(res.error);
+      }
+    } else {
+      const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-execution`, obj);
+      if (res && !res.error) {
+        dispatch(clearArrayForApproval());
+        dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
+        setSelectedTeamMember({});
+        saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for execution" });
+        getFiles(1);
+      } else {
+        console.log(res.error);
+      }
+    }
+  };
 
   const removeFiles = (item) => {
     dispatch(saveArrayForApproval(item));
@@ -22,11 +66,14 @@ const SendApprovalModal = () => {
         <div className="mb-2">{filesGoingFor === "approval" ? "Approval from" : "Send to"}</div>
         <Dropdown>
           <Dropdown.Toggle className={`${styles.selectMember} no-drop-arrow`}>
-            <span>Select</span>
+            <span>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.name : "Select team member"}</span>
             <BsChevronDown />
           </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item>Hello</Dropdown.Item>
+          <Dropdown.Menu className="w-100">
+            {teamMemberArr &&
+              teamMemberArr.map((curElem) => {
+                return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)}>{curElem.name}</Dropdown.Item>;
+              })}
           </Dropdown.Menu>
         </Dropdown>
         <div className="d-flex justify-content-between align-items-center my-2">
@@ -88,7 +135,9 @@ const SendApprovalModal = () => {
             >
               Cancel
             </button>
-            <button className={styles.sendButton}>Send</button>
+            <button className={styles.sendButton} onClick={submitFilesForApprovalOrExecution}>
+              Send
+            </button>
           </div>
         </div>
       </Modal.Body>

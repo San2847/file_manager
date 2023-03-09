@@ -44,4 +44,28 @@
   padding: 0.25rem 0.5rem;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 300ms;
+}
+.filePill:hover {
+  background-color: #00356625;
+}
+
+.checkBox {
+  height: 0.8rem;
+  width: 0.8rem;
+  border: 2px solid #1c1b1f;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all;
+  transition-duration: 300ms;
+}
+.activeCheckBox {
+  background-color: #003566;
+  border: 2px solid #003566;
 }

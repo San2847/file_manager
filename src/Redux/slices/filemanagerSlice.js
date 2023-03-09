@@ -5,6 +5,7 @@ const initialState = {
 
   fileFolderArr: [],
   onlyFilesArr: [],
+  emptyFolderArr: [],
 
   fileTypeTab: "all",
   internalTab: "internal",
@@ -21,6 +22,7 @@ const initialState = {
   deleteFolderModal: false,
   versionConfirmation: false,
   uploadNewVersion: false,
+  moveModal: false,
 
   fileUploadProgress: 0,
   fileFolderToBeRenamed: {},
@@ -32,6 +34,8 @@ const initialState = {
   arrayForApproval: [],
 
   filesGoingFor: "",
+  versionConfirmationReturns: false,
+  allEmptyFiles: [],
 };
 
 export const filemanagerSlice = createSlice({
@@ -47,6 +51,9 @@ export const filemanagerSlice = createSlice({
     },
     saveOnlyFiles: (state, action) => {
       state.onlyFilesArr = action.payload;
+    },
+    saveEmptyFolders: (state, action) => {
+      state.emptyFolderArr = action.payload;
     },
 
     selectFileTypeTab: (state, action) => {
@@ -136,6 +143,17 @@ export const filemanagerSlice = createSlice({
         state.fileToNewVersion = [...y];
       }
     },
+
+    setVersionConfirmationReturns: (state, action) => {
+      state.versionConfirmationReturns = action.payload;
+    },
+
+    saveAllEmptyFiles: (state, action) => {
+      state.allEmptyFiles = [action.payload];
+    },
+    clearAllEmptyFiles: (state) => {
+      state.allEmptyFiles = [];
+    },
   },
 });
 
@@ -143,6 +161,7 @@ export const {
   setLoadingState,
   saveFileAndFolder,
   saveOnlyFiles,
+  saveEmptyFolders,
   selectFileTypeTab,
   selectInternalTab,
   selectFileCheckbox,
@@ -158,6 +177,9 @@ export const {
   clearArrayForApproval,
   setFilesGoingFor,
   saveFileToNewVersion,
+  setVersionConfirmationReturns,
+  saveAllEmptyFiles,
+  clearAllEmptyFiles,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

@@ -6,6 +6,7 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import styles from "./onlyFilesTable.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdImage } from "react-icons/io";
+import { createDateString } from "../../../Services/commonFunctions";
 
 const OnlyFilesTable = ({ fileData }) => {
   const { detailsVersionTab, loading } = useSelector((state) => state.filemanager);
@@ -82,8 +83,10 @@ const OnlyFilesTable = ({ fileData }) => {
                       <div style={{ width: "15%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>{curElem.drawingType ? curElem.drawingType : "-"}</div>
                     </>
                   )}
-                  <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>Last Updated</div>
-                  <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>Status</div>
+                  <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>
+                    {curElem.updateTime ? createDateString(curElem.updateTime) : "-"}
+                  </div>
+                  <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>{curElem.status === 0 ? "Approval Pending" : "-"}</div>
                   {detailsVersionTab === "" && <div style={{ width: "10%", fontSize: "12px", color: "#333333", fontWeight: "500", display: "flex", justifyContent: "center" }}>Feedback</div>}
                   <div style={{ width: detailsVersionTab === "" ? "5%" : "10%" }}></div>
                 </div>

@@ -18,7 +18,6 @@
   transition-duration: 300ms;
 }
 .eachCard:hover {
-  transform: scale(1.01);
   background-color: #00356610;
 }
 

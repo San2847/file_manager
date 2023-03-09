@@ -13,9 +13,9 @@ const DeleteFilesModal = () => {
   const deleteMultipleFiles = async () => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/delete-files`, reduxPrepareDeleteArr);
     if (res && !res.error) {
-      getFiles(1);
       dispatch(savePrepareDeleteArr([]));
       dispatch(clearFileCheckbox());
+      getFiles(1);
     } else {
       console.log(res.error);
     }

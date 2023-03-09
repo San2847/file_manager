@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HeaderSidebar from "../../Components/Common/HeaderSidebar/HeaderSidebar";
 import HomepageMob from "./HomepageMob/HomepageMob";
 import HomepageWeb from "./HomepageWeb/HomepageWeb";
 
@@ -11,7 +12,12 @@ const Homepage = () => {
     window.addEventListener("resize", updateMedia);
     return () => window.removeEventListener("resize", updateMedia);
   });
-  return <>{isDesktop ? <HomepageWeb /> : <HomepageMob />}</>;
+  return (
+    <>
+      {isDesktop ? <HeaderSidebar /> : null}
+      {isDesktop ? <HomepageWeb /> : <HomepageMob />}
+    </>
+  );
 };
 
 export default Homepage;

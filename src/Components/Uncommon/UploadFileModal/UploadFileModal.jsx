@@ -25,7 +25,7 @@ const UploadFileModal = () => {
   const [openedFolder, setOpenedFolder] = useState([]);
   const openFolderOrSelectFiles = (outElem, event, inElem) => {
     event.stopPropagation();
-    if (outElem.fileDetails.length > 1) {
+    if (outElem.folderName) {
       if (!inElem) {
         if (!openedFolder.includes(outElem._id)) {
           setOpenedFolder((prev) => {
@@ -94,32 +94,35 @@ const UploadFileModal = () => {
                   <>
                     <div className={styles.eachCard} onClick={(event) => openFolderOrSelectFiles(curElem, event, undefined)}>
                       <div style={{ width: "30%", fontSize: "12px", display: "flex", alignItems: "center", paddingLeft: "0.5rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {curElem.fileDetails.length > 1 ? (
+                        {curElem.folderName ? (
                           <div className={styles.noBox}></div>
                         ) : (
                           <div
-                            className={`${styles.checkBox} ${selectionArr.includes(curElem.fileDetails[0]._id) && styles.activeBox}`}
+                            className={`${styles.checkBox} ${selectionArr.length > 0 && selectionArr.includes(curElem.fileDetails[0]._id) && styles.activeBox}`}
                             onClick={(event) => openFolderOrSelectFiles(curElem, event, undefined)}
                           >
                             <BsCheck />
                           </div>
                         )}
-                        <div className="d-flex align-items-center" title={curElem.fileDetails.length > 1 ? (curElem.folderName ? curElem.folderName : "Untitled") : curElem.fileDetails[0].fileName}>
-                          {curElem.fileDetails.length > 1 ? (
+                        <div
+                          className="d-flex align-items-center"
+                          title={curElem.folderName ? (curElem.folderName ? curElem.folderName : "Untitled") : curElem.fileDetails[0] && curElem.fileDetails[0].fileName}
+                        >
+                          {curElem.folderName ? (
                             <FaFolder color="#F2B007" style={{ marginRight: "0.5rem" }} />
-                          ) : curElem.fileDetails[0].fileType.split("/")[0] === "image" ? (
+                          ) : curElem.fileDetails[0] && curElem.fileDetails[0].fileType.split("/")[0] === "image" ? (
                             <IoMdImage fontSize={15} color="#26AD74" style={{ marginRight: "0.5rem" }} />
                           ) : (
                             <img src={pdfIcon} alt="" style={{ height: "14px", marginRight: "0.5rem" }} />
                           )}
-                          {curElem.fileDetails.length > 1 ? (curElem.folderName ? curElem.folderName : "Untitled") : curElem.fileDetails[0].fileName}
+                          {curElem.folderName ? (curElem.folderName ? curElem.folderName : "Untitled") : curElem.fileDetails[0] && curElem.fileDetails[0].fileName}
                         </div>
                       </div>
                       <div style={{ width: "17.5%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>
-                        {curElem.fileDetails.length > 1 ? "" : curElem.spaceName ? curElem.spaceName : "-"}
+                        {curElem.folderName ? "" : curElem.spaceName ? curElem.spaceName : "-"}
                       </div>
                       <div style={{ width: "17.5%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>
-                        {curElem.fileDetails.length > 1 ? "" : curElem.drawingType ? curElem.drawingType : "-"}
+                        {curElem.folderName ? "" : curElem.drawingType ? curElem.drawingType : "-"}
                       </div>
                       <div style={{ width: "17.5%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>Date Added</div>
                       <div style={{ width: "17.5%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>
@@ -127,7 +130,7 @@ const UploadFileModal = () => {
                       </div>
                     </div>
                     <div className={styles.insideFileContainer} style={{ height: openedFolder.includes(curElem._id) ? "8rem" : "0" }}>
-                      {curElem.fileDetails.length > 1 &&
+                      {curElem.folderName &&
                         curElem.fileDetails.map((cur) => {
                           return (
                             <div className={styles.eachCardInside}>

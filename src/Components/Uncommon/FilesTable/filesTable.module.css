@@ -13,7 +13,6 @@
 }
 .eachCard:hover {
   background-color: #00356610;
-  transform: scale(1.01);
 }
 .folderCard {
   border: 1px solid #e6e6e6;
@@ -31,7 +30,6 @@
 }
 .folderCard:hover {
   background-color: #00356610;
-  /* transform: scale(1.01); */
 }
 
 .folderCardNotOpened {
@@ -49,7 +47,6 @@
 }
 .folderCardNotOpened:hover {
   background-color: #00356610;
-  transform: scale(1.01);
 }
 .customCheckbox {
   border: 1px solid #333333;
@@ -156,4 +153,16 @@
 .fileLinkName {
   text-decoration: none;
   color: #333333;
+}
+
+.spaceDrawDiv {
+  transition: all;
+  transition-duration: 300ms;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-left: 0.5rem;
+}
+.spaceDrawDiv:hover {
+  background-color: #dfdfdf;
 }

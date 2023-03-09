@@ -10,14 +10,13 @@
 .multipleFilesOptionBox {
   position: absolute;
   bottom: 20px;
-  right: -50px;
-  width: 8rem;
+  min-width: 12rem;
   background-color: #ffffff;
   transition: all;
   transition-duration: 400ms;
   box-shadow: 4px 0 10px #00000030;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-start;
   overflow: hidden;
   display: flex;
@@ -33,6 +32,7 @@
 .eachOption {
   width: 2rem;
   height: 2rem;
+  padding: 0 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,6 +40,7 @@
   cursor: pointer;
   transition: all;
   transition-duration: 300ms;
+  margin: 0 0.25rem;
 }
 .eachOption:hover {
   background-color: #00000030;
@@ -82,7 +83,7 @@
   transition: all;
   transition-duration: 300ms;
 }
-.actionButtons:hover{
+.actionButtons:hover {
   background-color: #edeefd;
   color: #003566;
   border: 1px solid #cccde5;

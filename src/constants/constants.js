@@ -12,3 +12,5 @@ export const apiLinks = {
   s3api: "https://s3-service.idesign.market",
   pmt: "https://pmt.idesign.market",
 };
+
+export const monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

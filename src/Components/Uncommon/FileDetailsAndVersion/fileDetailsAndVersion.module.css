@@ -1,3 +1,10 @@
+.container {
+  height: 100%;
+}
+.headingTabs {
+  height: 6rem;
+}
+
 .heading {
   display: flex;
   justify-content: space-between;
@@ -6,8 +13,12 @@
 }
 
 .headingName {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
+  white-space: nowrap;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -35,12 +46,40 @@
   padding: 0.5rem 0;
   cursor: pointer;
   white-space: nowrap;
+  transition: all;
+  transition-duration: 300ms;
 }
 .activeTab {
   border-bottom: 3px solid #003566;
   background-color: #e4e4f1;
 }
 
-.content{
-    padding: 0.5rem;
+.content {
+  padding: 0.5rem;
+  height: 75%;
+  overflow-y: scroll;
+}
+
+.dataLabel {
+  font-size: 12px;
+}
+.dataData {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notifBox {
+  width: 100%;
+  border-bottom: 1px solid #e6e6e6;
+}
+.notifHead {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+.dateString {
+  font-size: 10px;
+  margin-bottom: 0.5rem;
+  color: #333333cc;
+  padding-left: 1rem;
 }
