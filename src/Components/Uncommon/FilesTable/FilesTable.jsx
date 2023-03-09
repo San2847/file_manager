@@ -279,7 +279,7 @@ const FilesTable = ({ fileData }) => {
             <>
               {fileData &&
                 fileData.map((curElem) => {
-                  let unreadFeeds = curElem.fileDetails[0].feedBack.filter((curF) => {
+                  let unreadFeeds = curElem?.fileDetails && curElem?.fileDetails[0]?.feedBack.filter((curF) => {
                     return curF.isRead === false;
                   });
                   return (
