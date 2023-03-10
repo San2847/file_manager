@@ -3,7 +3,7 @@ import styles from "./feedbackCard.module.css";
 import feedbackIcon from "../../../Assets/feedbackIcon.svg";
 import { createDateString } from "../../../Services/commonFunctions";
 
-const FeedbackCard = ({ feedData, currentVer }) => {
+const FeedbackCard = ({ feedData, currentVer, name }) => {
   return (
     <div className={styles.eachFeedback}>
       <div className="d-flex justify-content-between align-items-center mb-2">
@@ -22,7 +22,7 @@ const FeedbackCard = ({ feedData, currentVer }) => {
           >
             <img src={feedbackIcon} alt="" style={{ height: "0.9rem" }} />
           </div>
-          <div style={{ fontSize: "16px", fontWeight: "500", marginRight: "0.5rem" }}>BOQ 1</div>
+          <div style={{ fontSize: "16px", fontWeight: "500", marginRight: "0.5rem" }}>{name}</div>
           {currentVer && (
             <div
               style={{

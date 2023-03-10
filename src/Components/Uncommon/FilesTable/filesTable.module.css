@@ -134,6 +134,7 @@
   cursor: pointer;
   transition: all;
   transition-duration: 300ms;
+  position: relative;
 }
 .eachInsideCard:hover {
   background-color: #00356610;

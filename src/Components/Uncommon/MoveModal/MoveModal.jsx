@@ -17,9 +17,6 @@ const MoveModal = () => {
   const [selectedFolder, setSelectedFolder] = useState({});
 
   const moveFilesTo = async () => {
-    let arr = fileCheckBoxArr.map((curElem) => {
-      return curElem.fileOrFold;
-    });
     let type = 0;
     let filtArr = fileCheckBoxArr.filter((curElem) => {
       return curElem.container._id !== selectedFolder._id;
@@ -32,12 +29,28 @@ const MoveModal = () => {
     });
     if (outFilesOnly) {
       type = 1;
-    } else if (inFilesOnly) {
-      type = 3;
     } else if (selectedFolder === "home") {
+      type = 3;
+    } else if (inFilesOnly) {
       type = 2;
     }
-    const res = await postReq(`${apiLinks.pmt}/api/file-manager/move-files?type=${type}`, { folderId: selectedFolder._id, userId: getUserId(), fileDetails: [...arr] });
+
+    let x = JSON.parse(JSON.stringify(fileCheckBoxArr));
+    x.forEach((curElem) => {
+      delete curElem.fileOrFold._id;
+      curElem.fileOrFold["id"] = curElem.container._id;
+    });
+    let y = x.map((curElem) => {
+      return curElem.fileOrFold;
+    });
+
+    let sendObj = { userId: getUserId() };
+
+    if (type === 1 || type === 2) {
+      sendObj["folderId"] = selectedFolder._id;
+    }
+    sendObj["fileDetails"] = [...y];
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/move-files?type=${type}`, sendObj);
     if (res && !res.error) {
       getFiles(1);
       setSelectedFolder({});

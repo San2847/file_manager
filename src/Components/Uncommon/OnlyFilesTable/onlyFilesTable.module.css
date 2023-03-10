@@ -12,7 +12,6 @@
   border: 1px solid #e6e6e6;
   background-color: #ffffff;
   border-radius: 4px;
-  margin-bottom: 0.5rem;
   cursor: pointer;
   transition: all;
   transition-duration: 300ms;
@@ -81,4 +80,14 @@
   background-color: #f0f0f0;
   outline: none;
   padding-left: 0.5rem;
+}
+
+.feedbackContainer {
+  width: 100%;
+  background-color: #f2f2f2;
+  margin-bottom: 0.5rem;
+  border-radius: 0 0 6px 6px;
+  overflow-y: scroll;
+  transition: all;
+  transition-duration: 500ms;
 }

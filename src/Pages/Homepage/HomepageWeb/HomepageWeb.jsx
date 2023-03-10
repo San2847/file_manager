@@ -31,6 +31,7 @@ import SendApprovalModal from "../../../Components/Uncommon/SendApprovalModal/Se
 import VersionConfirmation from "../../../Components/Uncommon/VersionConfirmation/VersionConfirmation";
 import UploadNewVersion from "../../../Components/Uncommon/UploadNewVersion/UploadNewVersion";
 import MoveModal from "../../../Components/Uncommon/MoveModal/MoveModal";
+import CreateFolderModal from "../../../Components/Uncommon/CreateFolderModal/CreateFolderModal";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
@@ -133,17 +134,7 @@ const HomepageWeb = () => {
   };
 
   const createEmptyFolder = async () => {
-    let obj = {
-      userId: getUserId(),
-      folderName: "New Folder",
-      fileDetails: [],
-    };
-    const res = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, obj);
-    if (res && !res.error) {
-      getFiles(1);
-    } else {
-      console.log(res.error);
-    }
+    dispatch(setModalState({ modal: "createFolderModal", state: true }));
   };
 
   const deleteEmptyFile = async (fileContainerId) => {
@@ -177,6 +168,7 @@ const HomepageWeb = () => {
       <VersionConfirmation />
       <UploadNewVersion />
       <MoveModal />
+      <CreateFolderModal />
       <div className="container-box">
         <div className={styles.container}>
           {/* multiple files selected option box */}
