@@ -277,7 +277,7 @@ const HomepageWeb = () => {
                   </div>
                 )}
               </div>
-              {fileTypeTab === "all" ? internalTab === "internal" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} /> : <FilesTable fileData={clientFilesArr} />}
+              {internalTab === "internal" ? fileTypeTab === "all" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} /> : <FilesTable fileData={clientFilesArr} />}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
               <FileDetailsAndVersion />
