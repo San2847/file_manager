@@ -37,12 +37,16 @@ const HomepageWeb = () => {
   const dispatch = useDispatch();
   const { fileTypeTab, internalTab, detailsVersionTab, fileUploadProgress, fileFolderArr, onlyFilesArr, fileCheckBoxArr, allEmptyFiles } = useSelector((state) => state.filemanager);
 
+  const [clientFilesArr, setClientFilesArr] = useState([]);
+
   const statusObj = {
     all: 1,
     approved: 2,
     discussion: 0,
     execution: 3,
   };
+
+  let user = "internal";
 
   const [uploadingFile, setUploadingFile] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
@@ -213,10 +217,10 @@ const HomepageWeb = () => {
                 <Dropdown>
                   <Dropdown.Toggle className={styles.actionButtons}>New Upload</Dropdown.Toggle>
                   <Dropdown.Menu className="py-1">
-                    <Dropdown.Item className="d-flex align-items-center px-2" style={{fontSize: "14px"}} onClick={() => uploadFileRef.current.click()}>
+                    <Dropdown.Item className="d-flex align-items-center px-2" style={{ fontSize: "14px" }} onClick={() => uploadFileRef.current.click()}>
                       <AiOutlineFile style={{ marginRight: "0.25rem" }} /> Upload File
                     </Dropdown.Item>
-                    <Dropdown.Item className="d-flex align-items-center px-2" style={{fontSize: "14px"}} onClick={() => uploadFolderRef.current.click()}>
+                    <Dropdown.Item className="d-flex align-items-center px-2" style={{ fontSize: "14px" }} onClick={() => uploadFolderRef.current.click()}>
                       <RiFolder2Line style={{ marginRight: "0.25rem" }} /> Upload Folder
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -262,16 +266,18 @@ const HomepageWeb = () => {
           <div style={{ width: "100%", height: "75%", display: "flex", justifyContent: "space-between" }}>
             <div className={styles.filesTableContainer} style={detailsVersionTab === "" ? { width: "100%" } : { width: "70%" }}>
               <div className="d-flex justify-content-end mb-2">
-                <div className={styles.internalTabContainer}>
-                  <div className={internalTab === "internal" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("internal"))}>
-                    Internal
+                {user === "internal" && (
+                  <div className={styles.internalTabContainer}>
+                    <div className={internalTab === "internal" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("internal"))}>
+                      Internal
+                    </div>
+                    <div className={internalTab === "client" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("client"))}>
+                      Client
+                    </div>
                   </div>
-                  <div className={internalTab === "client" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("client"))}>
-                    Client
-                  </div>
-                </div>
+                )}
               </div>
-              {fileTypeTab === "all" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} />}
+              {fileTypeTab === "all" ? internalTab === "internal" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} /> : <FilesTable fileData={clientFilesArr} />}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
               <FileDetailsAndVersion />
