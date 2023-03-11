@@ -212,11 +212,11 @@ const HomepageWeb = () => {
                 <input className="d-none" ref={uploadFolderRef} webkitdirectory="true" onChange={uploadFolder} type="file" name="" id="" />
                 <Dropdown>
                   <Dropdown.Toggle className={styles.actionButtons}>New Upload</Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item className="d-flex align-items-center" onClick={() => uploadFileRef.current.click()}>
+                  <Dropdown.Menu className="py-1">
+                    <Dropdown.Item className="d-flex align-items-center px-2" style={{fontSize: "14px"}} onClick={() => uploadFileRef.current.click()}>
                       <AiOutlineFile style={{ marginRight: "0.25rem" }} /> Upload File
                     </Dropdown.Item>
-                    <Dropdown.Item className="d-flex align-items-center" onClick={() => uploadFolderRef.current.click()}>
+                    <Dropdown.Item className="d-flex align-items-center px-2" style={{fontSize: "14px"}} onClick={() => uploadFolderRef.current.click()}>
                       <RiFolder2Line style={{ marginRight: "0.25rem" }} /> Upload Folder
                     </Dropdown.Item>
                   </Dropdown.Menu>

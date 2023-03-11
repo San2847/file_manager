@@ -111,3 +111,38 @@
   transition: all;
   transition-duration: 300ms;
 }
+
+.uploadContainer {
+  height: 10rem;
+  width: 100%;
+  overflow-y: scroll;
+}
+.uploadFilesIcon {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background-color: #f7f7f7;
+  flex-direction: column;
+  cursor: pointer;
+  transition: background-color;
+  transition-duration: 300ms;
+}
+.uploadFilesIcon:hover {
+  background-color: #e6e6e6;
+}
+
+.uploadedFilesContainer {
+  height: 10rem;
+  width: 100%;
+  overflow-y: scroll;
+}
+.addMoreButton {
+  font-weight: 600;
+  font-size: 14px;
+  color: #003566;
+  cursor: pointer;
+  user-select: none;
+}

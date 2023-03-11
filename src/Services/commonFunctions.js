@@ -19,18 +19,19 @@ export const getFiles = async (status) => {
         return curElem.folderName && curElem.fileDetails.length === 0;
       });
       let updatedItemArray = y.filter((curElem) => {
-        return curElem.updateTime !== undefined;
+        return curElem.fileDetails[0].updateTime !== undefined;
       });
       let otherItemArray = y.filter((curElem) => {
         return !curElem.updateTime;
       });
-      updatedItemArray.sort((a, b) => new Date(a.updateTime).getTime() - new Date(b.updateTime).getTime());
+
+      updatedItemArray.sort((a, b) => new Date(a.fileDetails[0].updateTime).getTime() - new Date(b.fileDetails[0].updateTime).getTime());
 
       // this one to delete any empty file containers
       let z = res.data.filter((curElem) => {
         return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
       });
-      store.dispatch(saveFileAndFolder([...x, ...[...updatedItemArray.reverse(), ...otherItemArray]]));
+      store.dispatch(saveFileAndFolder([...x.reverse(), ...updatedItemArray.reverse(), ...otherItemArray]));
       store.dispatch(saveAllEmptyFiles([...z].flat()));
       store.dispatch(saveEmptyFolders([...emptyFolders]));
       store.dispatch(setLoadingState(false));

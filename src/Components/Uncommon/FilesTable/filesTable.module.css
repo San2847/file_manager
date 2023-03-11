@@ -141,7 +141,7 @@
 }
 
 .feedbackBox {
-  overflow-y: hidden;
+  overflow-y: scroll;
   transition: height;
   transition-duration: 500ms;
 }
@@ -177,6 +177,11 @@
   justify-content: center;
   align-items: center;
   margin-right: 0.25rem;
+  transition: all;
+  transition-duration: 300ms;
+}
+.approveTick:hover {
+  transform: scale(1.1);
 }
 .addFeed {
   background-color: #0077b6;
@@ -188,6 +193,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all;
+  transition-duration: 300ms;
+}
+.addFeed:hover {
+  transform: scale(1.1);
 }
 
 .feedbackInput {

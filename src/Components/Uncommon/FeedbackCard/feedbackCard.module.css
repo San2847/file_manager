@@ -3,4 +3,72 @@
   margin-bottom: 0.5rem;
   border-radius: 4px;
   padding: 0.5rem;
+  transition: background-color;
+  transition-duration: 300ms;
+}
+
+.firstFeedback {
+  background-color: #ffffff;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color;
+  transition-duration: 300ms;
+}
+.firstFeedback:hover {
+  background-color: #3183d018;
+}
+
+.replyBox {
+  width: 100%;
+  background-color: #f7f7f7;
+  overflow-y: scroll;
+}
+.inactiveReplyBox {
+  height: 0;
+}
+.activeReplyBox {
+  max-height: 10rem;
+}
+
+.outlineButton {
+  background-color: #00000000;
+  border: 1px solid #003566;
+  color: #003566;
+  font-size: 14px;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+.submitButton {
+  background-color: #003566;
+  color: #ffffff;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid #003566;
+  padding: 0.25rem 0.5rem;
+}
+.replyInput {
+  width: 100%;
+  border: 1.5px solid #21212166;
+  border-radius: 8px;
+  background-color: #00000000;
+  margin-bottom: 1rem;
+}
+.replyInput textarea {
+  border: none;
+  width: 100%;
+  resize: none;
+  background-color: #00000000;
+  outline: none;
+  padding: 0.5rem;
+}
+.sendForApproval {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  padding: 0 1rem 0.5rem 0.7rem;
+  cursor: pointer;
+  color: #333333;
 }

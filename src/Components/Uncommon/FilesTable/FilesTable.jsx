@@ -48,6 +48,11 @@ const FilesTable = ({ fileData }) => {
   const [drawTypeTest, setDrawTypeTest] = useState("");
   const [showInput, setShowInput] = useState("");
 
+  let inlineInactive = {
+    pointerEvents: "none",
+    color: "#dfdfdf",
+  };
+
   const spaceDrawInput = (event) => {
     const { name, value } = event.target;
     if (name === "spaceName") {
@@ -111,14 +116,18 @@ const FilesTable = ({ fileData }) => {
   };
 
   const getFileStatus = (file) => {
-    if (file.isSendForExecution === true) {
-      return `In-Execution`;
-    } else if (file.isSendForApproval === true) {
-      return `Approval Pending`;
-    } else if (file.isSelfApproved === true) {
-      return `Self Approved`;
+    if (file.status === 2) {
+      return `Approved`;
     } else {
-      return `-`;
+      if (file.isSendForExecution === true) {
+        return `In-Execution`;
+      } else if (file.isSendForApproval === true) {
+        return `Approval Pending`;
+      } else if (file.isSelfApproved === true) {
+        return `Self Approved`;
+      } else {
+        return `-`;
+      }
     }
   };
 
@@ -224,22 +233,35 @@ const FilesTable = ({ fileData }) => {
     //       return curElem.isRead === false;
     //     })
     //   : [];
-    if (obj.file && obj.file.approvalRequestTo === getUserId()) {
-      if (obj.file.feedBack.length > 0) {
-        return "feed";
-      } else {
-        if (obj.file.isSendForApproval === true) {
-          if (obj.file.isSendForExecution === true) {
-            return "approval";
-          } else {
-            return "approval";
-          }
-        } else {
-          return "feed";
-        }
-      }
-    } else {
+    if (obj.file.status === 2) {
       return "feed";
+    } else {
+      if (obj.file && obj.file.approvalRequestTo === getUserId()) {
+        if (obj.file.feedBack.length > 0) {
+          return "feed";
+        } else {
+          if (obj.file.isSendForApproval === true) {
+            if (obj.file.isSendForExecution === true) {
+              return "approval";
+            } else {
+              return "approval";
+            }
+          } else {
+            return "feed";
+          }
+        }
+      } else {
+        return "feed";
+      }
+    }
+  };
+
+  const approveFiles = async (fileObj) => {
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
+    if (res && !res.error) {
+      getFiles(1);
+    } else {
+      console.log(res.error);
     }
   };
 
@@ -454,14 +476,18 @@ const FilesTable = ({ fileData }) => {
 
                           {/* this part is for approval and feedback buttons for normal files */}
                           {detailsVersionTab === "" && (
-                            <div
-                              className={styles.commentButton}
-                              style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}
-                            >
+                            <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                               {!curElem.folderName &&
                                 (showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] }) === "approval" ? (
                                   <div className="d-flex">
-                                    <div className={styles.approveTick} title="Approve" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
+                                    <div
+                                      className={styles.approveTick}
+                                      title="Approve"
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        approveFiles({ container: curElem, file: curElem.fileDetails[0] });
+                                      }}
+                                    >
                                       <BsCheck />
                                     </div>
                                     <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
@@ -469,9 +495,10 @@ const FilesTable = ({ fileData }) => {
                                     </div>
                                   </div>
                                 ) : openedInfo?.file && openedInfo?.file?._id === curElem?.fileDetails[0]?._id ? (
-                                  <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                  <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
                                 ) : (
                                   <RiChatQuoteLine
+                                    className={styles.commentButton}
                                     onClick={(event) => {
                                       openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
                                       getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
@@ -523,7 +550,7 @@ const FilesTable = ({ fileData }) => {
                               </Dropdown.Toggle>
                               <Dropdown.Menu rootCloseEvent={() => setOpenedDrop("")}>
                                 <Dropdown.Item
-                                  style={{ fontSize: "12px" }}
+                                  style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                   onClick={(event) => {
                                     event.stopPropagation();
                                     if (curElem.folderName) {
@@ -570,7 +597,7 @@ const FilesTable = ({ fileData }) => {
                                 {!curElem.folderName && (
                                   <>
                                     <Dropdown.Item
-                                      style={{ fontSize: "12px" }}
+                                      style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                       onClick={(event) => {
                                         event.stopPropagation();
                                         dispatch(setFilesGoingFor("approval"));
@@ -581,7 +608,7 @@ const FilesTable = ({ fileData }) => {
                                       Send for Approval
                                     </Dropdown.Item>
                                     <Dropdown.Item
-                                      style={{ fontSize: "12px" }}
+                                      style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                       onClick={(event) => {
                                         event.stopPropagation();
                                         dispatch(setFilesGoingFor("execution"));
@@ -596,7 +623,7 @@ const FilesTable = ({ fileData }) => {
                                 )}
                                 <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
                                 <Dropdown.Item
-                                  style={{ fontSize: "12px", color: "red" }}
+                                  style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px", color: "red" }}
                                   onClick={(event) => {
                                     event.stopPropagation();
                                     if (curElem.folderName) {
@@ -758,13 +785,17 @@ const FilesTable = ({ fileData }) => {
                                           {getFileStatus(cur)}
                                         </div>
                                         {detailsVersionTab === "" && (
-                                          <div
-                                            className={styles.commentButton}
-                                            style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}
-                                          >
+                                          <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                                             {showApprovalOrFeed({ container: curElem, file: cur }) === "approval" ? (
                                               <div className="d-flex">
-                                                <div className={styles.approveTick} title="Approve" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
+                                                <div
+                                                  className={styles.approveTick}
+                                                  title="Approve"
+                                                  onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    approveFiles({ container: curElem, file: cur });
+                                                  }}
+                                                >
                                                   <BsCheck />
                                                 </div>
                                                 <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
@@ -772,9 +803,10 @@ const FilesTable = ({ fileData }) => {
                                                 </div>
                                               </div>
                                             ) : openedInfo?.file && openedInfo?.file?._id === cur?._id ? (
-                                              <RiChatQuoteFill onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
                                             ) : (
                                               <RiChatQuoteLine
+                                                className={styles.commentButton}
                                                 onClick={(event) => {
                                                   openInfo(event, { container: curElem, file: cur });
                                                   getFileFeedback({ container: curElem, file: cur });
@@ -829,7 +861,7 @@ const FilesTable = ({ fileData }) => {
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu rootCloseEvent={() => setOpenedDrop("")}>
                                               <Dropdown.Item
-                                                style={{ fontSize: "12px" }}
+                                                style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                                 onClick={() => {
                                                   dispatch(selectFileFolderToBeRenamed({ container: curElem, fileOrFold: cur, type: "inside" }));
                                                   dispatch(setModalState({ modal: "renameModal", state: true }));
@@ -864,7 +896,7 @@ const FilesTable = ({ fileData }) => {
                                                 Send for Approval
                                               </Dropdown.Item>
                                               <Dropdown.Item
-                                                style={{ fontSize: "12px" }}
+                                                style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                                 onClick={(event) => {
                                                   event.stopPropagation();
                                                   dispatch(setFilesGoingFor("execution"));
@@ -881,7 +913,10 @@ const FilesTable = ({ fileData }) => {
                                                 File Details
                                               </Dropdown.Item>
                                               <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
-                                              <Dropdown.Item style={{ color: "red", fontSize: "12px" }} onClick={() => deleteSingleFileOrFolder({ container: curElem, file: cur })}>
+                                              <Dropdown.Item
+                                                style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px", color: "red" }}
+                                                onClick={() => deleteSingleFileOrFolder({ container: curElem, file: cur })}
+                                              >
                                                 Delete File
                                               </Dropdown.Item>
                                             </Dropdown.Menu>

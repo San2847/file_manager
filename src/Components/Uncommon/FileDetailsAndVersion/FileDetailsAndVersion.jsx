@@ -30,7 +30,7 @@ const FileDetailsAndVersion = () => {
   const dataArray = [
     {
       label: "Upload Date",
-      data: "-",
+      data: detailsVersionBox.container ? createDateString(detailsVersionBox.container.createdAt) : "-",
     },
     {
       label: "File Type",
