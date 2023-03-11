@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/file-beta/static/css/main.d34381e6.css",
-    "main.js": "/file-beta/static/js/main.34db5e32.js",
+    "main.css": "/file-beta/static/css/main.66b7ef0a.css",
+    "main.js": "/file-beta/static/js/main.a48554f0.js",
     "static/js/787.fa554ae2.chunk.js": "/file-beta/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-beta/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/comp_logo.svg": "/file-beta/static/media/comp_logo.f4b34d724faac0ef4c1203bc01be63ab.svg",
@@ -10,12 +10,12 @@
     "static/media/medal.svg": "/file-beta/static/media/medal.eacb404a0688d9c2018753eb679f4314.svg",
     "static/media/feedbackIcon.svg": "/file-beta/static/media/feedbackIcon.48446e876c6fa11f529858f7e43de716.svg",
     "index.html": "/file-beta/index.html",
-    "main.d34381e6.css.map": "/file-beta/static/css/main.d34381e6.css.map",
-    "main.34db5e32.js.map": "/file-beta/static/js/main.34db5e32.js.map",
+    "main.66b7ef0a.css.map": "/file-beta/static/css/main.66b7ef0a.css.map",
+    "main.a48554f0.js.map": "/file-beta/static/js/main.a48554f0.js.map",
     "787.fa554ae2.chunk.js.map": "/file-beta/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d34381e6.css",
-    "static/js/main.34db5e32.js"
+    "static/css/main.66b7ef0a.css",
+    "static/js/main.a48554f0.js"
   ]
 }

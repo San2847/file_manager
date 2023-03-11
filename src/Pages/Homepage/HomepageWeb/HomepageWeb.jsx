@@ -32,6 +32,7 @@ import VersionConfirmation from "../../../Components/Uncommon/VersionConfirmatio
 import UploadNewVersion from "../../../Components/Uncommon/UploadNewVersion/UploadNewVersion";
 import MoveModal from "../../../Components/Uncommon/MoveModal/MoveModal";
 import CreateFolderModal from "../../../Components/Uncommon/CreateFolderModal/CreateFolderModal";
+import SelfApprovalConfirmationModal from "../../../Components/Uncommon/SelfApprovalConfirmationModal/SelfApprovalConfirmationModal";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
@@ -173,6 +174,7 @@ const HomepageWeb = () => {
       <UploadNewVersion />
       <MoveModal />
       <CreateFolderModal />
+      <SelfApprovalConfirmationModal />
       <div className="container-box">
         <div className={styles.container}>
           {/* multiple files selected option box */}

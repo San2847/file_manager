@@ -24,6 +24,7 @@ const initialState = {
   uploadNewVersion: false,
   moveModal: false,
   createFolderModal: false,
+  selfApprovalConfirmation: false,
 
   fileUploadProgress: 0,
   fileFolderToBeRenamed: {},

@@ -27,10 +27,11 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import RenameModal from "../RenameModal/RenameModal";
 import { getReq, postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
-import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
+import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
+import axios from "axios";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
@@ -113,22 +114,6 @@ const FilesTable = ({ fileData }) => {
     const month = dArr[date.getMonth()];
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
-  };
-
-  const getFileStatus = (file) => {
-    if (file.status === 2) {
-      return `Approved`;
-    } else {
-      if (file.isSendForExecution === true) {
-        return `In-Execution`;
-      } else if (file.isSendForApproval === true) {
-        return `Approval Pending`;
-      } else if (file.isSelfApproved === true) {
-        return `Self Approved`;
-      } else {
-        return `-`;
-      }
-    }
   };
 
   const deleteSingleFileOrFolder = async (item) => {
@@ -263,6 +248,22 @@ const FilesTable = ({ fileData }) => {
     } else {
       console.log(res.error);
     }
+  };
+
+  const downloadFile = (file) => {
+    axios({
+      url: file.fileLink,
+      method: "GET",
+      responseType: "blob",
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", file.fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    });
   };
 
   useEffect(() => {
@@ -549,7 +550,14 @@ const FilesTable = ({ fileData }) => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu rootCloseEvent={() => setOpenedDrop("")}>
                               <Dropdown.Item
-                                style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                                style={
+                                  !curElem.folderName &&
+                                  (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                    getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                    getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                    ? { fontSize: "12px", ...inlineInactive }
+                                    : { fontSize: "12px" }
+                                }
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   if (curElem.folderName) {
@@ -596,18 +604,36 @@ const FilesTable = ({ fileData }) => {
                               {!curElem.folderName && (
                                 <>
                                   <Dropdown.Item
-                                    style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                                    style={
+                                      !curElem.folderName &&
+                                      (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                        getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                        getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                        ? { fontSize: "12px", ...inlineInactive }
+                                        : { fontSize: "12px" }
+                                    }
                                     onClick={(event) => {
                                       event.stopPropagation();
                                       dispatch(setFilesGoingFor("approval"));
                                       dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
-                                      dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                      if (localStorage.getItem("position") === "admin") {
+                                        dispatch(setModalState({ modal: "selfApprovalConfirmation", state: true }));
+                                      } else {
+                                        dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                      }
                                     }}
                                   >
                                     Send for Approval
                                   </Dropdown.Item>
                                   <Dropdown.Item
-                                    style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                                    style={
+                                      !curElem.folderName &&
+                                      (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                        getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                        getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                        ? { fontSize: "12px", ...inlineInactive }
+                                        : { fontSize: "12px" }
+                                    }
                                     onClick={(event) => {
                                       event.stopPropagation();
                                       dispatch(setFilesGoingFor("execution"));
@@ -617,12 +643,21 @@ const FilesTable = ({ fileData }) => {
                                   >
                                     Send for Execution
                                   </Dropdown.Item>
-                                  <Dropdown.Item style={{ fontSize: "12px" }}>Download</Dropdown.Item>
+                                  <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile(curElem.fileDetails[0])}>
+                                    Download
+                                  </Dropdown.Item>
                                 </>
                               )}
                               <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
                               <Dropdown.Item
-                                style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px", color: "red" }}
+                                style={
+                                  !curElem.folderName &&
+                                  (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                    getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                    getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                    ? { fontSize: "12px", ...inlineInactive }
+                                    : { fontSize: "12px", color: "red" }
+                                }
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   if (curElem.folderName) {
@@ -644,7 +679,14 @@ const FilesTable = ({ fileData }) => {
                           <div className={styles.feedbackContainer}>
                             {fileFeedArr &&
                               fileFeedArr.map((eachFeed, index) => {
-                                return <FeedbackCard feedData={eachFeed} currentVer={index === 0} name={openedInfo.file ? openedInfo.file.fileName : ""} />;
+                                return (
+                                  <FeedbackCard
+                                    feedData={eachFeed}
+                                    currentVer={index === 0}
+                                    name={openedInfo.file ? openedInfo.file.fileName : ""}
+                                    containerAndFile={{ container: curElem, file: curElem.fileDetails[0] }}
+                                  />
+                                );
                               })}
                           </div>
                         </div>
@@ -860,7 +902,11 @@ const FilesTable = ({ fileData }) => {
                                           </Dropdown.Toggle>
                                           <Dropdown.Menu rootCloseEvent={() => setOpenedDrop("")}>
                                             <Dropdown.Item
-                                              style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                                              style={
+                                                getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
+                                                  ? { fontSize: "12px", ...inlineInactive }
+                                                  : { fontSize: "12px" }
+                                              }
                                               onClick={() => {
                                                 dispatch(selectFileFolderToBeRenamed({ container: curElem, fileOrFold: cur, type: "inside" }));
                                                 dispatch(setModalState({ modal: "renameModal", state: true }));
@@ -881,7 +927,11 @@ const FilesTable = ({ fileData }) => {
                                               Upload new version
                                             </Dropdown.Item>
                                             <Dropdown.Item
-                                              style={{ fontSize: "12px" }}
+                                              style={
+                                                getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
+                                                  ? { fontSize: "12px", ...inlineInactive }
+                                                  : { fontSize: "12px" }
+                                              }
                                               onClick={(event) => {
                                                 event.stopPropagation();
                                                 dispatch(setFilesGoingFor("approval"));
@@ -892,7 +942,11 @@ const FilesTable = ({ fileData }) => {
                                               Send for Approval
                                             </Dropdown.Item>
                                             <Dropdown.Item
-                                              style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                                              style={
+                                                getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
+                                                  ? { fontSize: "12px", ...inlineInactive }
+                                                  : { fontSize: "12px" }
+                                              }
                                               onClick={(event) => {
                                                 event.stopPropagation();
                                                 dispatch(setFilesGoingFor("execution"));
@@ -907,7 +961,11 @@ const FilesTable = ({ fileData }) => {
                                             </Dropdown.Item>
                                             <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
                                             <Dropdown.Item
-                                              style={getFileStatus(cur) === "Approved" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px", color: "red" }}
+                                              style={
+                                                getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
+                                                  ? { fontSize: "12px", ...inlineInactive }
+                                                  : { fontSize: "12px", color: "red" }
+                                              }
                                               onClick={() => deleteSingleFileOrFolder({ container: curElem, file: cur })}
                                             >
                                               Delete File
@@ -921,7 +979,14 @@ const FilesTable = ({ fileData }) => {
                                       <div className={styles.feedbackContainer}>
                                         {fileFeedArr &&
                                           fileFeedArr.map((eachFeed, index) => {
-                                            return <FeedbackCard feedData={eachFeed} currentVer={index === 0} name={openedInfo.file ? openedInfo.file.fileName : ""} />;
+                                            return (
+                                              <FeedbackCard
+                                                feedData={eachFeed}
+                                                currentVer={index === 0}
+                                                name={openedInfo.file ? openedInfo.file.fileName : ""}
+                                                containerAndFile={{ container: curElem, file: cur }}
+                                              />
+                                            );
                                           })}
                                       </div>
                                     </div>

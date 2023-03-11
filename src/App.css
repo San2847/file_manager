@@ -1,38 +1,43 @@
-.App {
-  text-align: center;
+.yesButton {
+  border: none;
+  background-color: #003566;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #ffffff;
+  margin-left: 1rem;
+  transition: all;
+  transition-duration: 300ms;
+}
+.noButton {
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #888888;
+  transition: all;
+  transition-duration: 300ms;
+}
+.outlineButton {
+  border: none;
+  background-color: #ffffff;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #003566;
+  margin-left: 1rem;
+  border: 1px solid #003566;
+  transition: all;
+  transition-duration: 300ms;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.yesButton:hover {
+  box-shadow: 4px 0 10px #00000055;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.noButton:hover {
+  box-shadow: 4px 0 10px #00000055;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.outlineButton:hover {
+  box-shadow: 4px 0 10px #00000055;
 }

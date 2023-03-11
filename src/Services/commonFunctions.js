@@ -1,5 +1,5 @@
 import { apiLinks, monthArr } from "../constants/constants";
-import { saveAllEmptyFiles, saveEmptyFolders, saveFileAndFolder, saveOnlyFiles, setLoadingState } from "../Redux/slices/filemanagerSlice";
+import { clearArrayForApproval, saveAllEmptyFiles, saveEmptyFolders, saveFileAndFolder, saveOnlyFiles, setLoadingState, setModalState } from "../Redux/slices/filemanagerSlice";
 import store from "../Redux/store";
 import { getReq, postReq } from "./api";
 import { getUserId } from "./authService";
@@ -95,5 +95,41 @@ export const saveFileChangesAsVersion = async (contFile) => {
     }
   } else {
     console.log(res.error);
+  }
+};
+
+export const approveFile = async (fileObj, modalName) => {
+  // const res = await postReq(`${apiLinks.pmt}/api/file-manager/self-approved?type=2`, { approvedBy: getUserId(), files: [{ id: fileObj.container._id, fileId: fileObj.file._id }] });
+  // if (res && !res.error) {
+  //   store.dispatch(setModalState({ modal: modalName, state: false }));
+  //   store.dispatch(clearArrayForApproval());
+  //   getFiles(1);
+  // } else {
+  //   console.log(res.error);
+  // }
+
+  const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
+  if (res && !res.error) {
+    store.dispatch(setModalState({ modal: modalName, state: false }));
+    store.dispatch(clearArrayForApproval());
+    getFiles(1);
+  } else {
+    console.log(res.error);
+  }
+};
+
+export const getFileStatus = (file) => {
+  if (file.status === 2) {
+    return `Approved`;
+  } else {
+    if (file.isSendForExecution === true) {
+      return `In-Execution`;
+    } else if (file.isSendForApproval === true) {
+      return `Approval Pending`;
+    } else if (file.isSelfApproved === true) {
+      return `Self Approved`;
+    } else {
+      return `-`;
+    }
   }
 };

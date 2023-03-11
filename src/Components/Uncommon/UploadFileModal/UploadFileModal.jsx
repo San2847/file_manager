@@ -64,8 +64,6 @@ const UploadFileModal = () => {
     }
   };
 
-  console.log(uploadedFiles);
-
   const createDateString = (dateItem) => {
     const arr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const day = new Date(dateItem).getDate();

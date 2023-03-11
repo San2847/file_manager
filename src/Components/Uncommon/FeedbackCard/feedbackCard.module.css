@@ -72,3 +72,25 @@
   cursor: pointer;
   color: #333333;
 }
+
+.eachReplyContainer {
+  padding: 0.5rem;
+}
+.eachReply {
+  background-color: #f7f7f7;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+.replyDate {
+  font-size: 10px;
+  color: #333333cc;
+}
+.replyHeading {
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+}
+.replyText {
+  font-size: 14px;
+  color: #333333;
+}

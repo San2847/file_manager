@@ -6,7 +6,7 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import styles from "./onlyFilesTable.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdImage } from "react-icons/io";
-import { createDateString } from "../../../Services/commonFunctions";
+import { createDateString, getFileStatus } from "../../../Services/commonFunctions";
 import { RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import FeedbackCard from "../FeedbackCard/FeedbackCard";
 
@@ -100,7 +100,7 @@ const OnlyFilesTable = ({ fileData }) => {
                     <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>
                       {curElem.updateTime ? createDateString(curElem.updateTime) : "-"}
                     </div>
-                    <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>{curElem.status === 0 ? "Approval Pending" : "-"}</div>
+                    <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "500" }}>{getFileStatus(curElem)}</div>
                     {detailsVersionTab === "" && (
                       <div style={{ width: "10%", fontSize: "12px", color: "#333333", fontWeight: "500", display: "flex", justifyContent: "center" }}>
                         {openedFeedback._id === curElem._id ? (
