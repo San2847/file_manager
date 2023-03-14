@@ -137,7 +137,7 @@ const FilesTable = ({ fileData }) => {
   const handleNewVersionUpload = async (event) => {
     const { files } = event.target;
     let filesToUpload = new FormData();
-    filesToUpload.append("bucketName", "idesignchat");
+    filesToUpload.append("bucketName", `${process.env.REACT_APP_BUCKET_NAME}`);
     filesToUpload.append("files", files[0]);
     const res = await putReq(`${apiLinks.s3api}/api/upload`, filesToUpload);
     if (res && !res.error) {

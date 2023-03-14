@@ -3,19 +3,21 @@ import { TbFolders, TbCurrencyRupee, TbReportAnalytics } from "react-icons/tb";
 import { IoMdFolderOpen } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
 import { RiChat1Line } from "react-icons/ri";
+import { FaMoneyCheckAlt } from "react-icons/fa";
 
+let BASE_URL = "http://erp.essentiaenvironments.com";
 export const sidebarLinks = [
   {
-    label: "Dashboard",
+    label: "Manage Leads",
     link: "/",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#1B4332",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#89c7ff",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -26,8 +28,8 @@ export const sidebarLinks = [
       </div>
     ),
     visible: true,
-    active: true,
-    href: "/dashboard",
+    active: false,
+    href: `${BASE_URL}/leads/`,
   },
   {
     label: "All Projects",
@@ -35,11 +37,11 @@ export const sidebarLinks = [
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#EF8354",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#ffe380",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -51,19 +53,19 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "/all-projects",
+    href: `${BASE_URL}/pmt/`,
   },
   {
-    label: "Quotation",
+    label: "Design Quotation",
     link: "/quotation",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#7209B7",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#f586ff",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -75,19 +77,43 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "/quotation",
+    href: `${BASE_URL}/quotation/enterprise-landing-page`,
   },
   {
-    label: "Files",
-    link: "/files",
+    label: "Quotation",
+    link: "/quotation",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#F2B007",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#f586ff",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginRight: "0.5rem",
+        }}
+      >
+        <TbCurrencyRupee />
+      </div>
+    ),
+    visible: true,
+    active: false,
+    href: `${BASE_URL}/quotation/`,
+  },
+  {
+    label: "Files",
+    link: "",
+    icon: (
+      <div
+        style={{
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#ffbd70",
+          color: "#ffffff",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -98,20 +124,20 @@ export const sidebarLinks = [
       </div>
     ),
     visible: true,
-    active: false,
-    href: "/files",
+    active: true,
+    href: "#",
   },
   {
     label: "Timelines",
-    link: "/timelines",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#718355",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#78f58c",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -123,7 +149,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "/timelines",
+    href: `#`,
   },
   {
     label: "Task Manager",
@@ -131,11 +157,11 @@ export const sidebarLinks = [
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
+          width: "1.8rem",
+          height: "1.8rem",
           backgroundColor: "#B7094C",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -145,25 +171,25 @@ export const sidebarLinks = [
         <CiViewList />
       </div>
     ),
-    visible: true,
+    visible: false,
     active: false,
-    href: "/task-manager",
+    href: `#`,
   },
   {
     label: "MOM",
-    link: "/mom",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
+          width: "1.8rem",
+          height: "1.8rem",
           fontSize: "10px",
-          borderRadius: "50%",
+          borderRadius: "4px",
           marginRight: "0.5rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#3D348B",
+          backgroundColor: "#7fe8ff",
           color: "#ffffff",
         }}
       >
@@ -172,19 +198,19 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "/mom",
+    href: `#`,
   },
   {
     label: "Moodboard",
-    link: "/moodboard",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
+          width: "1.8rem",
+          height: "1.8rem",
           backgroundColor: "#247BA0",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -194,25 +220,25 @@ export const sidebarLinks = [
         <MdOutlineSpaceDashboard />
       </div>
     ),
-    visible: true,
+    visible: false,
     active: false,
-    href: "/moodboard",
+    href: `${BASE_URL}/moodboard`,
   },
   {
     label: "Vendor & PO’s",
-    link: "/vendor-po",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
+          width: "1.8rem",
+          height: "1.8rem",
           fontSize: "10px",
-          borderRadius: "50%",
+          borderRadius: "4px",
           marginRight: "0.5rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#EF233C",
+          backgroundColor: "#9296ff",
           color: "#ffffff",
         }}
       >
@@ -221,19 +247,44 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "/vendor-po",
+    href: "#",
   },
+
   {
-    label: "Chat",
-    link: "/chat",
+    label: "Accounts",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
-          backgroundColor: "#FF5D8F",
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#247BA0",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginRight: "0.5rem",
+        }}
+      >
+        <FaMoneyCheckAlt />
+      </div>
+    ),
+    visible: true,
+    active: false,
+    href: "#",
+  },
+  {
+    label: "Chat",
+    link: "",
+    icon: (
+      <div
+        style={{
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#c881ff",
+          color: "#ffffff",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -243,21 +294,21 @@ export const sidebarLinks = [
         <RiChat1Line />
       </div>
     ),
-    visible: true,
+    visible: false,
     active: false,
-    href: "/chat",
+    href: "#",
   },
   {
     label: "Reports",
-    link: "/reports",
+    link: "",
     icon: (
       <div
         style={{
-          width: "2rem",
-          height: "2rem",
+          width: "1.8rem",
+          height: "1.8rem",
           backgroundColor: "#5E548E",
           color: "#ffffff",
-          borderRadius: "50%",
+          borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -267,8 +318,8 @@ export const sidebarLinks = [
         <TbReportAnalytics />
       </div>
     ),
-    visible: true,
+    visible: false,
     active: false,
-    href: "/reports",
+    href: "#",
   },
 ];

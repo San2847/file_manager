@@ -98,6 +98,6 @@ export const callAPI = async (method = "POST", url = "", data = {}, resType = "j
   }
 };
 
-export const getAllCon = async () => {
-  return await getReq(`https://chat.idesign.market/conversation/${getLoginId()}`, {});
-};
+// export const getAllCon = async () => {
+//   return await getReq(`https://chat.idesign.market/conversation/${getLoginId()}`, {});
+// };

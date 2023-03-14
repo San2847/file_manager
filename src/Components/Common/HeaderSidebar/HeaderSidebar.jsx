@@ -7,15 +7,45 @@ import { Link } from "react-router-dom";
 import { sidebarLinks } from "./sidebarLinks";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import medal from "./SidebarAssets/medal.svg";
+import { apiLinks, BASE_URL } from "../../../constants/constants";
+import { getReq } from "../../../Services/api";
+import { getToken } from "../../../Services/authService";
 
 const HeaderSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const [profileData, setProfileData] = useState({});
+
+  const getProfileData = async () => {
+    const res = await getReq(`${apiLinks.crm}/user/profile`, {}, { Authorization: `Bearer ${getToken()}` });
+    if (res && !res.error) {
+      setProfileData({ ...res.data.data });
+    } else {
+      console.log(res.error);
+      localStorage.clear();
+      window.location.assign(`${BASE_URL}`);
+    }
+  };
+
+  const gotohome = () => {
+    if (getToken()) {
+      window.location.assign(`${BASE_URL}/leads/`);
+    } else {
+      window.location.assign(`${BASE_URL}/`);
+    }
+  };
+
+  useEffect(() => {
+    getProfileData();
+  }, []);
+
   const handleButtonClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
   const handleDropdownItemClick = () => {
-    console.log("hello");
+    localStorage.clear();
+    window.location.assign(`${BASE_URL}/`);
     setIsDropdownOpen(false);
   };
   useEffect(() => {
@@ -32,10 +62,10 @@ const HeaderSidebar = () => {
   return (
     <div className={styles.container} style={{ zIndex: isDropdownOpen ? "999" : "0" }}>
       <div className={styles.header}>
-        <div className={styles.logobox}>
+        <div className={styles.logobox} onClick={gotohome}>
           <img src={logo} alt="" />
         </div>
-        <div className={styles.menubox}>
+        {/* <div className={styles.menubox}>
           <div className={styles.eachHeaderLink}>
             <Link to="/">Manage Leads</Link>
           </div>
@@ -48,29 +78,22 @@ const HeaderSidebar = () => {
           <div className={styles.eachHeaderLink}>
             <Link to="/contact">Community</Link>
           </div>
-        </div>
+        </div> */}
         <div className={styles.profilebox}>
-          <div className={styles.notification}>
+          {/* <div className={styles.notification}>
             <BsBell />
           </div>
           <div className={styles.cart}>
             <AiOutlineShoppingCart />
-          </div>
+          </div> */}
           <div className={styles.profileNameBox} onClick={handleButtonClick}>
             <div className={styles.profileName}>
-              Name <BsChevronDown style={{ marginLeft: "0.25rem" }} />
+              {profileData.fullName} <BsChevronDown style={{ marginLeft: "0.25rem" }} />
             </div>
-            <div className={styles.planPill}>Free Plan</div>
             {isDropdownOpen && (
               <div className={styles.dropdown} ref={dropdownRef}>
                 <div className={styles.dropdownItem} onClick={handleDropdownItemClick}>
-                  Item 1
-                </div>
-                <div className={styles.dropdownItem} onClick={handleDropdownItemClick}>
-                  Item 2
-                </div>
-                <div className={styles.dropdownItem} onClick={handleDropdownItemClick}>
-                  Item 3
+                  Sign Out
                 </div>
               </div>
             )}
@@ -78,7 +101,7 @@ const HeaderSidebar = () => {
         </div>
       </div>
       <div className={styles.sidebar}>
-        <div style={{ height: "80%" }}>
+        <div style={{ height: "100%" }}>
           <div className={styles.createProjectButtonWrapper}>
             <button className={styles.createProjectButton}>
               <AiOutlinePlus style={{ marginRight: "0.25rem" }} />
@@ -89,25 +112,27 @@ const HeaderSidebar = () => {
             <div className={styles.linksContainer}>
               {sidebarLinks.map((curElem, index) => {
                 return (
-                  <div key={index} className={styles.sidebarItem}>
-                    {curElem.link ? (
-                      <Link to={curElem.link} className={styles.sidebarLink}>
-                        {curElem.icon}
-                        <span className={styles.sidebarLabel}>{curElem.label}</span>
-                      </Link>
-                    ) : (
-                      <a href={curElem.href} className={styles.sidebarLink}>
-                        {curElem.icon}
-                        <span className={styles.sidebarLabel}>{curElem.label}</span>
-                      </a>
-                    )}
-                  </div>
+                  curElem.visible && (
+                    <div key={index} className={curElem.active ? styles.activeSidebarItem : styles.sidebarItem}>
+                      {curElem.link ? (
+                        <Link to={curElem.link} className={styles.sidebarLink}>
+                          {curElem.icon}
+                          <span className={styles.sidebarLabel}>{curElem.label}</span>
+                        </Link>
+                      ) : (
+                        <a href={curElem.href} className={styles.sidebarLink}>
+                          {curElem.icon}
+                          <span className={styles.sidebarLabel}>{curElem.label}</span>
+                        </a>
+                      )}
+                    </div>
+                  )
                 );
               })}
             </div>
           </div>
         </div>
-        <div className={styles.upgradeContainer}>
+        {/* <div className={styles.upgradeContainer}>
           <button className={styles.upgradeButton}>
             <img src={medal} alt="" style={{ marginRight: "0.5rem" }} />
             Upgrade to Premium
@@ -121,7 +146,7 @@ const HeaderSidebar = () => {
               <FaPhoneSquareAlt fontSize={24} color="#5255A4" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

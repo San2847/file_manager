@@ -28,7 +28,7 @@ const UploadFileModal = () => {
     const { files } = event.target;
     for (let i = 0; i < files.length; i++) {
       let filesToUpload = new FormData();
-      filesToUpload.append("bucketName", "idesignchat");
+      filesToUpload.append("bucketName", `${process.env.REACT_APP_BUCKET_NAME}`);
       filesToUpload.append("files", event.target.files[i]);
       const res = await putReq(`${apiLinks.s3api}/api/upload`, filesToUpload);
       if (res && !res.error) {

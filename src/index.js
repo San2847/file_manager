@@ -15,7 +15,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <BrowserRouter basename="/file-beta/">
+        <BrowserRouter basename="/file-manager/">
           <App />
         </BrowserRouter>
       </PersistGate>

@@ -1,4 +1,4 @@
-const tokenKey = "jwtToken";
+const tokenKey = "token";
 const id = "userId";
 
 export function getToken() {
