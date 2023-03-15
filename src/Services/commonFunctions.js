@@ -1,5 +1,5 @@
 import { apiLinks, monthArr } from "../constants/constants";
-import { clearArrayForApproval, saveAllEmptyFiles, saveEmptyFolders, saveFileAndFolder, saveOnlyFiles, setLoadingState, setModalState } from "../Redux/slices/filemanagerSlice";
+import { clearArrayForApproval, saveAllEmptyFiles, saveEmptyFolders, saveFileAndFolder, saveOnlyFiles, saveTeamMemberArray, setLoadingState, setModalState } from "../Redux/slices/filemanagerSlice";
 import store from "../Redux/store";
 import { getReq, postReq } from "./api";
 import { getUserId } from "./authService";
@@ -9,29 +9,30 @@ export const getFiles = async (status) => {
     store.dispatch(setLoadingState(true));
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&type=1`);
     if (res && !res.error) {
-      let x = res.data.filter((curElem) => {
-        return curElem.folderName !== undefined;
-      });
-      let y = res.data.filter((curElem) => {
-        return !curElem.folderName;
-      });
+      // let x = res.data.filter((curElem) => {
+      //   return curElem.folderName !== undefined;
+      // });
+      // let y = res.data.filter((curElem) => {
+      //   return !curElem.folderName;
+      // });
       let emptyFolders = res.data.filter((curElem) => {
         return curElem.folderName && curElem.fileDetails.length === 0;
       });
-      let updatedItemArray = y.filter((curElem) => {
-        return curElem.fileDetails[0].updateTime !== undefined;
-      });
-      let otherItemArray = y.filter((curElem) => {
-        return !curElem.updateTime;
-      });
+      // let updatedItemArray = y.filter((curElem) => {
+      //   return curElem.fileDetails[0].updateTime !== undefined;
+      // });
+      // let otherItemArray = y.filter((curElem) => {
+      //   return !curElem.updateTime;
+      // });
+      console.log(res.data);
 
-      updatedItemArray.sort((a, b) => new Date(a.fileDetails[0].updateTime).getTime() - new Date(b.fileDetails[0].updateTime).getTime());
+      // updatedItemArray.sort((a, b) => new Date(a.fileDetails[0].updateTime).getTime() - new Date(b.fileDetails[0].updateTime).getTime());
 
       // this one to delete any empty file containers
       let z = res.data.filter((curElem) => {
         return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
       });
-      store.dispatch(saveFileAndFolder([...x.reverse(), ...updatedItemArray.reverse(), ...otherItemArray]));
+      store.dispatch(saveFileAndFolder([...res.data]));
       store.dispatch(saveAllEmptyFiles([...z].flat()));
       store.dispatch(saveEmptyFolders([...emptyFolders]));
       store.dispatch(setLoadingState(false));
@@ -119,17 +120,29 @@ export const approveFile = async (fileObj, modalName) => {
 };
 
 export const getFileStatus = (file) => {
-  if (file.status === 2) {
-    return `Approved`;
-  } else {
-    if (file.isSendForExecution === true) {
-      return `In-Execution`;
-    } else if (file.isSendForApproval === true) {
-      return `Approval Pending`;
-    } else if (file.isSelfApproved === true) {
-      return `Self Approved`;
+  if (file) {
+    if (file.status === 2) {
+      return `Approved`;
     } else {
-      return `-`;
+      if (file.isSendForExecution === true) {
+        return `In-Execution`;
+      } else if (file.isSendForApproval === true) {
+        return `Approval Pending`;
+      } else if (file.isSelfApproved === true) {
+        return `Self Approved`;
+      } else {
+        return `-`;
+      }
     }
+  }
+};
+
+export const getTeamMembers = async () => {
+  const res = await getReq(`${apiLinks.crm}/api/enterprise/get-team-member?userId=${localStorage.getItem("userId")}`);
+  if (res && !res.error) {
+    console.log(res.data);
+    // store.dispatch(saveTeamMemberArray())
+  } else {
+    console.log(res.error);
   }
 };

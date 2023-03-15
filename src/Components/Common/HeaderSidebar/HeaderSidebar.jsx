@@ -23,17 +23,17 @@ const HeaderSidebar = () => {
       setProfileData({ ...res.data.data });
     } else {
       console.log(res.error);
-      localStorage.clear();
-      window.location.assign(`${BASE_URL}`);
+      // localStorage.clear();
+      // window.location.assign(`${BASE_URL}`);
     }
   };
 
   const gotohome = () => {
-    if (getToken()) {
-      window.location.assign(`${BASE_URL}/leads/`);
-    } else {
-      window.location.assign(`${BASE_URL}/`);
-    }
+    // if (getToken()) {
+    //   window.location.assign(`${BASE_URL}/leads/`);
+    // } else {
+    //   window.location.assign(`${BASE_URL}/`);
+    // }
   };
 
   useEffect(() => {

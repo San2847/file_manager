@@ -218,26 +218,30 @@ const FilesTable = ({ fileData }) => {
     //       return curElem.isRead === false;
     //     })
     //   : [];
-    if (obj.file.status === 2) {
-      return "feed";
-    } else {
-      if (obj.file && obj.file.approvalRequestTo === getUserId()) {
-        if (obj.file.feedBack.length > 0) {
-          return "feed";
-        } else {
-          if (obj.file.isSendForApproval === true) {
-            if (obj.file.isSendForExecution === true) {
-              return "approval";
-            } else {
-              return "approval";
-            }
-          } else {
-            return "feed";
-          }
-        }
-      } else {
+    if (obj.file) {
+      if (obj.file.status === 2) {
         return "feed";
+      } else {
+        if (obj.file && obj.file.approvalRequestTo === getUserId()) {
+          if (obj.file.feedBack.length > 0) {
+            return "feed";
+          } else {
+            if (obj.file.isSendForApproval === true) {
+              if (obj.file.isSendForExecution === true) {
+                return "approval";
+              } else {
+                return "approval";
+              }
+            } else {
+              return "feed";
+            }
+          }
+        } else {
+          return "feed";
+        }
       }
+    } else {
+      return "feed";
     }
   };
 
@@ -478,14 +482,14 @@ const FilesTable = ({ fileData }) => {
                         {detailsVersionTab === "" && (
                           <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                             {!curElem.folderName &&
-                              (showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] }) === "approval" ? (
+                              (showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
                                 <div className="d-flex">
                                   <div
                                     className={styles.approveTick}
                                     title="Approve"
                                     onClick={(event) => {
                                       event.stopPropagation();
-                                      approveFiles({ container: curElem, file: curElem.fileDetails[0] });
+                                      approveFiles({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined });
                                     }}
                                   >
                                     <BsCheck />

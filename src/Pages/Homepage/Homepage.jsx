@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import HeaderSidebar from "../../Components/Common/HeaderSidebar/HeaderSidebar";
+import { getTeamMembers } from "../../Services/commonFunctions";
 import HomepageMob from "./HomepageMob/HomepageMob";
 import HomepageWeb from "./HomepageWeb/HomepageWeb";
 
 const Homepage = () => {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 767);
+
+  useEffect(() => {
+    getTeamMembers();
+  }, []);
   const updateMedia = () => {
     setIsDesktop(window.innerWidth > 767);
   };

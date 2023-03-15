@@ -38,6 +38,8 @@ const initialState = {
   filesGoingFor: "",
   versionConfirmationReturns: false,
   allEmptyFiles: [],
+
+  teamMemberArray: [],
 };
 
 export const filemanagerSlice = createSlice({
@@ -156,6 +158,10 @@ export const filemanagerSlice = createSlice({
     clearAllEmptyFiles: (state) => {
       state.allEmptyFiles = [];
     },
+
+    saveTeamMemberArray: (state, action) => {
+      state.teamMemberArray = action.payload;
+    },
   },
 });
 
@@ -182,6 +188,7 @@ export const {
   setVersionConfirmationReturns,
   saveAllEmptyFiles,
   clearAllEmptyFiles,
+  saveTeamMemberArray
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;
