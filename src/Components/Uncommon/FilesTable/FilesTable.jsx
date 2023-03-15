@@ -31,7 +31,7 @@ import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Serv
 import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
-import axios from "axios";
+import fileDownload from "js-file-download";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
@@ -219,29 +219,33 @@ const FilesTable = ({ fileData }) => {
     //     })
     //   : [];
     if (obj.file) {
-      if (obj.file.status === 2) {
-        return "feed";
-      } else {
-        if (obj.file && obj.file.approvalRequestTo === getUserId()) {
-          if (obj.file.feedBack.length > 0) {
-            return "feed";
-          } else {
-            if (obj.file.isSendForApproval === true) {
-              if (obj.file.isSendForExecution === true) {
-                return "approval";
-              } else {
-                return "approval";
-              }
-            } else {
-              return "feed";
-            }
-          }
-        } else {
+      if (obj.file.feedBack.length > 0) {
+        if (obj.file.status === 2) {
           return "feed";
+        } else {
+          if (obj.file && obj.file.approvalRequestTo === getUserId()) {
+            if (obj.file.feedBack.length > 0) {
+              return "feed";
+            } else {
+              if (obj.file.isSendForApproval === true) {
+                if (obj.file.isSendForExecution === true) {
+                  return "approval";
+                } else {
+                  return "approval";
+                }
+              } else {
+                return "feed";
+              }
+            }
+          } else {
+            return "feed";
+          }
         }
+      } else {
+        return "none";
       }
     } else {
-      return "feed";
+      return "none";
     }
   };
 
@@ -255,19 +259,7 @@ const FilesTable = ({ fileData }) => {
   };
 
   const downloadFile = (file) => {
-    axios({
-      url: file.fileLink,
-      method: "GET",
-      responseType: "blob",
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", file.fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    });
+    fileDownload(file.fileLink, `${file.fileName}`);
   };
 
   useEffect(() => {
@@ -481,8 +473,8 @@ const FilesTable = ({ fileData }) => {
                         {/* this part is for approval and feedback buttons for normal files */}
                         {detailsVersionTab === "" && (
                           <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
-                            {!curElem.folderName &&
-                              (showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
+                            {!curElem.folderName && showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) !== "none" ? (
+                              showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
                                 <div className="d-flex">
                                   <div
                                     className={styles.approveTick}
@@ -509,7 +501,10 @@ const FilesTable = ({ fileData }) => {
                                     readFeedback({ container: curElem, file: curElem.fileDetails[0] });
                                   }}
                                 />
-                              ))}
+                              )
+                            ) : (
+                              "-"
+                            )}
                             {unreadFeeds && unreadFeeds?.length > 0 && !curElem.folderName && (
                               <div
                                 style={{
@@ -962,6 +957,9 @@ const FilesTable = ({ fileData }) => {
                                             </Dropdown.Item>
                                             <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => dispatch(handleDetailsVersionBox({ item: { container: curElem, file: cur }, tab: "details" }))}>
                                               File Details
+                                            </Dropdown.Item>
+                                            <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile(cur)}>
+                                              Download
                                             </Dropdown.Item>
                                             <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
                                             <Dropdown.Item

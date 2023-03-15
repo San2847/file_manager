@@ -32,7 +32,7 @@ const DeleteFolderModal = () => {
         >
           Yes
         </button>
-        <button className={styles.noButton} onClick={() => dispatch(setModalState({ modal: "deleteModal", state: false }))}>
+        <button className={styles.noButton} onClick={() => dispatch(setModalState({ modal: "deleteFolderModal", state: false }))}>
           No
         </button>
       </Modal.Footer>

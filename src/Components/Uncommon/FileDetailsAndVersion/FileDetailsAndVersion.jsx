@@ -18,6 +18,7 @@ const FileDetailsAndVersion = () => {
   const [loading, setLoading] = useState(false);
 
   const [versionData, setVersionData] = useState([]);
+  const [userData, setUserData] = useState({});
 
   const getFileTypeString = (fileT) => {
     let fileExt = fileT.split("/")[1].toUpperCase();
@@ -25,6 +26,18 @@ const FileDetailsAndVersion = () => {
     fileFormat[0] = fileFormat[0].toUpperCase();
     let newFileFormat = fileFormat.join("");
     return `${fileExt} ${newFileFormat}`;
+  };
+
+  console.log(detailsVersionBox);
+  const getUploaderDetails = async () => {
+    const res = await getReq(
+      `${apiLinks.crm}/api/listDesigners?apitoken=${process.env.REACT_APP_API_KEY}&designerId=${detailsVersionBox.container.userId}&designerId=${detailsVersionBox.container.userId}`
+    );
+    if (res && !res.error) {
+      setUserData(res.data);
+    } else {
+      console.log(res.error);
+    }
   };
 
   const dataArray = [
@@ -77,6 +90,9 @@ const FileDetailsAndVersion = () => {
   useEffect(() => {
     if (detailsVersionTab === "version" && Object.keys(detailsVersionBox).length > 0) {
       getFileVersions();
+    }
+    if (detailsVersionTab === "details") {
+      getUploaderDetails();
     }
   }, [detailsVersionTab, detailsVersionBox]);
 

@@ -23,7 +23,6 @@ const UploadNewVersion = () => {
       fileType: fileToNewVersion[0].file.fileType,
       fileSize: fileToNewVersion[0].file.fileSize,
       type: 1,
-      status: 2,
       spaceName: fileToNewVersion[0].file.spaceName ? fileToNewVersion[0].file.spaceName : "",
       drawingType: fileToNewVersion[0].file.drawingType ? fileToNewVersion[0].file.drawingType : "",
     };

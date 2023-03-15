@@ -24,7 +24,7 @@ export const getFiles = async (status) => {
       // let otherItemArray = y.filter((curElem) => {
       //   return !curElem.updateTime;
       // });
-      console.log(res.data);
+      // console.log(res.data);
 
       // updatedItemArray.sort((a, b) => new Date(a.fileDetails[0].updateTime).getTime() - new Date(b.fileDetails[0].updateTime).getTime());
 
@@ -32,7 +32,7 @@ export const getFiles = async (status) => {
       let z = res.data.filter((curElem) => {
         return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
       });
-      store.dispatch(saveFileAndFolder([...res.data]));
+      store.dispatch(saveFileAndFolder([...res.data.reverse()]));
       store.dispatch(saveAllEmptyFiles([...z].flat()));
       store.dispatch(saveEmptyFolders([...emptyFolders]));
       store.dispatch(setLoadingState(false));
@@ -138,7 +138,7 @@ export const getFileStatus = (file) => {
 };
 
 export const getTeamMembers = async () => {
-  const res = await getReq(`${apiLinks.crm}/api/enterprise/get-team-member?userId=${localStorage.getItem("userId")}`);
+  const res = await getReq(`${apiLinks.crm}/api/enterprise/get-team-member`);
   if (res && !res.error) {
     console.log(res.data);
     // store.dispatch(saveTeamMemberArray())
