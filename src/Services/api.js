@@ -16,7 +16,7 @@ export const postReq = (url, payload) => {
 export const getReq = (url, payload, headers) => {
   return axios
     .get(url, {
-      headers: headers || { "x-auth-token": getToken() },
+      headers: headers || { "Authorization": getToken() },
       data: payload,
     })
     .then((response) => response)

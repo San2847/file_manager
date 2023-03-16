@@ -19,7 +19,7 @@ code {
 
 .container-box {
   margin-left: 20vw;
-  height: 87vh;
+  height: calc(100vh - 4.5rem);
   margin-top: 4.5rem;
 }
 
@@ -28,4 +28,8 @@ code {
 }
 .no-drop-arrow::after {
   display: none !important;
+}
+
+.dropdownWithFixed .dropdown-menu{
+  position: fixed !important;
 }

@@ -11,7 +11,7 @@ import { getUserId } from "../../../Services/authService";
 
 const MoveModal = () => {
   const dispatch = useDispatch();
-  const { moveModal, fileFolderArr, fileCheckBoxArr, emptyFolderArr } = useSelector((state) => state.filemanager);
+  const { moveModal, fileFolderArr, fileCheckBoxArr } = useSelector((state) => state.filemanager);
   const [onlyFolders, setOnlyFolders] = useState([]);
 
   const [selectedFolder, setSelectedFolder] = useState({});

@@ -12,46 +12,46 @@ import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunc
 
 const SendApprovalModal = () => {
   const dispatch = useDispatch();
-  const { sendApprovalModal, arrayForApproval, filesGoingFor } = useSelector((state) => state.filemanager);
+  const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray } = useSelector((state) => state.filemanager);
   const [notify, setNotify] = useState(false);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState({});
 
-  const teamMemberArr = [{ name: "Testing", _id: "62da389aa1b06a08f6f0d037" }];
-
   const submitFilesForApprovalOrExecution = async () => {
-    const obj = {};
-    if (filesGoingFor === "approval") {
-      obj["approvalRequestTo"] = selectedTeamMember._id;
-    } else {
-      obj["executionRequestTo"] = selectedTeamMember._id;
-    }
-    let arr = [];
-    arrayForApproval.forEach((curElem) => {
-      arr.push({ id: curElem.container._id, fileId: curElem.file._id });
-    });
-    obj["files"] = arr;
-    if (filesGoingFor === "approval") {
-      const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-approval`, obj);
-      if (res && !res.error) {
-        dispatch(clearArrayForApproval());
-        dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
-        setSelectedTeamMember({});
-        saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for approval" });
-        getFiles(1);
+    if (Object.keys(selectedTeamMember).length > 0) {
+      const obj = {};
+      if (filesGoingFor === "approval") {
+        obj["approvalRequestTo"] = selectedTeamMember.memberId;
       } else {
-        console.log(res.error);
+        obj["executionRequestTo"] = selectedTeamMember.memberId;
       }
-    } else {
-      const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-execution`, obj);
-      if (res && !res.error) {
-        dispatch(clearArrayForApproval());
-        dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
-        setSelectedTeamMember({});
-        saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for execution" });
-        getFiles(1);
+      let arr = [];
+      arrayForApproval.forEach((curElem) => {
+        arr.push({ id: curElem.container._id, fileId: curElem.file._id });
+      });
+      obj["files"] = arr;
+      if (filesGoingFor === "approval") {
+        const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-approval`, obj);
+        if (res && !res.error) {
+          dispatch(clearArrayForApproval());
+          dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
+          setSelectedTeamMember({});
+          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for approval" });
+          getFiles(1);
+        } else {
+          console.log(res.error);
+        }
       } else {
-        console.log(res.error);
+        const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-execution`, obj);
+        if (res && !res.error) {
+          dispatch(clearArrayForApproval());
+          dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
+          setSelectedTeamMember({});
+          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for execution" });
+          getFiles(1);
+        } else {
+          console.log(res.error);
+        }
       }
     }
   };
@@ -66,13 +66,13 @@ const SendApprovalModal = () => {
         <div className="mb-2">{filesGoingFor === "approval" ? "Approval from" : "Send to"}</div>
         <Dropdown>
           <Dropdown.Toggle className={`${styles.selectMember} no-drop-arrow`}>
-            <span>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.name : "Select team member"}</span>
+            <span>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.memberName : "Select team member"}</span>
             <BsChevronDown />
           </Dropdown.Toggle>
           <Dropdown.Menu className="w-100">
-            {teamMemberArr &&
-              teamMemberArr.map((curElem) => {
-                return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)}>{curElem.name}</Dropdown.Item>;
+            {teamMemberArray &&
+              teamMemberArray.map((curElem) => {
+                return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)}>{curElem.memberName}</Dropdown.Item>;
               })}
           </Dropdown.Menu>
         </Dropdown>

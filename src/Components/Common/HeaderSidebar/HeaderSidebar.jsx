@@ -10,8 +10,11 @@ import medal from "./SidebarAssets/medal.svg";
 import { apiLinks, BASE_URL } from "../../../constants/constants";
 import { getReq } from "../../../Services/api";
 import { getToken } from "../../../Services/authService";
+import { useDispatch } from "react-redux";
+import { saveProfileData } from "../../../Redux/slices/filemanagerSlice";
 
 const HeaderSidebar = () => {
+  const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -21,6 +24,7 @@ const HeaderSidebar = () => {
     const res = await getReq(`${apiLinks.crm}/user/profile`, {}, { Authorization: `Bearer ${getToken()}` });
     if (res && !res.error) {
       setProfileData({ ...res.data.data });
+      dispatch(saveProfileData({ ...res.data.data }));
     } else {
       console.log(res.error);
       // localStorage.clear();

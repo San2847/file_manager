@@ -19,6 +19,7 @@ const FileDetailsAndVersion = () => {
 
   const [versionData, setVersionData] = useState([]);
   const [userData, setUserData] = useState({});
+  const [singleFile, setSingleFile] = useState({});
 
   const getFileTypeString = (fileT) => {
     let fileExt = fileT.split("/")[1].toUpperCase();
@@ -28,10 +29,11 @@ const FileDetailsAndVersion = () => {
     return `${fileExt} ${newFileFormat}`;
   };
 
-  console.log(detailsVersionBox);
   const getUploaderDetails = async () => {
     const res = await getReq(
-      `${apiLinks.crm}/api/listDesigners?apitoken=${process.env.REACT_APP_API_KEY}&designerId=${detailsVersionBox.container.userId}&designerId=${detailsVersionBox.container.userId}`
+      `${apiLinks.crm}/api/listDesigners?apitoken=${process.env.REACT_APP_API_KEY}&designerId=${
+        detailsVersionBox.container.userId ? detailsVersionBox.container.userId : singleFile.userId
+      }&designerId=${detailsVersionBox.container.userId ? detailsVersionBox.container.userId : singleFile.userId}`
     );
     if (res && !res.error) {
       setUserData(res.data);
@@ -43,7 +45,7 @@ const FileDetailsAndVersion = () => {
   const dataArray = [
     {
       label: "Upload Date",
-      data: detailsVersionBox.container ? createDateString(detailsVersionBox.container.createdAt) : "-",
+      data: detailsVersionBox.container ? (detailsVersionBox.container.createdAt ? createDateString(detailsVersionBox.container.createdAt) : createDateString(singleFile.createdAt)) : "-",
     },
     {
       label: "File Type",
@@ -87,12 +89,24 @@ const FileDetailsAndVersion = () => {
     }
   };
 
+  const getSingleFileDetails = async () => {
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${detailsVersionBox.file.uuId}`);
+    if (res && !res.error) {
+      setSingleFile(res.data[0]);
+    } else {
+      console.log(res.error);
+    }
+  };
+
   useEffect(() => {
     if (detailsVersionTab === "version" && Object.keys(detailsVersionBox).length > 0) {
       getFileVersions();
     }
     if (detailsVersionTab === "details") {
       getUploaderDetails();
+    }
+    if (detailsVersionBox.container && !detailsVersionBox.container.folderName) {
+      getSingleFileDetails();
     }
   }, [detailsVersionTab, detailsVersionBox]);
 

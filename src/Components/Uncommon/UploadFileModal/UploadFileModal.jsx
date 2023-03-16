@@ -13,6 +13,7 @@ import { postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
+import { getFileStatus } from "../../../Services/commonFunctions";
 
 const UploadFileModal = () => {
   const dispatch = useDispatch();
@@ -144,7 +145,10 @@ const UploadFileModal = () => {
                   fileFolderArr.map((curElem) => {
                     return (
                       <>
-                        <div className={styles.eachCard} onClick={(event) => openFolderOrSelectFiles(curElem, event, undefined)}>
+                        <div
+                          className={!curElem.folderName ? (getFileStatus(curElem.fileDetails[0]) === "-" ? styles.eachCard : styles.disabledCard) : styles.eachCard}
+                          onClick={(event) => openFolderOrSelectFiles(curElem, event, undefined)}
+                        >
                           <div
                             style={{ width: "30%", fontSize: "12px", display: "flex", alignItems: "center", paddingLeft: "0.5rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                           >
@@ -187,7 +191,7 @@ const UploadFileModal = () => {
                           {curElem.folderName &&
                             curElem.fileDetails.map((cur) => {
                               return (
-                                <div className={styles.eachCardInside}>
+                                <div className={getFileStatus(cur) === "-" ? styles.eachCardInside : styles.disabledCardInside}>
                                   <div
                                     style={{
                                       width: "30%",

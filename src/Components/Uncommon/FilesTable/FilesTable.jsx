@@ -35,7 +35,7 @@ import fileDownload from "js-file-download";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
-  const { fileCheckBoxArr, detailsVersionBox, detailsVersionTab, loading, versionConfirmationReturns, emptyFolderArr } = useSelector((state) => state.filemanager);
+  const { fileCheckBoxArr, detailsVersionTab, loading, versionConfirmationReturns, profileData } = useSelector((state) => state.filemanager);
 
   const newVerUploadRef = useRef(null);
 
@@ -85,7 +85,7 @@ const FilesTable = ({ fileData }) => {
   };
 
   const openFolderOrSelectFile = (elem) => {
-    if (elem.folderName) {
+    if (elem.folderName && elem.fileDetails.length > 0) {
       setOpenedFolder(`folder-${elem._id}`);
     } else {
       dispatch(selectFileCheckbox({ container: elem, fileOrFold: elem.fileDetails[0], type: "outside" }));
@@ -242,7 +242,21 @@ const FilesTable = ({ fileData }) => {
           }
         }
       } else {
-        return "none";
+        if (obj.file.status === 2) {
+          return "none";
+        } else {
+          if (obj.file && obj.file.approvalRequestTo === getUserId()) {
+            if (obj.file.isSendForApproval === true) {
+              if (obj.file.isSendForExecution === true) {
+                return "none";
+              } else {
+                return "approval";
+              }
+            }
+          } else {
+            return "none";
+          }
+        }
       }
     } else {
       return "none";
@@ -252,6 +266,7 @@ const FilesTable = ({ fileData }) => {
   const approveFiles = async (fileObj) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
     if (res && !res.error) {
+      saveFileChangesAsVersion({ container: fileObj.container, file: fileObj.file, text: `has been approved by ${profileData.fullName}` });
       getFiles(1);
     } else {
       console.log(res.error);
@@ -372,7 +387,12 @@ const FilesTable = ({ fileData }) => {
                                 "Untitled"
                               )
                             ) : (
-                              <a className={styles.fileLinkName} href={curElem.fileDetails[0] && curElem.fileDetails[0].fileLink} target="_blank">
+                              <a
+                                title={curElem.fileDetails[0] && curElem.fileDetails[0].fileName}
+                                className={styles.fileLinkName}
+                                href={curElem.fileDetails[0] && curElem.fileDetails[0].fileLink}
+                                target="_blank"
+                              >
                                 {curElem.fileDetails[0] && curElem.fileDetails[0].fileName}
                               </a>
                             )}
@@ -390,7 +410,7 @@ const FilesTable = ({ fileData }) => {
                                     name="spaceName"
                                     value={spaceName}
                                     onChange={spaceDrawInput}
-                                    // onBlur={(event) => spaceDrawSubmit(curElem, event)}
+                                    onBlur={(event) => spaceDrawSubmit(curElem, event, undefined, { container: curElem, file: curElem.fileDetails[0], text: "Space Name Updated" })}
                                     onClick={(event) => event.stopPropagation()}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -423,7 +443,7 @@ const FilesTable = ({ fileData }) => {
                                     name="drawType"
                                     value={drawType}
                                     onChange={spaceDrawInput}
-                                    // onBlur={(event) => spaceDrawSubmit(curElem, event)}
+                                    onBlur={(event) => spaceDrawSubmit(curElem, event, undefined, { container: curElem, file: curElem.fileDetails[0], text: "Drawing Type Updated" })}
                                     onClick={(event) => event.stopPropagation()}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -626,10 +646,7 @@ const FilesTable = ({ fileData }) => {
                                   </Dropdown.Item>
                                   <Dropdown.Item
                                     style={
-                                      !curElem.folderName &&
-                                      (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
-                                        getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
-                                        getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                      !curElem.folderName && (getFileStatus(curElem.fileDetails[0]) === "In-Execution" || getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
                                         ? { fontSize: "12px", ...inlineInactive }
                                         : { fontSize: "12px" }
                                     }
@@ -650,10 +667,15 @@ const FilesTable = ({ fileData }) => {
                               <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
                               <Dropdown.Item
                                 style={
-                                  !curElem.folderName &&
-                                  (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
-                                    getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
-                                    getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                  !curElem.folderName
+                                    ? getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                      getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                      getFileStatus(curElem.fileDetails[0]) === "Approval Pending"
+                                      ? { fontSize: "12px", ...inlineInactive }
+                                      : { fontSize: "12px", color: "red" }
+                                    : curElem.fileDetails.some((each) => {
+                                        return getFileStatus(each) !== "-";
+                                      })
                                     ? { fontSize: "12px", ...inlineInactive }
                                     : { fontSize: "12px", color: "red" }
                                 }
@@ -705,7 +727,7 @@ const FilesTable = ({ fileData }) => {
 
                       {curElem.folderName && (
                         <div className={styles.folderFiles} style={openedFolder === `folder-${curElem._id}` ? { height: "10rem", border: "1px solid #e6e6e6" } : { height: "0", border: "none" }}>
-                          <div style={{ height: "100%", overflowY: "scroll" }}>
+                          <div style={{ height: "100%", overflowY: "scroll", position: "relative" }}>
                             {curElem.fileDetails &&
                               curElem.fileDetails.map((cur) => {
                                 let unreadFeeds = cur.feedBack.filter((curF) => {
@@ -730,12 +752,8 @@ const FilesTable = ({ fileData }) => {
                                         <div className="d-flex align-items-center me-1">
                                           {cur.fileType.split("/")[0] === "image" ? <IoMdImage color="#26AD74" fontSize={20} /> : <img src={pdfIcon} alt="" />}
                                         </div>
-                                        <div
-                                          title={cur.fileName}
-                                          style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", paddingRight: "0.5rem" }}
-                                          onClick={(event) => event.stopPropagation()}
-                                        >
-                                          <a className={styles.fileLinkName} href={cur.fileLink} target="_blank">
+                                        <div style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", paddingRight: "0.5rem" }} onClick={(event) => event.stopPropagation()}>
+                                          <a title={cur.fileName} className={styles.fileLinkName} href={cur.fileLink} target="_blank">
                                             {cur.fileName}
                                           </a>
                                         </div>
@@ -751,7 +769,7 @@ const FilesTable = ({ fileData }) => {
                                                 name="spaceName"
                                                 value={spaceName}
                                                 onChange={spaceDrawInput}
-                                                // onBlur={(event) => spaceDrawSubmit(curElem, event, cur)}
+                                                onBlur={(event) => spaceDrawSubmit(curElem, event, cur, { container: curElem, file: cur, text: "Space Name Updated" })}
                                                 onClick={(event) => event.stopPropagation()}
                                                 onKeyDown={(event) => {
                                                   if (event.key === "Enter") {
@@ -783,7 +801,7 @@ const FilesTable = ({ fileData }) => {
                                                 name="drawType"
                                                 value={drawType}
                                                 onChange={spaceDrawInput}
-                                                // onBlur={(event) => spaceDrawSubmit(curElem, event, cur)}
+                                                onBlur={(event) => spaceDrawSubmit(curElem, event, cur, { container: curElem, file: cur, text: "Drawing Type Updated" })}
                                                 onClick={(event) => event.stopPropagation()}
                                                 onKeyDown={(event) => {
                                                   if (event.key === "Enter") {
@@ -826,33 +844,37 @@ const FilesTable = ({ fileData }) => {
                                       </div>
                                       {detailsVersionTab === "" && (
                                         <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
-                                          {showApprovalOrFeed({ container: curElem, file: cur }) === "approval" ? (
-                                            <div className="d-flex">
-                                              <div
-                                                className={styles.approveTick}
-                                                title="Approve"
+                                          {showApprovalOrFeed({ container: curElem, file: cur }) !== "none" ? (
+                                            showApprovalOrFeed({ container: curElem, file: cur }) === "approval" ? (
+                                              <div className="d-flex">
+                                                <div
+                                                  className={styles.approveTick}
+                                                  title="Approve"
+                                                  onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    approveFiles({ container: curElem, file: cur });
+                                                  }}
+                                                >
+                                                  <BsCheck />
+                                                </div>
+                                                <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
+                                                  <RiChatNewLine />
+                                                </div>
+                                              </div>
+                                            ) : openedInfo?.file && openedInfo?.file?._id === cur?._id ? (
+                                              <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                            ) : (
+                                              <RiChatQuoteLine
+                                                className={styles.commentButton}
                                                 onClick={(event) => {
-                                                  event.stopPropagation();
-                                                  approveFiles({ container: curElem, file: cur });
+                                                  openInfo(event, { container: curElem, file: cur });
+                                                  getFileFeedback({ container: curElem, file: cur });
+                                                  readFeedback({ container: curElem, file: cur });
                                                 }}
-                                              >
-                                                <BsCheck />
-                                              </div>
-                                              <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
-                                                <RiChatNewLine />
-                                              </div>
-                                            </div>
-                                          ) : openedInfo?.file && openedInfo?.file?._id === cur?._id ? (
-                                            <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              />
+                                            )
                                           ) : (
-                                            <RiChatQuoteLine
-                                              className={styles.commentButton}
-                                              onClick={(event) => {
-                                                openInfo(event, { container: curElem, file: cur });
-                                                getFileFeedback({ container: curElem, file: cur });
-                                                readFeedback({ container: curElem, file: cur });
-                                              }}
-                                            />
+                                            "-"
                                           )}
                                           {unreadFeeds && unreadFeeds?.length > 0 && (
                                             <div
@@ -878,7 +900,7 @@ const FilesTable = ({ fileData }) => {
                                         style={{ width: detailsVersionTab === "" ? "5%" : "10%", display: "flex", alignItems: "center", justifyContent: "flex-end" }}
                                         onClick={(event) => event.stopPropagation()}
                                       >
-                                        <Dropdown show={openedDrop === cur._id}>
+                                        <Dropdown className="dropdownWithFixed" show={openedDrop === cur._id}>
                                           <Dropdown.Toggle
                                             as="button"
                                             className="no-drop-arrow p-0"
@@ -942,9 +964,7 @@ const FilesTable = ({ fileData }) => {
                                             </Dropdown.Item>
                                             <Dropdown.Item
                                               style={
-                                                getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
-                                                  ? { fontSize: "12px", ...inlineInactive }
-                                                  : { fontSize: "12px" }
+                                                getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }
                                               }
                                               onClick={(event) => {
                                                 event.stopPropagation();

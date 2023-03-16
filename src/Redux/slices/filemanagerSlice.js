@@ -40,6 +40,8 @@ const initialState = {
   allEmptyFiles: [],
 
   teamMemberArray: [],
+
+  profileData: {},
 };
 
 export const filemanagerSlice = createSlice({
@@ -160,7 +162,11 @@ export const filemanagerSlice = createSlice({
     },
 
     saveTeamMemberArray: (state, action) => {
-      state.teamMemberArray = action.payload;
+      state.teamMemberArray = [...action.payload];
+    },
+
+    saveProfileData: (state, action) => {
+      state.profileData = action.payload;
     },
   },
 });
@@ -188,7 +194,8 @@ export const {
   setVersionConfirmationReturns,
   saveAllEmptyFiles,
   clearAllEmptyFiles,
-  saveTeamMemberArray
+  saveTeamMemberArray,
+  saveProfileData,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

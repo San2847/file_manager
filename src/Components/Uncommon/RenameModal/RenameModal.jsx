@@ -13,23 +13,34 @@ const RenameModal = () => {
   const [itemName, setItemName] = useState("");
 
   const submitRename = async () => {
-    if (fileFolderToBeRenamed.type === "outside" || fileFolderToBeRenamed.type === "inside") {
-      const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.container._id}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
+    if (fileFolderToBeRenamed.tab === "onlyFiles") {
+      const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.fileOrFold.folderId}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
       if (res && !res.error) {
         dispatch(setModalState({ modal: "renameModal", state: false }));
         saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
-        getFiles(1);
+        getFiles(2);
       } else {
         console.log(res.error);
       }
     } else {
-      const res = await postReq(`${apiLinks.pmt}/api/file-manager/rename-folder?id=${fileFolderToBeRenamed.fileOrFold._id}`, { folderName: itemName });
-      if (res && !res.error) {
-        dispatch(setModalState({ modal: "renameModal", state: false }));
-        saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
-        getFiles(1);
+      if (fileFolderToBeRenamed.type === "outside" || fileFolderToBeRenamed.type === "inside") {
+        const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.container._id}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
+        if (res && !res.error) {
+          dispatch(setModalState({ modal: "renameModal", state: false }));
+          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
+          getFiles(1);
+        } else {
+          console.log(res.error);
+        }
       } else {
-        console.log(res.error);
+        const res = await postReq(`${apiLinks.pmt}/api/file-manager/rename-folder?id=${fileFolderToBeRenamed.fileOrFold._id}`, { folderName: itemName });
+        if (res && !res.error) {
+          dispatch(setModalState({ modal: "renameModal", state: false }));
+          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
+          getFiles(1);
+        } else {
+          console.log(res.error);
+        }
       }
     }
   };

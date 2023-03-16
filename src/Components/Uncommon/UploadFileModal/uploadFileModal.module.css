@@ -43,6 +43,14 @@
 .eachCard:hover {
   background-color: #00356611;
 }
+.disabledCard {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 0.5rem 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
 
 .eachCardInside {
   width: 100%;
@@ -55,6 +63,14 @@
 }
 .eachCardInside:hover {
   background-color: #00356611;
+}
+.disabledCardInside {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 0.5rem;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .checkBox {

@@ -22,7 +22,7 @@ import { postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
-import { getFiles } from "../../../Services/commonFunctions";
+import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import OnlyFilesTable from "../../../Components/Uncommon/OnlyFilesTable/OnlyFilesTable";
 import { BsBoxArrowInRight, BsShare } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -48,6 +48,8 @@ const HomepageWeb = () => {
   };
 
   let user = "internal";
+
+  const [disableDelete, setDisableDelete] = useState(false);
 
   const [uploadingFile, setUploadingFile] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
@@ -78,7 +80,7 @@ const HomepageWeb = () => {
         sendingObj["fileDetails"] = [{ ...eachFileObj }];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendingObj);
         if (upRes && !upRes.error) {
-          // console.log(res);
+          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails[0], text: "has been uploaded." });
         } else {
           console.log(upRes.error);
         }
@@ -130,7 +132,7 @@ const HomepageWeb = () => {
         sendObj["fileDetails"] = [...arr];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendObj);
         if (upRes && !upRes.error) {
-          getFiles(1);
+          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails, text: "has been uploaded" });
         } else {
           console.log(upRes.error);
         }
@@ -165,6 +167,18 @@ const HomepageWeb = () => {
     }
   }, [allEmptyFiles, fileTypeTab]);
 
+  useEffect(() => {
+    if (fileCheckBoxArr) {
+      let x = fileCheckBoxArr.some((curElem) => {
+        return getFileStatus(curElem.fileOrFold) !== "-";
+      });
+      if (x) {
+        setDisableDelete(true);
+      } else {
+        setDisableDelete(false);
+      }
+    }
+  }, [fileCheckBoxArr]);
   return (
     <>
       <SendApprovalModal />
@@ -186,8 +200,7 @@ const HomepageWeb = () => {
               <div className={styles.eachOption}>
                 <BsShare />
               </div>
-              {/* <div className={styles.eachOption} onClick={deleteMultipleFiles}> */}
-              <div className={styles.eachOption} onClick={openDeleteModal}>
+              <div className={disableDelete ? styles.disabledOption : styles.eachOption} onClick={openDeleteModal}>
                 <FaRegTrashAlt />
               </div>
               <div className={styles.eachOption}>
