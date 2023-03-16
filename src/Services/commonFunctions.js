@@ -44,18 +44,16 @@ export const createDateString = (dateStr) => {
   return `${date}-${month}-${year}`;
 };
 
-export const saveFileChangesAsVersion = async (contFile) => {
+export const saveFileChangesAsVersion = async (contFile, uuId) => {
   let obj = {
     userId: getUserId(),
   };
-  if (contFile.file.length && contFile.file.length > 0) {
-    obj["folderName"] = contFile.container.folderName;
+  if (uuId) {
     let y = contFile.file;
-    y.forEach((curElem) => {
-      curElem["updateTime"] = new Date();
-      curElem["versionText"] = contFile.text;
-      delete curElem["_id"];
-    });
+    y["updateTime"] = new Date();
+    y["versionText"] = contFile.text;
+    y["uuId"] = uuId;
+    delete y["_id"];
     obj["fileDetails"] = y;
     const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
     if (verRes && !verRes.error) {
@@ -64,39 +62,56 @@ export const saveFileChangesAsVersion = async (contFile) => {
       console.log(verRes.error);
     }
   } else {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${contFile.file.uuId}`);
-    if (res && !res.error) {
-      if (!contFile.container.folderName) {
-        let x = res.data[0].fileDetails;
-        x[0]["updateTime"] = new Date();
-        x[0]["versionText"] = contFile.text;
-        delete x[0]["_id"];
-        obj["fileDetails"] = x;
-        const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
-        if (verRes && !verRes.error) {
-          getFiles(1);
-        } else {
-          console.log(verRes.error);
-        }
+    if (contFile.file.length && contFile.file.length > 0) {
+      obj["folderName"] = contFile.container.folderName;
+      let y = contFile.file;
+      y.forEach((curElem) => {
+        curElem["updateTime"] = new Date();
+        curElem["versionText"] = contFile.text;
+        delete curElem["_id"];
+      });
+      obj["fileDetails"] = y;
+      const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
+      if (verRes && !verRes.error) {
+        getFiles(1);
       } else {
-        obj["folderName"] = contFile.container.folderName;
-        let y = res.data[0].fileDetails;
-        let z = y.filter((curElem) => {
-          return curElem.uuId === contFile.file.uuId;
-        });
-        z[0]["updateTime"] = new Date();
-        z[0]["versionText"] = contFile.text;
-        delete z[0]["_id"];
-        obj["fileDetails"] = z;
-        const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
-        if (verRes && !verRes.error) {
-          getFiles(1);
-        } else {
-          console.log(verRes.error);
-        }
+        console.log(verRes.error);
       }
     } else {
-      console.log(res.error);
+      const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${contFile.file.uuId}`);
+      if (res && !res.error) {
+        if (!contFile.container.folderName) {
+          let x = res.data[0].fileDetails;
+          x[0]["updateTime"] = new Date();
+          x[0]["versionText"] = contFile.text;
+          delete x[0]["_id"];
+          obj["fileDetails"] = x;
+          const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
+          if (verRes && !verRes.error) {
+            getFiles(1);
+          } else {
+            console.log(verRes.error);
+          }
+        } else {
+          obj["folderName"] = contFile.container.folderName;
+          let y = res.data[0].fileDetails;
+          let z = y.filter((curElem) => {
+            return curElem.uuId === contFile.file.uuId;
+          });
+          z[0]["updateTime"] = new Date();
+          z[0]["versionText"] = contFile.text;
+          delete z[0]["_id"];
+          obj["fileDetails"] = z;
+          const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
+          if (verRes && !verRes.error) {
+            getFiles(1);
+          } else {
+            console.log(verRes.error);
+          }
+        }
+      } else {
+        console.log(res.error);
+      }
     }
   }
 };

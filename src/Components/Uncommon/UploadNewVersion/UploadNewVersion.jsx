@@ -2,32 +2,31 @@ import React, { useEffect, useState } from "react";
 import styles from "./uploadNewVersion.module.css";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { saveFileToNewVersion, setModalState } from "../../../Redux/slices/filemanagerSlice";
+import { cleanNewFileForVersion, saveFileToNewVersion, setModalState } from "../../../Redux/slices/filemanagerSlice";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdClose, IoMdImage } from "react-icons/io";
 import { BsCheck } from "react-icons/bs";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
-import { getFiles } from "../../../Services/commonFunctions";
+import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 
 const UploadNewVersion = () => {
   const dispatch = useDispatch();
-  const { uploadNewVersion, fileToNewVersion } = useSelector((state) => state.filemanager);
+  const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
 
   const [shareChecks, setShareChecks] = useState([]);
 
   const updateFileVersion = async () => {
     const obj = {
-      fileName: fileToNewVersion[0].file.fileName,
-      fileLink: fileToNewVersion[0].file.fileLink,
-      fileType: fileToNewVersion[0].file.fileType,
-      fileSize: fileToNewVersion[0].file.fileSize,
+      fileName: newFileForVersion.fileName,
+      fileLink: newFileForVersion.fileLink,
+      fileType: newFileForVersion.fileType,
+      fileSize: newFileForVersion.fileSize,
       type: 1,
-      spaceName: fileToNewVersion[0].file.spaceName ? fileToNewVersion[0].file.spaceName : "",
-      drawingType: fileToNewVersion[0].file.drawingType ? fileToNewVersion[0].file.drawingType : "",
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {
+      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file.uuId);
       getFiles(1);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
       dispatch(saveFileToNewVersion(fileToNewVersion[0]));
@@ -48,11 +47,11 @@ const UploadNewVersion = () => {
           <div className={styles.smallHeading}>Uploaded file</div>
         </div>
         <div className={styles.fileContainer}>
-          {fileToNewVersion[0] && (
-            <div className={styles.filePill} onClick={() => dispatch(saveFileToNewVersion(fileToNewVersion[0]))}>
-              {fileToNewVersion[0].file.fileType.split("/")[0] === "image" ? <IoMdImage color="#26AD74" /> : <img src={pdfIcon} alt="" height={14} />}
-              <span className="mx-1" style={{ fontSize: "14px" }}>
-                {fileToNewVersion[0] && fileToNewVersion[0].file.fileName}
+          {Object.keys(newFileForVersion).length > 0 && (
+            <div className={styles.filePill} onClick={() => dispatch(cleanNewFileForVersion())}>
+              {newFileForVersion.fileType && newFileForVersion.fileType.split("/")[0] === "image" ? <IoMdImage color="#26AD74" /> : <img src={pdfIcon} alt="" height={14} />}
+              <span className="mx-1" style={{ fontSize: "14px", width: "70%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {newFileForVersion && newFileForVersion.fileName}
               </span>
               <IoMdClose />
             </div>
@@ -140,6 +139,7 @@ const UploadNewVersion = () => {
           onClick={() => {
             dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
             dispatch(saveFileToNewVersion(fileToNewVersion[0]));
+            dispatch(cleanNewFileForVersion());
           }}
         >
           Cancel

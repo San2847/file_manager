@@ -160,7 +160,7 @@ const FileDetailsAndVersion = () => {
                       </div>
                     </div>
                     <div>
-                      <RiChatQuoteLine style={{ marginRight: "0.25rem" }} />
+                      {curElem.feedBack && curElem.feedBack.length > 0 && <RiChatQuoteLine style={{ marginRight: "0.25rem" }} />}
                       <a href={curElem.fileLink} target="_blank" style={{ textDecoration: "none", color: "#000000" }}>
                         <HiOutlineDocumentMagnifyingGlass />
                       </a>

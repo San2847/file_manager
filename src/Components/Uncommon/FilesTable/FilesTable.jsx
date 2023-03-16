@@ -13,6 +13,7 @@ import {
   saveArrayForApproval,
   saveFileToNewVersion,
   saveFolderToBeDeleted,
+  saveNewFileForVersion,
   savePrepareDeleteArr,
   selectFileCheckbox,
   selectFileFolderToBeRenamed,
@@ -126,6 +127,7 @@ const FilesTable = ({ fileData }) => {
   };
 
   const uploadNewVersion = (item, outItem) => {
+    dispatch(saveFileToNewVersion({ container: item, file: outItem }));
     dispatch(setVersionConfirmationReturns(false));
     if (outItem.isSendForExecution) {
       dispatch(setModalState({ modal: "versionConfirmation", state: true }));
@@ -141,18 +143,9 @@ const FilesTable = ({ fileData }) => {
     filesToUpload.append("files", files[0]);
     const res = await putReq(`${apiLinks.s3api}/api/upload`, filesToUpload);
     if (res && !res.error) {
-      const savRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, {
-        userId: getUserId(),
-        fileDetails: [{ uuId: uuid(), fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)} KB`, type: 1 }],
-      });
-      if (savRes && !savRes.error) {
-        dispatch(saveFileToNewVersion({ container: savRes.data, file: savRes.data.fileDetails[0] }));
-        dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
-        dispatch(setVersionConfirmationReturns(false));
-      } else {
-        console.log(savRes.error);
-        dispatch(setVersionConfirmationReturns(false));
-      }
+      dispatch(saveNewFileForVersion({ fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)}KB`, type: 1 }));
+      dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
+      dispatch(setVersionConfirmationReturns(false));
     } else {
       console.log(res.error);
       dispatch(setVersionConfirmationReturns(false));

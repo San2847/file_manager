@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/file-manager/static/css/main.5f7642dc.css",
-    "main.js": "/file-manager/static/js/main.ec31f12d.js",
+    "main.css": "/file-manager/static/css/main.9fd4f5b3.css",
+    "main.js": "/file-manager/static/js/main.5392021b.js",
     "static/js/787.fa554ae2.chunk.js": "/file-manager/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-manager/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/pdfIcon.svg": "/file-manager/static/media/pdfIcon.63b14eb1790a401672fbd98ab51c7940.svg",
@@ -10,12 +10,12 @@
     "static/media/medal.svg": "/file-manager/static/media/medal.eacb404a0688d9c2018753eb679f4314.svg",
     "static/media/feedbackIcon.svg": "/file-manager/static/media/feedbackIcon.48446e876c6fa11f529858f7e43de716.svg",
     "index.html": "/file-manager/index.html",
-    "main.5f7642dc.css.map": "/file-manager/static/css/main.5f7642dc.css.map",
-    "main.ec31f12d.js.map": "/file-manager/static/js/main.ec31f12d.js.map",
+    "main.9fd4f5b3.css.map": "/file-manager/static/css/main.9fd4f5b3.css.map",
+    "main.5392021b.js.map": "/file-manager/static/js/main.5392021b.js.map",
     "787.fa554ae2.chunk.js.map": "/file-manager/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5f7642dc.css",
-    "static/js/main.ec31f12d.js"
+    "static/css/main.9fd4f5b3.css",
+    "static/js/main.5392021b.js"
   ]
 }

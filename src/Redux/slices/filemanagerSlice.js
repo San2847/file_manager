@@ -29,6 +29,7 @@ const initialState = {
   fileUploadProgress: 0,
   fileFolderToBeRenamed: {},
   fileToNewVersion: [],
+  newFileForVersion: [],
 
   reduxPrepareDeleteArr: [],
   folderToBeDeleted: "",
@@ -149,6 +150,12 @@ export const filemanagerSlice = createSlice({
         state.fileToNewVersion = [...y];
       }
     },
+    saveNewFileForVersion: (state, action) => {
+      state.newFileForVersion = action.payload;
+    },
+    cleanNewFileForVersion: (state) => {
+      state.newFileForVersion = {};
+    },
 
     setVersionConfirmationReturns: (state, action) => {
       state.versionConfirmationReturns = action.payload;
@@ -191,6 +198,8 @@ export const {
   clearArrayForApproval,
   setFilesGoingFor,
   saveFileToNewVersion,
+  saveNewFileForVersion,
+  cleanNewFileForVersion,
   setVersionConfirmationReturns,
   saveAllEmptyFiles,
   clearAllEmptyFiles,
