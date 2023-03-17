@@ -25,11 +25,13 @@ const initialState = {
   moveModal: false,
   createFolderModal: false,
   selfApprovalConfirmation: false,
+  shareModal: false,
 
   fileUploadProgress: 0,
   fileFolderToBeRenamed: {},
   fileToNewVersion: [],
   newFileForVersion: [],
+  filesToBeSharedArr: [],
 
   reduxPrepareDeleteArr: [],
   folderToBeDeleted: "",
@@ -175,6 +177,10 @@ export const filemanagerSlice = createSlice({
     saveProfileData: (state, action) => {
       state.profileData = action.payload;
     },
+
+    saveFilesToBeShared: (state, action) => {
+      state.filesToBeSharedArr = [...action.payload];
+    },
   },
 });
 
@@ -205,6 +211,7 @@ export const {
   clearAllEmptyFiles,
   saveTeamMemberArray,
   saveProfileData,
+  saveFilesToBeShared,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

@@ -110,16 +110,11 @@ const OnlyFilesTable = ({ fileData }) => {
   };
 
   const approveFiles = async (item) => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
-    if (res && !res.error) {
-      const appRes = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${res.data._id}&fileId=${item._id}`, { status: 2 });
-      if (appRes && !appRes.error) {
-        getFiles(1);
-      } else {
-        console.log(appRes.error);
-      }
+    const appRes = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${item.folderId}&fileId=${item._id}`, { status: 2 });
+    if (appRes && !appRes.error) {
+      getFiles(0);
     } else {
-      console.log(res.error);
+      console.log(appRes.error);
     }
   };
 

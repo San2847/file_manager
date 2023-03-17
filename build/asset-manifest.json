@@ -1,21 +1,25 @@
 {
   "files": {
-    "main.css": "/file-manager/static/css/main.9fd4f5b3.css",
-    "main.js": "/file-manager/static/js/main.5392021b.js",
+    "main.css": "/file-manager/static/css/main.a564c1d1.css",
+    "main.js": "/file-manager/static/js/main.898a157d.js",
     "static/js/787.fa554ae2.chunk.js": "/file-manager/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-manager/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/pdfIcon.svg": "/file-manager/static/media/pdfIcon.63b14eb1790a401672fbd98ab51c7940.svg",
     "static/media/logo.svg": "/file-manager/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "static/media/comp_logo.svg": "/file-manager/static/media/comp_logo.413001bf5eeec20750cbebc97f340202.svg",
+    "static/media/team.svg": "/file-manager/static/media/team.220b50cde907de74f00936e3f1e8eee8.svg",
     "static/media/medal.svg": "/file-manager/static/media/medal.eacb404a0688d9c2018753eb679f4314.svg",
+    "static/media/whatsapp.svg": "/file-manager/static/media/whatsapp.f1f4b18216fbd3fca0ba218169c3e6a1.svg",
+    "static/media/mailIcon.svg": "/file-manager/static/media/mailIcon.4722605da1119bc8a8737259ce2adbd8.svg",
     "static/media/feedbackIcon.svg": "/file-manager/static/media/feedbackIcon.48446e876c6fa11f529858f7e43de716.svg",
     "index.html": "/file-manager/index.html",
-    "main.9fd4f5b3.css.map": "/file-manager/static/css/main.9fd4f5b3.css.map",
-    "main.5392021b.js.map": "/file-manager/static/js/main.5392021b.js.map",
+    "static/media/person.svg": "/file-manager/static/media/person.852c713b65728b43f059dbb53c7c8d36.svg",
+    "main.a564c1d1.css.map": "/file-manager/static/css/main.a564c1d1.css.map",
+    "main.898a157d.js.map": "/file-manager/static/js/main.898a157d.js.map",
     "787.fa554ae2.chunk.js.map": "/file-manager/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9fd4f5b3.css",
-    "static/js/main.5392021b.js"
+    "static/css/main.a564c1d1.css",
+    "static/js/main.898a157d.js"
   ]
 }

@@ -11,6 +11,7 @@ import { HiEllipsisVertical } from "react-icons/hi2";
 import {
   handleDetailsVersionBox,
   saveArrayForApproval,
+  saveFilesToBeShared,
   saveFileToNewVersion,
   saveFolderToBeDeleted,
   saveNewFileForVersion,
@@ -300,6 +301,19 @@ const FilesTable = ({ fileData }) => {
       getFileInfo();
     }
   }, [openedInfo]);
+
+  useEffect(() => {
+    if (fileCheckBoxArr) {
+      let x = JSON.parse(JSON.stringify(fileCheckBoxArr));
+      x.forEach((curElem) => {
+        let b = curElem.fileOrFold;
+        delete curElem["fileOrFold"];
+        curElem["file"] = b;
+      });
+
+      dispatch(saveFilesToBeShared([...x]));
+    }
+  }, [fileCheckBoxArr]);
 
   return (
     <>
@@ -657,7 +671,18 @@ const FilesTable = ({ fileData }) => {
                                   </Dropdown.Item>
                                 </>
                               )}
-                              <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
+                              {!curElem.folderName && (
+                                <Dropdown.Item
+                                  style={{ fontSize: "12px" }}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    dispatch(saveFilesToBeShared([{ container: curElem, file: curElem.fileDetails[0] }]));
+                                    dispatch(setModalState({ modal: "shareModal", state: true }));
+                                  }}
+                                >
+                                  Share
+                                </Dropdown.Item>
+                              )}
                               <Dropdown.Item
                                 style={
                                   !curElem.folderName
@@ -689,7 +714,7 @@ const FilesTable = ({ fileData }) => {
                       </div>
 
                       {!curElem.folderName && (
-                        <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? { height: "10rem" } : { height: "0" }}>
+                        <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
                           <div className={styles.feedbackContainer}>
                             {fileFeedArr &&
                               fileFeedArr.map((eachFeed, index) => {
@@ -706,7 +731,7 @@ const FilesTable = ({ fileData }) => {
                         </div>
                       )}
                       {!curElem.folderName && (
-                        <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === curElem.fileDetails[0]._id ? { height: "12rem" } : { height: "0" }}>
+                        <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
                           <div className={styles.feedbackContainer}>
                             <textarea name="feedbackText" rows="5" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
                             <div className="d-flex justify-content-end">
@@ -719,7 +744,7 @@ const FilesTable = ({ fileData }) => {
                       )}
 
                       {curElem.folderName && (
-                        <div className={styles.folderFiles} style={openedFolder === `folder-${curElem._id}` ? { height: "10rem", border: "1px solid #e6e6e6" } : { height: "0", border: "none" }}>
+                        <div className={styles.folderFiles} style={openedFolder === `folder-${curElem._id}` ? { height: "fit-content", border: "1px solid #e6e6e6" } : { height: "0", border: "none" }}>
                           <div style={{ height: "100%", overflowY: "scroll", position: "relative" }}>
                             {curElem.fileDetails &&
                               curElem.fileDetails.map((cur) => {
@@ -974,7 +999,16 @@ const FilesTable = ({ fileData }) => {
                                             <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile(cur)}>
                                               Download
                                             </Dropdown.Item>
-                                            <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
+                                            <Dropdown.Item
+                                              style={{ fontSize: "12px" }}
+                                              onClick={(event) => {
+                                                event.stopPropagation();
+                                                dispatch(saveFilesToBeShared([{ container: curElem, file: cur }]));
+                                                dispatch(setModalState({ modal: "shareModal", state: true }));
+                                              }}
+                                            >
+                                              Share
+                                            </Dropdown.Item>
                                             <Dropdown.Item
                                               style={
                                                 getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
@@ -990,7 +1024,7 @@ const FilesTable = ({ fileData }) => {
                                       </div>
                                     </div>
 
-                                    <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === cur._id ? { height: "10rem" } : { height: "0" }}>
+                                    <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === cur._id ? { height: "fit-content" } : { height: "0" }}>
                                       <div className={styles.feedbackContainer}>
                                         {fileFeedArr &&
                                           fileFeedArr.map((eachFeed, index) => {
@@ -1005,7 +1039,7 @@ const FilesTable = ({ fileData }) => {
                                           })}
                                       </div>
                                     </div>
-                                    <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === cur._id ? { height: "12rem" } : { height: "0" }}>
+                                    <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === cur._id ? { height: "fit-content" } : { height: "0" }}>
                                       <div className={styles.feedbackContainer}>
                                         <textarea name="feedbackText" rows="5" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
                                         <div className="d-flex justify-content-end">
