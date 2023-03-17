@@ -6,7 +6,7 @@ import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 
-const FeedbackCard = ({ feedData, currentVer, name, containerAndFile }) => {
+const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyText, setReplyText] = useState("");
   const sendReply = async () => {
@@ -92,7 +92,9 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile }) => {
               </div>
             </div>
             <div className="d-flex justify-content-end">
-              <button className={styles.outlineButton}>Upload New Version</button>
+              <button className={styles.outlineButton} onClick={() => uploadNewVersionFunc(containerAndFile.container, containerAndFile.file)}>
+                Upload New Version
+              </button>
               <button className={styles.submitButton} onClick={sendReply}>
                 Submit
               </button>

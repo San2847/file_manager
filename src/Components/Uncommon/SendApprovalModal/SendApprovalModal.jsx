@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./sendApprovalModal.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdClose } from "react-icons/io";
-import { setModalState, saveArrayForApproval, clearArrayForApproval } from "../../../Redux/slices/filemanagerSlice";
+import { setModalState, saveArrayForApproval, clearArrayForApproval, inputNotifyMessage } from "../../../Redux/slices/filemanagerSlice";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 
 const SendApprovalModal = () => {
   const dispatch = useDispatch();
-  const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray } = useSelector((state) => state.filemanager);
+  const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray, notifyMessage } = useSelector((state) => state.filemanager);
   const [notify, setNotify] = useState(false);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState({});
@@ -48,12 +48,16 @@ const SendApprovalModal = () => {
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
           saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for execution" });
-          getFiles(1);
+          getFiles(3);
         } else {
           console.log(res.error);
         }
       }
     }
+  };
+
+  const inputMessage = (event) => {
+    dispatch(inputNotifyMessage(event.target.value));
   };
 
   const removeFiles = (item) => {
@@ -111,7 +115,7 @@ const SendApprovalModal = () => {
             </div>
             <div>Message</div>
             <div className={styles.messageBox}>
-              <textarea rows={4}></textarea>
+              <textarea rows={4} value={notifyMessage} onChange={inputMessage}></textarea>
             </div>
           </>
         )}

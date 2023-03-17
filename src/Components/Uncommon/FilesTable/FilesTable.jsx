@@ -724,6 +724,7 @@ const FilesTable = ({ fileData }) => {
                                     currentVer={index === 0}
                                     name={openedInfo.file ? openedInfo.file.fileName : ""}
                                     containerAndFile={{ container: curElem, file: curElem.fileDetails[0] }}
+                                    uploadNewVersionFunc={uploadNewVersion}
                                   />
                                 );
                               })}
@@ -1034,6 +1035,7 @@ const FilesTable = ({ fileData }) => {
                                                 currentVer={index === 0}
                                                 name={openedInfo.file ? openedInfo.file.fileName : ""}
                                                 containerAndFile={{ container: curElem, file: cur }}
+                                                uploadNewVersionFunc={uploadNewVersion}
                                               />
                                             );
                                           })}

@@ -29,7 +29,7 @@
   height: 0;
 }
 .activeReplyBox {
-  max-height: 10rem;
+  height: fit-content;
 }
 
 .outlineButton {

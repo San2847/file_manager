@@ -45,6 +45,8 @@ const initialState = {
   teamMemberArray: [],
 
   profileData: {},
+
+  notifyMessage: "",
 };
 
 export const filemanagerSlice = createSlice({
@@ -181,6 +183,10 @@ export const filemanagerSlice = createSlice({
     saveFilesToBeShared: (state, action) => {
       state.filesToBeSharedArr = [...action.payload];
     },
+
+    inputNotifyMessage: (state, action) => {
+      state.notifyMessage = action.payload;
+    },
   },
 });
 
@@ -212,6 +218,7 @@ export const {
   saveTeamMemberArray,
   saveProfileData,
   saveFilesToBeShared,
+  inputNotifyMessage,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

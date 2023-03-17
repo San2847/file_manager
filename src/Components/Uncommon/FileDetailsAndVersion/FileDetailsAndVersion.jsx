@@ -36,11 +36,13 @@ const FileDetailsAndVersion = () => {
       }&designerId=${detailsVersionBox.container.userId ? detailsVersionBox.container.userId : singleFile.userId}`
     );
     if (res && !res.error) {
-      setUserData(res.data);
+      setUserData(res.data.data.data[0]);
     } else {
       console.log(res.error);
     }
   };
+
+  console.log(userData)
 
   const dataArray = [
     {
@@ -73,7 +75,7 @@ const FileDetailsAndVersion = () => {
     },
     {
       label: "Uploaded by",
-      data: "-",
+      data: userData ? userData.fullName : "-",
     },
   ];
 
@@ -81,7 +83,7 @@ const FileDetailsAndVersion = () => {
     setLoading(true);
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-versions?uuId=${detailsVersionBox.file.uuId}`);
     if (res && !res.error) {
-      setVersionData([...res.data]);
+      setVersionData([...res.data.reverse()]);
       setLoading(false);
     } else {
       console.log(res.error);
