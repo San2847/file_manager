@@ -42,7 +42,7 @@ const FileDetailsAndVersion = () => {
     }
   };
 
-  console.log(userData)
+  console.log(userData);
 
   const dataArray = [
     {
@@ -156,10 +156,17 @@ const FileDetailsAndVersion = () => {
                       <div className="h-100">
                         <BsFileEarmarkFill color="#43A6DD" fontSize={14} style={{ marginRight: "0.25rem" }} />
                       </div>
-                      <div style={{ fontSize: "14px", width: "90%" }}>
-                        <b>{curElem && curElem.fileName}</b>
-                        {curElem.versionText ? ` ${curElem.versionText}` : ""}
-                      </div>
+                      {curElem.feedBack && curElem.feedBack.length > 0 ? (
+                        <div style={{ fontSize: "14px", width: "90%" }}>
+                          <b>{curElem && curElem.fileName}</b>
+                          {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}` : ""}
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: "14px", width: "90%" }}>
+                          <b>{curElem && curElem.fileName}</b>
+                          {curElem.versionText ? ` ${curElem.versionText}` : ""}
+                        </div>
+                      )}
                     </div>
                     <div>
                       {curElem.feedBack && curElem.feedBack.length > 0 && <RiChatQuoteLine style={{ marginRight: "0.25rem" }} />}
@@ -167,6 +174,13 @@ const FileDetailsAndVersion = () => {
                         <HiOutlineDocumentMagnifyingGlass />
                       </a>
                     </div>
+                  </div>
+                  <div>
+                    {curElem.feedBack && curElem.feedBack.length > 0 && (
+                      <div style={{ fontSize: "12px", width: "100%", backgroundColor: "#ffffff", padding: "0.5rem", borderRadius: "4px" }}>
+                        {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[1] ? curElem.versionText.split("~-+-~")[1] : ""}` : ""}
+                      </div>
+                    )}
                   </div>
                   <div className={styles.dateString}>{curElem.updateTime ? createDateString(curElem.updateTime) : ""}</div>
                 </div>

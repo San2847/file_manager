@@ -178,9 +178,13 @@ const FilesTable = ({ fileData }) => {
     setFeedbackText(event.target.value);
   };
   const submitFeedback = async () => {
-    const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${openedGiveFeed.container._id}&fileId=${openedGiveFeed.file._id}`, { sendBy: getUserId(), message: feedbackText });
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${openedGiveFeed.container._id}&fileId=${openedGiveFeed.file._id}`, {
+      sendBy: getUserId(),
+      message: `${feedbackText}~-+-~${profileData.fullName}`,
+    });
     if (res && !res.error) {
       getFiles(1);
+      saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `A feedback has been added by ${profileData.fullName}~-+-~${feedbackText}` });
       setFileFeedArr([...res.data.fileDetails[0].feedBack]);
       setOpenedGiveFeed("");
       setFeedbackText("");
@@ -725,6 +729,7 @@ const FilesTable = ({ fileData }) => {
                                     name={openedInfo.file ? openedInfo.file.fileName : ""}
                                     containerAndFile={{ container: curElem, file: curElem.fileDetails[0] }}
                                     uploadNewVersionFunc={uploadNewVersion}
+                                    profileData={profileData}
                                   />
                                 );
                               })}
