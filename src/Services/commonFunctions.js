@@ -27,7 +27,10 @@ export const getFiles = async (status) => {
     store.dispatch(setLoadingState(true));
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&type=1&status=${status}`);
     if (res && !res.error) {
-      store.dispatch(saveOnlyFiles(res.data));
+      let sortedItems = res.data.sort((a, b) => {
+        return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
+      });
+      store.dispatch(saveOnlyFiles([...sortedItems]));
       store.dispatch(setLoadingState(false));
     } else {
       console.log(res.error);

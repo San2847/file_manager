@@ -1,5 +1,5 @@
-import React from "react";
-import { Modal } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Dropdown, Modal } from "react-bootstrap";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./shareModal.module.css";
@@ -8,11 +8,42 @@ import whatsapp from "../../../Assets/ShareModalIcons/whatsapp.svg";
 import person from "../../../Assets/ShareModalIcons/person.svg";
 import team from "../../../Assets/ShareModalIcons/team.svg";
 import { setModalState } from "../../../Redux/slices/filemanagerSlice";
+import { postReq } from "../../../Services/api";
+import { apiLinks } from "../../../constants/constants";
 
 const ShareModal = () => {
   const dispatch = useDispatch();
-  const { shareModal, filesToBeSharedArr } = useSelector((state) => state.filemanager);
-  console.log(filesToBeSharedArr);
+  const { shareModal, filesToBeSharedArr, profileData, teamMemberArray } = useSelector((state) => state.filemanager);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [copyButtonText, setCopyButtonText] = useState("Copy Link");
+
+  const linkTextRef = useRef(null);
+
+  const [selectedTeamMember, setSelectedTeamMember] = useState({});
+
+  const shareToTeam = async (fileObj) => {
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/share-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { userId: selectedTeamMember.memberId });
+    if (res && !res.error) {
+      setShowDropdown(false);
+      dispatch(setModalState({ modal: "shareModal", state: false }));
+    } else {
+      console.log(res.error);
+    }
+  };
+  const shareToTeamClick = () => {
+    setShowDropdown(true);
+    if (showDropdown && Object.keys(selectedTeamMember).length > 0) {
+      filesToBeSharedArr.forEach((curElem) => {
+        shareToTeam(curElem);
+      });
+    }
+  };
+
+  const copyText = () => {
+    const text = linkTextRef.current.innerText;
+    navigator.clipboard.writeText(text);
+    setCopyButtonText("Copied");
+  };
   return (
     <Modal show={shareModal} centered>
       <Modal.Body>
@@ -23,7 +54,7 @@ const ShareModal = () => {
           </div>
         </div>
         <div className={styles.linkContainerDiv}>
-          <div style={{ whiteSpace: "nowrap", overflow: "scroll", width: "78%" }}>
+          <div style={{ whiteSpace: "nowrap", overflow: "scroll", width: "78%" }} ref={linkTextRef}>
             {filesToBeSharedArr &&
               filesToBeSharedArr.map((curElem, index) => {
                 if (index === filesToBeSharedArr.length - 1) {
@@ -33,8 +64,19 @@ const ShareModal = () => {
                 }
               })}
           </div>
-          <button>Copy Link</button>
+          <button onClick={copyText}>{copyButtonText}</button>
         </div>
+        {showDropdown && (
+          <Dropdown>
+            <Dropdown.Toggle className={styles.teamSelectDrop}>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.memberName : "Select"}</Dropdown.Toggle>
+            <Dropdown.Menu>
+              {teamMemberArray &&
+                teamMemberArray.map((curElem) => {
+                  return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)}>{curElem.memberName}</Dropdown.Item>;
+                })}
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
         <div className="d-flex">
           <div className={styles.eachIconContainer}>
             <img src={mailIcon} alt="" />
@@ -48,7 +90,7 @@ const ShareModal = () => {
             <img src={person} alt="" />
             <div>Client</div>
           </div>
-          <div className={styles.eachIconContainer}>
+          <div className={styles.eachIconContainer} onClick={shareToTeamClick}>
             <img src={team} alt="" />
             <div>Internal Team</div>
           </div>

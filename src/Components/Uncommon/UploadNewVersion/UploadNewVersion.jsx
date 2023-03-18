@@ -15,6 +15,7 @@ const UploadNewVersion = () => {
   const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
 
   const [shareChecks, setShareChecks] = useState([]);
+  console.log(fileToNewVersion)
 
   const updateFileVersion = async () => {
     const obj = {
@@ -29,6 +30,7 @@ const UploadNewVersion = () => {
       saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file.uuId);
       getFiles(1);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
+      dispatch(setModalState({ modal: "versionConfirmation", state: false }));
       dispatch(saveFileToNewVersion(fileToNewVersion[0]));
     } else {
       console.log(res.error);
