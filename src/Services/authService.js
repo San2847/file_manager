@@ -19,6 +19,15 @@ export function getUserId() {
   }
 }
 
+export function getProjectId() {
+  const projectId = localStorage.getItem("projectId");
+  if (projectId) {
+    return projectId;
+  } else {
+    return null;
+  }
+}
+
 export function getLoginId() {
   const loginid = localStorage.getItem(id);
   if (loginid) {

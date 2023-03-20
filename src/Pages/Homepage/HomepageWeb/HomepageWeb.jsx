@@ -20,7 +20,7 @@ import { RiFolder2Line } from "react-icons/ri";
 import UploadFileModal from "../../../Components/Uncommon/UploadFileModal/UploadFileModal";
 import { postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
-import { getUserId } from "../../../Services/authService";
+import { getProjectId, getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
 import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import OnlyFilesTable from "../../../Components/Uncommon/OnlyFilesTable/OnlyFilesTable";
@@ -70,6 +70,7 @@ const HomepageWeb = () => {
       if (res && !res.error) {
         let sendingObj = {
           userId: getUserId(),
+          projectId: getProjectId(),
         };
         let eachFileObj = {};
         eachFileObj["uuId"] = uuid();
@@ -106,6 +107,7 @@ const HomepageWeb = () => {
     const folderName = files[0].webkitRelativePath.split("/")[0];
     let sendObj = {
       userId: getUserId(),
+      projectId: getProjectId(),
       folderName: folderName,
     };
     let arr = [];
