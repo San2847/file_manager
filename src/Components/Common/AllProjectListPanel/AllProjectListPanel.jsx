@@ -15,7 +15,7 @@ const AllProjectListPanel = ({ projectId }) => {
   const getProjects = async () => {
     const res = await getReq(`${apiLinks.pmt}/api/projects/getProjects?projectId=${projectId}`);
     if (res && !res.error) {
-      setProjects([...res.data.projects[0]]);
+      setProjects(res.data.projects[0]);
     } else {
       console.log(res.error);
     }
@@ -24,6 +24,7 @@ const AllProjectListPanel = ({ projectId }) => {
   useEffect(() => {
     getProjects();
   }, [projectId]);
+  console.log(projects);
 
   return (
     <React.Fragment>
