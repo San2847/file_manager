@@ -1,0 +1,213 @@
+.projectContainer {
+  height: 100%;
+  background-color: #fafafa;
+  width: 20vw;
+  border-radius: 8px;
+  border: 1px solid #ededed;
+}
+
+.projectName {
+  border-bottom: 1px solid #bdbdbd;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.projectNameText {
+  color: #3b5998;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.projectInsideContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+.projectInsideLinksActive {
+  display: flex;
+  align-items: center;
+  background-color: #5255a4;
+  padding: 0.3rem 1rem;
+  border-radius: 8px;
+  width: 70%;
+  justify-content: space-between;
+  color: #ffffff;
+  margin-bottom: 0.1rem;
+  cursor: pointer;
+  font-size: 14px;
+}
+.projectInsideLinksInactive {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  border-radius: 8px;
+  width: 70%;
+  justify-content: space-between;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+  cursor: pointer;
+  font-size: 14px;
+}
+.projectInsideLinksInactive:hover{
+  background-color: #9d9d9d1a;
+}
+
+.projectInsideLinksActive .updateIcon {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #3b5998;
+  font-size: 12px;
+}
+.projectInsideLinksInactive .updateIcon {
+  background-color: #dfdfdf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #000000;
+  font-size: 14px;
+}
+
+.projectInsideLinksActive .filesIcon {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #3b5998;
+  font-size: 14px;
+}
+.projectInsideLinksInactive .filesIcon {
+  background-color: #ffaa47;
+  color: #ffffff;
+  padding: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.projectInsideLinksActive .momIcon {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.6rem 0.4rem;
+  border-radius: 6px;
+  color: #3b5998;
+  font-size: 6px;
+}
+.projectInsideLinksInactive .momIcon {
+  background-color: #49dcfc;
+  color: #ffffff;
+  font-size: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.6rem 0.4rem;
+  border-radius: 6px;
+}
+
+.projectInsideLinksActive .timelineIcon {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #3b5998;
+}
+.projectInsideLinksInactive .timelineIcon {
+  background-color: #08d729;
+  color: #ffffff;
+  padding: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.projectInsideLinksActive .quotationIcon {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  color: #3b5998;
+}
+.projectInsideLinksInactive .quotationIcon {
+  background-color: #ec53fa;
+  color: #ffffff;
+  padding: 0.35rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}
+.quotationIcon img {
+  height: 16px;
+}
+
+.updateSubLinkContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  padding-right: 2rem;
+}
+.updateSubLinkActive {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  margin: 0.25rem 0;
+  padding: 0.3rem 3rem 0.3rem 0.8rem;
+  background-color: #9d9d9d1a;
+  width: 70%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.updateSubLinkInactive {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  /* margin: 0.25rem 0; */
+  padding: 0.4rem 3rem 0.4rem 0.8rem;
+  width: 70%;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.updateSubLinkInactive:hover {
+  background-color: #9d9d9d1a;
+}
+.chatIcon {
+  background-color: #ae47ff;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+}
+.emailIcon {
+  background-color: #f254a0;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.35rem;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+}

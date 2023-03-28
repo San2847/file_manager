@@ -6,6 +6,11 @@ export const routingArray = [
     path: "/",
     element: <Homepage />,
   },
+  {
+    forKey: 0,
+    path: "/:id",
+    element: <Homepage />,
+  },
 ];
 
 export const apiLinks = {

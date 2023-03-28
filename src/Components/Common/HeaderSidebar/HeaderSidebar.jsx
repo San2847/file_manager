@@ -3,7 +3,7 @@ import styles from "./headerSidebar.module.css";
 import logo from "../../../Assets/comp_logo.svg";
 import { AiOutlineShoppingCart, AiOutlinePlus } from "react-icons/ai";
 import { BsBell, BsChevronDown } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { sidebarLinks } from "./sidebarLinks";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import medal from "./SidebarAssets/medal.svg";
@@ -12,11 +12,14 @@ import { getReq } from "../../../Services/api";
 import { getToken } from "../../../Services/authService";
 import { useDispatch } from "react-redux";
 import { saveProfileData } from "../../../Redux/slices/filemanagerSlice";
+import AllProjectListPanel from "../AllProjectListPanel/AllProjectListPanel";
 
 const HeaderSidebar = () => {
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const { id } = useParams();
 
   const [profileData, setProfileData] = useState({});
 
@@ -104,39 +107,42 @@ const HeaderSidebar = () => {
           </div>
         </div>
       </div>
-      <div className={styles.sidebar}>
-        <div style={{ height: "100%" }}>
-          <div className={styles.createProjectButtonWrapper}>
-            <button className={styles.createProjectButton}>
-              <AiOutlinePlus style={{ marginRight: "0.25rem" }} />
-              Create a Project
-            </button>
-          </div>
-          <div className={styles.linksContainerWrapper}>
-            <div className={styles.linksContainer}>
-              {sidebarLinks.map((curElem, index) => {
-                return (
-                  curElem.visible && (
-                    <div key={index} className={curElem.active ? styles.activeSidebarItem : styles.sidebarItem}>
-                      {curElem.link ? (
-                        <Link to={curElem.link} className={styles.sidebarLink}>
-                          {curElem.icon}
-                          <span className={styles.sidebarLabel}>{curElem.label}</span>
-                        </Link>
-                      ) : (
-                        <a href={curElem.href} className={styles.sidebarLink}>
-                          {curElem.icon}
-                          <span className={styles.sidebarLabel}>{curElem.label}</span>
-                        </a>
-                      )}
-                    </div>
-                  )
-                );
-              })}
+      {id ? (
+        <AllProjectListPanel projectId={id} />
+      ) : (
+        <div className={styles.sidebar}>
+          <div style={{ height: "100%" }}>
+            <div className={styles.createProjectButtonWrapper}>
+              <button className={styles.createProjectButton}>
+                <AiOutlinePlus style={{ marginRight: "0.25rem" }} />
+                Create a Project
+              </button>
+            </div>
+            <div className={styles.linksContainerWrapper}>
+              <div className={styles.linksContainer}>
+                {sidebarLinks.map((curElem, index) => {
+                  return (
+                    curElem.visible && (
+                      <div key={index} className={curElem.active ? styles.activeSidebarItem : styles.sidebarItem}>
+                        {curElem.link ? (
+                          <Link to={curElem.link} className={styles.sidebarLink}>
+                            {curElem.icon}
+                            <span className={styles.sidebarLabel}>{curElem.label}</span>
+                          </Link>
+                        ) : (
+                          <a href={curElem.href} className={styles.sidebarLink}>
+                            {curElem.icon}
+                            <span className={styles.sidebarLabel}>{curElem.label}</span>
+                          </a>
+                        )}
+                      </div>
+                    )
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-        {/* <div className={styles.upgradeContainer}>
+          {/* <div className={styles.upgradeContainer}>
           <button className={styles.upgradeButton}>
             <img src={medal} alt="" style={{ marginRight: "0.5rem" }} />
             Upgrade to Premium
@@ -151,7 +157,8 @@ const HeaderSidebar = () => {
             </div>
           </div>
         </div> */}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
