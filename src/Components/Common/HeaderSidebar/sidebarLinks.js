@@ -9,7 +9,7 @@ let BASE_URL = "http://erp.essentiaenvironments.com";
 export const sidebarLinks = [
   {
     label: "Manage Leads",
-    link: "/",
+    link: "",
     icon: (
       <div
         style={{
@@ -33,7 +33,7 @@ export const sidebarLinks = [
   },
   {
     label: "All Projects",
-    link: "/all-projects",
+    link: "",
     icon: (
       <div
         style={{
@@ -57,7 +57,7 @@ export const sidebarLinks = [
   },
   {
     label: "Design Quotation",
-    link: "/quotation",
+    link: "",
     icon: (
       <div
         style={{
@@ -81,7 +81,7 @@ export const sidebarLinks = [
   },
   {
     label: "Quotation",
-    link: "/quotation",
+    link: "",
     icon: (
       <div
         style={{
@@ -149,11 +149,11 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `#`,
+    href: `${BASE_URL}/timeline/timeline-dashboard/`,
   },
   {
     label: "Task Manager",
-    link: "/task-manager",
+    link: "",
     icon: (
       <div
         style={{
@@ -171,9 +171,9 @@ export const sidebarLinks = [
         <CiViewList />
       </div>
     ),
-    visible: false,
+    visible: true,
     active: false,
-    href: `#`,
+    href: `${BASE_URL}/timeline/task-manager-dashboard/`,
   },
   {
     label: "MOM",
@@ -198,7 +198,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `#`,
+    href: `${BASE_URL}/mom/`,
   },
   {
     label: "Moodboard",
@@ -247,7 +247,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "#",
+    href: `${BASE_URL}/po/`,
   },
 
   {
@@ -272,7 +272,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: "#",
+    href: `${BASE_URL}/account/`,
   },
   {
     label: "Chat",
