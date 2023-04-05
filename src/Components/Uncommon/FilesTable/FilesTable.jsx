@@ -1161,7 +1161,7 @@ const FilesTable = ({ fileData }) => {
                                 );
                               })
                             ) : (
-                              <div style={{ height: "10rem", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "18px", fontWeight: "600", color: "#888888" }}>
+                              <div style={{ height: "5rem", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "18px", fontWeight: "600", color: "#888888" }}>
                                 No files to show
                               </div>
                             )}
