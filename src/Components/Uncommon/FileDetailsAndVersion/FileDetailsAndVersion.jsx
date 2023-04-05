@@ -185,18 +185,12 @@ const FileDetailsAndVersion = () => {
                       {curElem.feedBack && curElem.feedBack.length > 0 ? (
                         <div style={{ fontSize: "14px", width: "90%" }}>
                           <b>{curElem && curElem.fileName}</b>
-                          {curElem.versionText && !curElem.versionText.includes("execution")
-                            ? curElem.versionText.split("~-+-~")
-                              ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}`
-                              : ""
-                            : curElem.versionText.split("-+-")
-                            ? `Reason: ${curElem.version.split("-+-")[1]}`
-                            : ""}
+                          {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}` : ""}
                         </div>
                       ) : (
                         <div style={{ fontSize: "14px", width: "90%" }}>
                           <b>{curElem && curElem.fileName}</b>
-                          {curElem.versionText ? ` ${curElem.versionText.includes("execution") ? `${curElem.versionText.split("-+-")[0]} Reason: ${curElem.versionText.split("-+-")[1]}` : ""}` : ""}
+                          {curElem.versionText ? ` ${curElem.versionText}` : ""}
                         </div>
                       )}
                     </div>
