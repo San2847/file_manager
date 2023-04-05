@@ -9,6 +9,7 @@ import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { RiChatNewLine, RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import {
+  clearFileCheckbox,
   handleDetailsVersionBox,
   saveArrayForApproval,
   saveFilesToBeShared,
@@ -16,6 +17,7 @@ import {
   saveFolderToBeDeleted,
   saveNewFileForVersion,
   savePrepareDeleteArr,
+  selectAllCheckBoxes,
   selectFileCheckbox,
   selectFileFolderToBeRenamed,
   setFilesGoingFor,
@@ -29,7 +31,7 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import RenameModal from "../RenameModal/RenameModal";
 import { getReq, postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
-import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
+import { getFiles, getFileStatus, saveFileChangesAsVersion, scrollFileContainerToTop } from "../../../Services/commonFunctions";
 import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
@@ -43,7 +45,7 @@ const FilesTable = ({ fileData }) => {
 
   const [addedFilesArr, setAddedFilesArr] = useState([]);
 
-  const [openedFolder, setOpenedFolder] = useState("");
+  const [openedFolder, setOpenedFolder] = useState([]);
 
   const [spaceName, setSpaceName] = useState("");
   const [drawType, setDrawType] = useState("");
@@ -87,13 +89,18 @@ const FilesTable = ({ fileData }) => {
   };
 
   const openFolderOrSelectFile = (elem) => {
-    if (elem.folderName && elem.fileDetails.length > 0) {
-      setOpenedFolder(`folder-${elem._id}`);
+    if (elem.folderName) {
+      setOpenedFolder((prev) => {
+        return [...prev, `folder-${elem._id}`];
+      });
     } else {
       dispatch(selectFileCheckbox({ container: elem, fileOrFold: elem.fileDetails[0], type: "outside" }));
     }
-    if (openedFolder === `folder-${elem._id}`) {
-      setOpenedFolder("");
+    if (openedFolder.includes(`folder-${elem._id}`)) {
+      let x = openedFolder.filter((curElem) => {
+        return curElem !== `folder-${elem._id}`;
+      });
+      setOpenedFolder(x);
     }
   };
 
@@ -188,7 +195,7 @@ const FilesTable = ({ fileData }) => {
       setFileFeedArr([...res.data.fileDetails[0].feedBack]);
       setOpenedGiveFeed("");
       setFeedbackText("");
-      console.log(res.data);
+      scrollFileContainerToTop();
     } else {
       console.log(res.error);
     }
@@ -275,6 +282,83 @@ const FilesTable = ({ fileData }) => {
     fileDownload(file.fileLink, `${file.fileName}`);
   };
 
+  const [uploaderData, setUploaderData] = useState([]);
+  const getUploaderData = async (userIdArr) => {
+    const res = await postReq(`${apiLinks.pmt}/api/projects/get-profiles-by-userids`, { userIds: userIdArr });
+    if (res && !res.error) {
+      setUploaderData([...res.data]);
+    } else {
+      console.log(res.error);
+    }
+  };
+
+  const [requestToId, setRequestToId] = useState([]);
+  const getRequestToIds = async (idArr) => {
+    let defArr = idArr.filter((curElem) => {
+      return curElem !== undefined;
+    });
+    const res = await postReq(`${apiLinks.pmt}/api/projects/get-profiles-by-userids`, { userIds: defArr });
+    if (res && !res.error) {
+      setRequestToId([...res.data]);
+    } else {
+      console.log(res.error);
+    }
+  };
+
+  const [allSelectCheckboxState, setAllSelectCheckboxState] = useState(false);
+  const selectAllFiles = () => {
+    let allFiles = fileData
+      .map((curEl) => {
+        return curEl.fileDetails;
+      })
+      .flat();
+    if (fileCheckBoxArr.length === allFiles.length) {
+      dispatch(clearFileCheckbox());
+    } else {
+      let x = fileData.flatMap((curElem) => {
+        if (!curElem.folderName) {
+          return { container: curElem, fileOrFold: curElem.fileDetails[0], type: "outside" };
+        } else {
+          return curElem.fileDetails.map((cur) => {
+            return { container: curElem, fileOrFold: cur, type: "inside" };
+          });
+        }
+      });
+      dispatch(selectAllCheckBoxes(x));
+    }
+  };
+
+  useEffect(() => {
+    let allFiles = fileData
+      .map((curEl) => {
+        return curEl.fileDetails;
+      })
+      .flat();
+    if (allFiles.length === fileCheckBoxArr.length) {
+      setAllSelectCheckboxState(true);
+    } else {
+      setAllSelectCheckboxState(false);
+    }
+  }, [fileCheckBoxArr, fileData]);
+
+  useEffect(() => {
+    if (fileData) {
+      let x = fileData.map((curElem) => {
+        return curElem.userId;
+      });
+      getUploaderData(x);
+
+      let y = fileData.map((curElem) => {
+        if (curElem.fileDetails[0] && !curElem.folderName && curElem.fileDetails[0].executionRequestTo !== undefined && curElem.fileDetails[0].executionRequestTo !== "") {
+          return curElem.fileDetails[0].executionRequestTo;
+        } else if (curElem.fileDetails[0] && !curElem.folderName && curElem.fileDetails[0].approvalRequestTo !== undefined && curElem.fileDetails[0].approvalRequestTo !== "") {
+          return curElem.fileDetails[0].approvalRequestTo;
+        }
+      });
+      getRequestToIds(y);
+    }
+  }, [fileData]);
+
   useEffect(() => {
     if (fileCheckBoxArr) {
       let x = fileCheckBoxArr.map((curElem) => {
@@ -324,7 +408,10 @@ const FilesTable = ({ fileData }) => {
       <RenameModal />
       <DeleteFolderModal />
       <input type="file" onChange={handleNewVersionUpload} className="d-none" ref={newVerUploadRef} />
-      <div className="d-flex mb-2 px-2">
+      <div className="d-flex mb-2 px-2 align-items-center">
+        <div className={allSelectCheckboxState ? styles.activeCheckbox : styles.customCheckbox} onClick={selectAllFiles}>
+          <BsCheck />
+        </div>
         <div style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "1.5rem", display: "flex", alignItems: "center" }}>
           Name
           <AiOutlineArrowUp />
@@ -341,18 +428,21 @@ const FilesTable = ({ fileData }) => {
         <div style={{ width: detailsVersionTab === "" ? "5%" : "10%" }}></div>
       </div>
 
-      <div className="d-flex flex-column" style={{ height: "80%", overflowY: "scroll" }}>
+      <div className="d-flex flex-column" id="file-container-div" style={{ height: "80%", overflowY: "scroll" }}>
         <div style={{ height: "fit-content" }}>
           {loading ? (
             <LoadingSekeleton />
           ) : fileData ? (
             <>
-              {fileData.map((curElem) => {
+              {fileData.map((curElem, index) => {
                 let unreadFeeds =
                   curElem?.fileDetails &&
                   curElem?.fileDetails[0]?.feedBack.filter((curF) => {
                     return curF.isRead === false;
                   });
+
+                let curInitial = uploaderData[index]?.data?.data[0]?.fullName === "x" ? "-" : uploaderData[index]?.data?.data[0]?.fullName.split("")[0];
+
                 return (
                   <>
                     <div style={openedDrop === curElem._id ? { backgroundColor: "#f2f2f2", position: "relative", zIndex: "1000" } : { backgroundColor: "#f7f7f7" }}>
@@ -384,7 +474,7 @@ const FilesTable = ({ fileData }) => {
                             )}
                           </div>
                           <div
-                            style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+                            style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", display: "flex", alignItems: "center" }}
                             onClick={(event) => {
                               if (!curElem.folderName) {
                                 event.stopPropagation();
@@ -406,6 +496,11 @@ const FilesTable = ({ fileData }) => {
                               >
                                 {curElem.fileDetails[0] && curElem.fileDetails[0].fileName}
                               </a>
+                            )}
+                            {uploaderData[index]?.fullName !== "x" && (
+                              <span className={styles.senderInitial} title={uploaderData[index]?.data?.data[0]?.fullName}>
+                                {curInitial}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -499,6 +594,9 @@ const FilesTable = ({ fileData }) => {
                           }}
                         >
                           {curElem.folderName ? "" : curElem.fileDetails[0] && getFileStatus(curElem.fileDetails[0])}
+                          {/* <span className={styles.senderInitial} title={uploaderData[index]?.data?.data[0]?.fullName}>
+                            {requestInitial[0].data.data[0].fullName}
+                          </span> */}
                         </div>
 
                         {/* this part is for approval and feedback buttons for normal files */}
@@ -750,9 +848,12 @@ const FilesTable = ({ fileData }) => {
                       )}
 
                       {curElem.folderName && (
-                        <div className={styles.folderFiles} style={openedFolder === `folder-${curElem._id}` ? { height: "fit-content", border: "1px solid #e6e6e6" } : { height: "0", border: "none" }}>
+                        <div
+                          className={styles.folderFiles}
+                          style={openedFolder.includes(`folder-${curElem._id}`) ? { height: "fit-content", border: "1px solid #e6e6e6" } : { height: "0", border: "none" }}
+                        >
                           <div style={{ height: "100%", overflowY: "scroll", position: "relative" }}>
-                            {curElem.fileDetails &&
+                            {curElem.fileDetails.length > 0 ? (
                               curElem.fileDetails.map((cur) => {
                                 let unreadFeeds = cur.feedBack.filter((curF) => {
                                   return curF.isRead === false;
@@ -1058,7 +1159,12 @@ const FilesTable = ({ fileData }) => {
                                     </div>
                                   </>
                                 );
-                              })}
+                              })
+                            ) : (
+                              <div style={{ height: "10rem", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "18px", fontWeight: "600", color: "#888888" }}>
+                                No files to show
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}

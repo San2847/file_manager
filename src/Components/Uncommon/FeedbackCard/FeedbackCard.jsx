@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./feedbackCard.module.css";
 import feedbackIcon from "../../../Assets/feedbackIcon.svg";
-import { createDateString, getFiles } from "../../../Services/commonFunctions";
+import { createDateString, getFiles, scrollFileContainerToTop } from "../../../Services/commonFunctions";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
@@ -9,6 +9,7 @@ import { getUserId } from "../../../Services/authService";
 const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, profileData }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyText, setReplyText] = useState("");
+
   const sendReply = async () => {
     if (replyText) {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/reply-feedback?id=${containerAndFile.container._id}&fileId=${containerAndFile.file._id}&feedbackId=${feedData._id}`, {
@@ -17,6 +18,8 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
       });
       if (res && !res.error) {
         getFiles(1);
+        setShowReplyBox(false);
+        scrollFileContainerToTop();
       } else {
         console.log(res.error);
       }
@@ -24,7 +27,7 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
   };
   return (
     <>
-      <div className={currentVer ? styles.firstFeedback : styles.eachFeedback} onClick={() => setShowReplyBox(!showReplyBox)}>
+      <div className={currentVer ? styles.firstFeedback : styles.eachFeedback}>
         <div className="d-flex justify-content-between align-items-center mb-2">
           <div className="d-flex align-items-center" style={{ width: "90%" }}>
             <div
@@ -114,21 +117,32 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
       </div>
 
       {currentVer && (
-        <div className={`${styles.replyBox} ${showReplyBox ? styles.activeReplyBox : styles.inactiveReplyBox}`}>
+        <div className={`${styles.replyBox}`}>
           <div>
-            <div className={styles.replyInput}>
-              <textarea rows="4" value={replyText} onChange={(event) => setReplyText(event.target.value)}></textarea>
-              {/* <div className={styles.sendForApproval}>
-                <input className="me-2" type="checkbox" />
-                Send for approval
-              </div> */}
-            </div>
+            {showReplyBox && (
+              <div className={styles.replyInput}>
+                <textarea rows="4" value={replyText} onChange={(event) => setReplyText(event.target.value)}></textarea>
+                <div className={styles.sendForApproval}>
+                  <input className="me-2" type="checkbox" />
+                  Send for approval
+                </div>
+              </div>
+            )}
             <div className="d-flex justify-content-end">
               <button className={styles.outlineButton} onClick={() => uploadNewVersionFunc(containerAndFile.container, containerAndFile.file)}>
                 Upload New Version
               </button>
-              <button className={styles.submitButton} onClick={sendReply}>
-                Submit
+              <button
+                className={styles.submitButton}
+                onClick={() => {
+                  if (showReplyBox) {
+                    sendReply();
+                  } else {
+                    setShowReplyBox(true);
+                  }
+                }}
+              >
+                {showReplyBox ? "Submit" : "Add Reply"}
               </button>
             </div>
           </div>

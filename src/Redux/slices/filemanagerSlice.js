@@ -187,6 +187,10 @@ export const filemanagerSlice = createSlice({
     inputNotifyMessage: (state, action) => {
       state.notifyMessage = action.payload;
     },
+
+    selectAllCheckBoxes: (state, action) => {
+      state.fileCheckBoxArr = [...action.payload];
+    },
   },
 });
 
@@ -219,6 +223,7 @@ export const {
   saveProfileData,
   saveFilesToBeShared,
   inputNotifyMessage,
+  selectAllCheckBoxes,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

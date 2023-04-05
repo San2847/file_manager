@@ -15,7 +15,6 @@ const UploadNewVersion = () => {
   const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
 
   const [shareChecks, setShareChecks] = useState([]);
-  console.log(fileToNewVersion)
 
   const updateFileVersion = async () => {
     const obj = {

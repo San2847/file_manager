@@ -26,7 +26,7 @@ export const innerLinks = [
     link: "/project-discussion",
     icon: <img src={updates} />,
     visible: true,
-    active: true,
+    active: false,
     href: "",
   },
   {
@@ -34,7 +34,7 @@ export const innerLinks = [
     link: "",
     icon: <img src={files} />,
     visible: true,
-    active: false,
+    active: true,
     href: `${BASE_URL}/file-manager/${projectId}`,
   },
   {
@@ -59,15 +59,15 @@ export const innerLinks = [
     icon: <img src={timeline} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/timeline-dashboard/`,
+    href: `${BASE_URL}/timeline/timeline-dashboard/${projectId}`,
   },
   {
     label: "Task Manager",
     link: "",
     icon: <img src={taskmanager} />,
-    visible: false,
+    visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/task-manager-dashboard/`,
+    href: `${BASE_URL}/timeline/task-manager-dashboard/${projectId}`,
   },
   {
     label: "Accounts",

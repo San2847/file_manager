@@ -5,6 +5,7 @@ import Breadcrumb from "../../../Components/Common/Breadcrumb/Breadcrumb";
 import {
   clearAllEmptyFiles,
   clearFileCheckbox,
+  saveArrayForApproval,
   savePrepareDeleteArr,
   selectFileTypeTab,
   selectInternalTab,
@@ -34,10 +35,13 @@ import MoveModal from "../../../Components/Uncommon/MoveModal/MoveModal";
 import CreateFolderModal from "../../../Components/Uncommon/CreateFolderModal/CreateFolderModal";
 import SelfApprovalConfirmationModal from "../../../Components/Uncommon/SelfApprovalConfirmationModal/SelfApprovalConfirmationModal";
 import ShareModal from "../../../Components/Uncommon/ShareModal/ShareModal";
+import { useParams } from "react-router-dom";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
   const { fileTypeTab, internalTab, detailsVersionTab, fileUploadProgress, fileFolderArr, onlyFilesArr, fileCheckBoxArr, allEmptyFiles } = useSelector((state) => state.filemanager);
+
+  const { id } = useParams();
 
   const [clientFilesArr, setClientFilesArr] = useState([]);
 
@@ -59,6 +63,11 @@ const HomepageWeb = () => {
   const uploadFolderRef = useRef(null);
 
   const uploadFile = async (event) => {
+    const allFiles = fileFolderArr.map((curElem) => {
+      if (!curElem.folderName) {
+        return curElem.fileDetails[0].fileName;
+      }
+    });
     const { files } = event.target;
     setTotalFiles(files.length);
     for (let i = 0; i < files.length; i++) {
@@ -74,7 +83,7 @@ const HomepageWeb = () => {
         };
         let eachFileObj = {};
         eachFileObj["uuId"] = uuid();
-        eachFileObj["fileName"] = files[i].name ? files[i].name : "File";
+        eachFileObj["fileName"] = allFiles.includes(files[i].name) ? `${files[i].name}-copy` : files[i].name;
         eachFileObj["fileLink"] = res.data.locations[0];
         eachFileObj["fileType"] = files[i].type;
         eachFileObj["fileSize"] = `${Math.round(files[i].size / 1024)} KB`;
@@ -102,13 +111,16 @@ const HomepageWeb = () => {
   };
 
   const uploadFolder = async (event) => {
+    const allFolders = fileFolderArr.map((curElem) => {
+      return curElem.folderName;
+    });
     const { files } = event.target;
     setTotalFiles(files.length);
     const folderName = files[0].webkitRelativePath.split("/")[0];
     let sendObj = {
       userId: getUserId(),
       projectId: getProjectId(),
-      folderName: folderName,
+      folderName: allFolders.includes(folderName) ? `${folderName}-copy` : folderName,
     };
     let arr = [];
     for (let i = 0; i < files.length; i++) {
@@ -156,10 +168,32 @@ const HomepageWeb = () => {
     }
   };
 
+  const sendAllToExecution = () => {
+    dispatch(setFilesGoingFor("execution"));
+    fileCheckBoxArr.forEach((cur) => {
+      dispatch(saveArrayForApproval({ container: cur.container, file: cur.fileOrFold }));
+    });
+    dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+  };
+
+  const [sendExecButtonShow, setSendExecButtonShow] = useState(false);
+  useEffect(() => {
+    if (fileCheckBoxArr) {
+      let x =
+        fileCheckBoxArr.length > 0
+          ? fileCheckBoxArr.every((curElem) => {
+              return curElem.fileOrFold.status === 2;
+            })
+          : false;
+      setSendExecButtonShow(x);
+    }
+  }, [fileCheckBoxArr]);
+
   useEffect(() => {
     if (fileTypeTab) {
       getFiles(statusObj[fileTypeTab]);
     }
+    dispatch(clearFileCheckbox());
   }, [fileTypeTab]);
 
   useEffect(() => {
@@ -228,6 +262,11 @@ const HomepageWeb = () => {
             <div className="d-flex justify-content-between">
               <div className={styles.filesHeading}>Files</div>
               <div className="d-flex align-items-center">
+                {sendExecButtonShow && (
+                  <button className={`${styles.actionButtons} me-2`} onClick={sendAllToExecution}>
+                    Send for Execution
+                  </button>
+                )}
                 <button className={`${styles.actionButtons} me-2`} onClick={createEmptyFolder}>
                   Create Folder
                 </button>
@@ -296,7 +335,39 @@ const HomepageWeb = () => {
                   </div>
                 )}
               </div>
-              {internalTab === "internal" ? fileTypeTab === "all" ? <FilesTable fileData={fileFolderArr} /> : <OnlyFilesTable fileData={onlyFilesArr} /> : <FilesTable fileData={clientFilesArr} />}
+              {internalTab === "internal" ? (
+                fileTypeTab === "all" ? (
+                  <FilesTable
+                    fileData={
+                      id
+                        ? fileFolderArr.filter((curElem) => {
+                            return curElem.projectId === id;
+                          })
+                        : fileFolderArr
+                    }
+                  />
+                ) : (
+                  <OnlyFilesTable
+                    fileData={
+                      fileTypeTab === "discussion"
+                        ? id
+                          ? onlyFilesArr
+                              .filter((cur) => {
+                                return cur.projectId === id;
+                              })
+                              .filter((curElem) => {
+                                return curElem.status !== 0 || curElem.isSendForApproval === true;
+                              })
+                          : onlyFilesArr.filter((curElem) => {
+                              return curElem.status !== 0 || curElem.isSendForApproval === true;
+                            })
+                        : onlyFilesArr
+                    }
+                  />
+                )
+              ) : (
+                <FilesTable fileData={clientFilesArr} />
+              )}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
               <FileDetailsAndVersion />

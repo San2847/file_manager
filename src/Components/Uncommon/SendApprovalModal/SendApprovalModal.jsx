@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Modal } from "react-bootstrap";
 import { BsCheck, BsChevronDown } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +22,10 @@ const SendApprovalModal = () => {
       const obj = {};
       if (filesGoingFor === "approval") {
         obj["approvalRequestTo"] = selectedTeamMember.memberId;
+        obj["approvalRequestName"] = selectedTeamMember.memberName;
       } else {
         obj["executionRequestTo"] = selectedTeamMember.memberId;
+        obj["executionRequestName"] = selectedTeamMember.memberName;
       }
       let arr = [];
       arrayForApproval.forEach((curElem) => {
@@ -36,7 +38,7 @@ const SendApprovalModal = () => {
           dispatch(clearArrayForApproval());
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
-          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for approval" });
+          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` });
           getFiles(1);
         } else {
           console.log(res.error);
@@ -47,7 +49,11 @@ const SendApprovalModal = () => {
           dispatch(clearArrayForApproval());
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
-          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: "File sent for execution" });
+          saveFileChangesAsVersion({
+            container: arrayForApproval[0].container,
+            file: arrayForApproval[0].file,
+            text: `File sent for execution to ${selectedTeamMember.memberName}-+-${notifyMessage}`,
+          });
           getFiles(3);
         } else {
           console.log(res.error);
@@ -63,6 +69,12 @@ const SendApprovalModal = () => {
   const removeFiles = (item) => {
     dispatch(saveArrayForApproval(item));
   };
+
+  useEffect(() => {
+    if (filesGoingFor === "execution") {
+      setNotify(true);
+    }
+  }, [filesGoingFor]);
   return (
     <Modal show={sendApprovalModal} centered size="lg">
       <Modal.Header className={styles.heading}>{filesGoingFor === "approval" ? "New Approval Request" : "Send for Execution"}</Modal.Header>
@@ -108,11 +120,15 @@ const SendApprovalModal = () => {
         </div>
         {notify && (
           <>
-            <div className="mt-2">Select Channels</div>
-            <div className="d-flex w-100 flex-wrap my-2">
-              <div className={styles.channelPill}>channel name</div>
-              <div className={styles.channelPill}>channel name</div>
-            </div>
+            {filesGoingFor !== "execution" && (
+              <>
+                <div className="mt-2">Select Channels</div>
+                <div className="d-flex w-100 flex-wrap my-2">
+                  <div className={styles.channelPill}>channel name</div>
+                  <div className={styles.channelPill}>channel name</div>
+                </div>
+              </>
+            )}
             <div>Message</div>
             <div className={styles.messageBox}>
               <textarea rows={4} value={notifyMessage} onChange={inputMessage}></textarea>
@@ -121,12 +137,16 @@ const SendApprovalModal = () => {
         )}
         <div className="d-flex justify-content-between mt-2">
           <div className="d-flex align-items-center" style={{ userSelect: "none" }}>
-            <div className={`${styles.checkBox} ${notify && styles.activeCheckBox}`} onClick={() => setNotify(!notify)}>
-              <BsCheck color="#ffffff" />
-            </div>
-            <div style={{ fontSize: "12px", cursor: "pointer" }} onClick={() => setNotify(!notify)}>
-              Notify in chat
-            </div>
+            {filesGoingFor !== "execution" && (
+              <>
+                <div className={`${styles.checkBox} ${notify && styles.activeCheckBox}`} onClick={() => setNotify(!notify)}>
+                  <BsCheck color="#ffffff" />
+                </div>
+                <div style={{ fontSize: "12px", cursor: "pointer" }} onClick={() => setNotify(!notify)}>
+                  Notify in chat
+                </div>
+              </>
+            )}
           </div>
           <div className="d-flex">
             <button
@@ -134,7 +154,7 @@ const SendApprovalModal = () => {
               onClick={() => {
                 dispatch(clearArrayForApproval());
                 dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
-                dispatch(setModalState({ modal: "uploadFileModal", state: true }));
+                // dispatch(setModalState({ modal: "uploadFileModal", state: true }));
               }}
             >
               Cancel

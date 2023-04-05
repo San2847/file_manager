@@ -153,6 +153,8 @@
 .fileLinkName {
   text-decoration: none;
   color: #333333;
+  display: flex;
+  align-items: center;
 }
 
 .spaceDrawDiv {
@@ -232,4 +234,17 @@
   color: #888888;
   font-size: 24px;
   font-weight: 500;
+}
+
+.senderInitial {
+  font-size: 8px;
+  background-color: #fbccff;
+  color: #e61bf7;
+  border-radius: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.25rem;
 }

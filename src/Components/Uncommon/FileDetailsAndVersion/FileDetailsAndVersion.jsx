@@ -42,7 +42,28 @@ const FileDetailsAndVersion = () => {
     }
   };
 
-  console.log(userData);
+  const [shareWithDataArr, setShareWithDataArr] = useState([]);
+  const getShareWithData = async (shareWithId) => {
+    const res = await getReq(`${apiLinks.crm}/api/listDesigners?apitoken=${process.env.REACT_APP_API_KEY}&designerId=${shareWithId}&designerId=${shareWithId}`);
+    if (res && !res.error) {
+      setShareWithDataArr((prev) => {
+        return [...prev, res.data.data.data[0]];
+      });
+    } else {
+      console.log(res.error);
+    }
+  };
+
+  useEffect(() => {
+    setShareWithDataArr([]);
+  }, [detailsVersionBox]);
+  useEffect(() => {
+    if (detailsVersionBox && detailsVersionBox.file && detailsVersionBox.file.shareWith) {
+      detailsVersionBox.file.shareWith.forEach((curElem) => {
+        getShareWithData(curElem);
+      });
+    }
+  }, [detailsVersionBox]);
 
   const dataArray = [
     {
@@ -55,7 +76,12 @@ const FileDetailsAndVersion = () => {
     },
     {
       label: "Shared With",
-      data: "-",
+      data:
+        shareWithDataArr.length > 0
+          ? shareWithDataArr.map((curElem) => {
+              return `${curElem.fullName}, `;
+            })
+          : "-",
     },
     {
       label: "Last Modified on",
@@ -159,12 +185,18 @@ const FileDetailsAndVersion = () => {
                       {curElem.feedBack && curElem.feedBack.length > 0 ? (
                         <div style={{ fontSize: "14px", width: "90%" }}>
                           <b>{curElem && curElem.fileName}</b>
-                          {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}` : ""}
+                          {curElem.versionText && !curElem.versionText.includes("execution")
+                            ? curElem.versionText.split("~-+-~")
+                              ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}`
+                              : ""
+                            : curElem.versionText.split("-+-")
+                            ? `Reason: ${curElem.version.split("-+-")[1]}`
+                            : ""}
                         </div>
                       ) : (
                         <div style={{ fontSize: "14px", width: "90%" }}>
                           <b>{curElem && curElem.fileName}</b>
-                          {curElem.versionText ? ` ${curElem.versionText}` : ""}
+                          {curElem.versionText ? ` ${curElem.versionText.includes("execution") ? `${curElem.versionText.split("-+-")[0]} Reason: ${curElem.versionText.split("-+-")[1]}` : ""}` : ""}
                         </div>
                       )}
                     </div>

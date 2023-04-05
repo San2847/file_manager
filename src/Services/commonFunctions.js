@@ -211,3 +211,8 @@ export const showApprovalOrFeed = (file) => {
     return "none";
   }
 };
+
+export const scrollFileContainerToTop = () => {
+  const ele = document.getElementById("file-container-div");
+  ele.scrollTop = 0;
+};

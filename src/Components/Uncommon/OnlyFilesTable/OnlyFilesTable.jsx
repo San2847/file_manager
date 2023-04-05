@@ -250,9 +250,10 @@ const OnlyFilesTable = ({ fileData }) => {
                               </div>
                             </div>
                           ) : openedFeedback && openedFeedback._id === curElem._id ? (
-                            <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openFeedbacks(event, curElem)} />
+                            <RiChatQuoteFill fontSize={18} className={styles.commentButton} onClick={(event) => openFeedbacks(event, curElem)} />
                           ) : (
                             <RiChatQuoteLine
+                              fontSize={18}
                               className={styles.commentButton}
                               onClick={(event) => {
                                 openFeedbacks(event, curElem);
