@@ -770,12 +770,7 @@ const FilesTable = ({ fileData }) => {
                                     Send for Approval
                                   </Dropdown.Item>
                                   <Dropdown.Item
-                                    // style={
-                                    //   !curElem.folderName && (getFileStatus(curElem.fileDetails[0]) === "In-Execution" || getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
-                                    //     ? { fontSize: "12px", ...inlineInactive }
-                                    //     : { fontSize: "12px" }
-                                    // }
-                                    style={{ fontSize: "12px" }}
+                                    style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "In-Execution" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                     onClick={(event) => {
                                       event.stopPropagation();
                                       dispatch(setFilesGoingFor("execution"));
