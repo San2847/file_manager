@@ -79,7 +79,7 @@ const HomepageWeb = () => {
       if (res && !res.error) {
         let sendingObj = {
           userId: getUserId(),
-          projectId: getProjectId(),
+          projectId: id,
         };
         let eachFileObj = {};
         eachFileObj["uuId"] = uuid();
@@ -182,7 +182,7 @@ const HomepageWeb = () => {
       let x =
         fileCheckBoxArr.length > 0
           ? fileCheckBoxArr.every((curElem) => {
-              return curElem.fileOrFold.status === 2;
+              return !curElem.fileOrFold.isSendForExecution;
             })
           : false;
       setSendExecButtonShow(x);
@@ -349,18 +349,10 @@ const HomepageWeb = () => {
                 ) : (
                   <OnlyFilesTable
                     fileData={
-                      fileTypeTab === "discussion"
-                        ? id
-                          ? onlyFilesArr
-                              .filter((cur) => {
-                                return cur.projectId === id;
-                              })
-                              .filter((curElem) => {
-                                return curElem.status !== 0 || curElem.isSendForApproval === true;
-                              })
-                          : onlyFilesArr.filter((curElem) => {
-                              return curElem.status !== 0 || curElem.isSendForApproval === true;
-                            })
+                      id
+                        ? onlyFilesArr.filter((cur) => {
+                            return cur.projectId === id;
+                          })
                         : onlyFilesArr
                     }
                   />

@@ -7,15 +7,18 @@ import { postReq } from "../../../Services/api";
 import { getUserId } from "../../../Services/authService";
 import { getFiles } from "../../../Services/commonFunctions";
 import styles from "./createFolderModal.module.css";
+import { useParams } from "react-router-dom";
 
 const CreateFolderModal = () => {
   const dispatch = useDispatch();
+  const { id } = useParams();
   const { createFolderModal } = useSelector((state) => state.filemanager);
   const [folderNameText, setFolderNameText] = useState("");
 
   const createNewFolder = async () => {
     if (folderNameText) {
       let obj = {
+        projectId: id,
         userId: getUserId(),
         folderName: folderNameText,
         fileDetails: [],

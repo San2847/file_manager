@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { BsCheck } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +12,15 @@ import FeedbackCard from "../FeedbackCard/FeedbackCard";
 import { Dropdown } from "react-bootstrap";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import {
+  clearFileCheckbox,
+  fillFileCheckbox,
   handleDetailsVersionBox,
   saveArrayForApproval,
   saveFileToNewVersion,
+  saveNewFileForVersion,
   savePrepareDeleteArr,
+  selectAllCheckBoxes,
+  selectFileCheckbox,
   selectFileFolderToBeRenamed,
   setFilesGoingFor,
   setModalState,
@@ -30,7 +35,7 @@ import fileDownload from "js-file-download";
 
 const OnlyFilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
-  const { detailsVersionTab, loading } = useSelector((state) => state.filemanager);
+  const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns , fileCheckBoxArr} = useSelector((state) => state.filemanager);
   const newVerUploadRef = useRef(null);
   const [addedFilesArr, setAddedFilesArr] = useState([]);
 
@@ -42,6 +47,7 @@ const OnlyFilesTable = ({ fileData }) => {
 
   const uploadNewVersion = (outItem) => {
     dispatch(setVersionConfirmationReturns(false));
+    dispatch(saveFileToNewVersion({ container: { _id: outItem.folderId }, file: outItem }));
     if (outItem.isSendForExecution) {
       dispatch(setModalState({ modal: "versionConfirmation", state: true }));
     } else {
@@ -60,7 +66,16 @@ const OnlyFilesTable = ({ fileData }) => {
         fileDetails: [{ uuId: uuid(), fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)} KB`, type: 1 }],
       });
       if (savRes && !savRes.error) {
-        dispatch(saveFileToNewVersion({ container: savRes.data, file: savRes.data.fileDetails[0] }));
+        // dispatch(saveNewFileForVersion({ container: savRes.data, file: savRes.data.fileDetails[0] }));
+        dispatch(
+          saveNewFileForVersion({
+            fileName: savRes.data.fileDetails[0].fileName,
+            fileLink: savRes.data.fileDetails[0].fileLink,
+            fileType: savRes.data.fileDetails[0].fileType,
+            fileSize: savRes.data.fileDetails[0].fileSize,
+            type: 1,
+          })
+        );
         dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
         dispatch(setVersionConfirmationReturns(false));
       } else {
@@ -97,15 +112,18 @@ const OnlyFilesTable = ({ fileData }) => {
   };
 
   const checkboxSelectUnselect = (elem) => {
-    if (!addedFilesArr.includes(elem._id)) {
+    let x = addedFilesArr.map((curElem) => {
+      return curElem._id;
+    });
+    if (!x.includes(elem._id)) {
       setAddedFilesArr((prev) => {
-        return [...prev, elem._id];
+        return [...prev, elem];
       });
     } else {
-      let x = addedFilesArr.filter((curElem) => {
-        return curElem !== elem._id;
+      let y = addedFilesArr.filter((curElem) => {
+        return curElem._id !== elem._id;
       });
-      setAddedFilesArr([...x]);
+      setAddedFilesArr([...y]);
     }
   };
 
@@ -162,11 +180,61 @@ const OnlyFilesTable = ({ fileData }) => {
       setOpenedGiveFeed(obj);
     }
   };
+
+  const [allSelectCheckboxState, setAllSelectCheckboxState] = useState(false);
+  const selectAllFiles = () => {
+    let allFiles = fileData;
+    if (fileCheckBoxArr.length === allFiles.length) {
+      dispatch(clearFileCheckbox());
+    } else {
+      let x = fileData.flatMap((curElem) => {
+        return { container: { _id: curElem.folderId }, fileOrFold: curElem, type: "outside" };
+      });
+      dispatch(selectAllCheckBoxes(x));
+    }
+  };
+
+  useEffect(() => {
+    let allFiles = fileData;
+    if (allFiles.length === fileCheckBoxArr.length) {
+      setAllSelectCheckboxState(true);
+    } else {
+      setAllSelectCheckboxState(false);
+    }
+  }, [fileCheckBoxArr, fileData]);
+
+  useEffect(() => {
+    if (addedFilesArr) {
+      let x = addedFilesArr.map((curElem) => {
+        return { container: { _id: curElem.folderId }, fileOrFold: curElem, type: "inside" };
+      });
+      dispatch(fillFileCheckbox(x));
+    }
+  }, [addedFilesArr]);
+
+  useEffect(() => {
+    let x = fileCheckBoxArr.map((curElem) => {
+      return curElem.fileOrFold;
+    });
+  }, [fileCheckBoxArr])
+
+  useEffect(() => {
+    setAddedFilesArr([]);
+  }, [fileTypeTab]);
+
+  useEffect(() => {
+    if (versionConfirmationReturns === true) {
+      newVerUploadRef.current.click();
+    }
+  }, [versionConfirmationReturns]);
   return (
     <>
       <RenameModal />
       <input type="file" onChange={handleNewVersionUpload} className="d-none" ref={newVerUploadRef} />
       <div className="d-flex mb-2 px-2">
+        <div className={allSelectCheckboxState ? styles.activeCheckbox : styles.customCheckbox} onClick={selectAllFiles}>
+          <BsCheck />
+        </div>
         <div style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "1.5rem", display: "flex", alignItems: "center" }}>
           Name
           <AiOutlineArrowUp />
@@ -197,7 +265,15 @@ const OnlyFilesTable = ({ fileData }) => {
                       style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "0.5rem", display: "flex", alignItems: "center" }}
                     >
                       <div
-                        className={addedFilesArr.includes(curElem._id) ? styles.activeCheckbox : styles.customCheckbox}
+                        className={
+                          addedFilesArr
+                            .map((cure) => {
+                              return cure._id;
+                            })
+                            .includes(curElem._id)
+                            ? styles.activeCheckbox
+                            : styles.customCheckbox
+                        }
                         onClick={(event) => {
                           event.stopPropagation();
                           checkboxSelectUnselect(curElem);
@@ -331,12 +407,17 @@ const OnlyFilesTable = ({ fileData }) => {
                             Send for Approval
                           </Dropdown.Item>
                           <Dropdown.Item
-                            style={getFileStatus(curElem) === "In-Execution" || getFileStatus(curElem) === "Approval Pending" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
+                            style={{ fontSize: "12px" }}
                             onClick={(event) => {
                               event.stopPropagation();
                               dispatch(setFilesGoingFor("execution"));
                               toArrayForApproval(curElem);
-                              dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                              // dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                              if (getFileStatus(curElem) !== "Approved") {
+                                dispatch(setModalState({ modal: "selfApprovalConfirmation", state: true }));
+                              } else {
+                                dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                              }
                             }}
                           >
                             Send for Execution

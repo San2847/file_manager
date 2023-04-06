@@ -591,8 +591,28 @@ const FilesTable = ({ fileData }) => {
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
+                            display: "flex",
+                            alignItems: "center",
                           }}
                         >
+                          {!curElem.folderName && curElem.fileDetails[0] && (curElem.fileDetails[0].approvalRequestName || curElem.fileDetails[0].approvalRequestName) && (
+                            <span
+                              className={`${styles.senderInitial} me-1`}
+                              title={
+                                curElem.fileDetails[0].executionRequestName
+                                  ? curElem.fileDetails[0].executionRequestName
+                                  : curElem.fileDetails[0].approvalRequestName
+                                  ? curElem.fileDetails[0].approvalRequestName
+                                  : ""
+                              }
+                            >
+                              {curElem.fileDetails[0].executionRequestName
+                                ? curElem.fileDetails[0].executionRequestName.split("")[0]
+                                : curElem.fileDetails[0].approvalRequestName
+                                ? curElem.fileDetails[0].approvalRequestName.split("")[0]
+                                : ""}
+                            </span>
+                          )}
                           {curElem.folderName ? "" : curElem.fileDetails[0] && getFileStatus(curElem.fileDetails[0])}
                           {/* <span className={styles.senderInitial} title={uploaderData[index]?.data?.data[0]?.fullName}>
                             {requestInitial[0].data.data[0].fullName}
@@ -744,26 +764,28 @@ const FilesTable = ({ fileData }) => {
                                       event.stopPropagation();
                                       dispatch(setFilesGoingFor("approval"));
                                       dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
-                                      if (localStorage.getItem("position") === "admin") {
-                                        dispatch(setModalState({ modal: "selfApprovalConfirmation", state: true }));
-                                      } else {
-                                        dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
-                                      }
+                                      dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
                                     }}
                                   >
                                     Send for Approval
                                   </Dropdown.Item>
                                   <Dropdown.Item
-                                    style={
-                                      !curElem.folderName && (getFileStatus(curElem.fileDetails[0]) === "In-Execution" || getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
-                                        ? { fontSize: "12px", ...inlineInactive }
-                                        : { fontSize: "12px" }
-                                    }
+                                    // style={
+                                    //   !curElem.folderName && (getFileStatus(curElem.fileDetails[0]) === "In-Execution" || getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                    //     ? { fontSize: "12px", ...inlineInactive }
+                                    //     : { fontSize: "12px" }
+                                    // }
+                                    style={{ fontSize: "12px" }}
                                     onClick={(event) => {
                                       event.stopPropagation();
                                       dispatch(setFilesGoingFor("execution"));
                                       dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
-                                      dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                      // if (localStorage.getItem("position") === "admin") {
+                                      if (true) {
+                                        dispatch(setModalState({ modal: "selfApprovalConfirmation", state: true }));
+                                      } else {
+                                        dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                      }
                                     }}
                                   >
                                     Send for Execution

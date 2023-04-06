@@ -4,7 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { apiLinks } from "../../../constants/constants";
 import { changeDetVerTab, handleDetailsVersionBox } from "../../../Redux/slices/filemanagerSlice";
-import { getReq } from "../../../Services/api";
+import { getReq, postReq } from "../../../Services/api";
 import { createDateString } from "../../../Services/commonFunctions";
 import styles from "./fileDetailsAndVersion.module.css";
 import { BsFileEarmarkFill } from "react-icons/bs";
@@ -43,25 +43,39 @@ const FileDetailsAndVersion = () => {
   };
 
   const [shareWithDataArr, setShareWithDataArr] = useState([]);
-  const getShareWithData = async (shareWithId) => {
-    const res = await getReq(`${apiLinks.crm}/api/listDesigners?apitoken=${process.env.REACT_APP_API_KEY}&designerId=${shareWithId}&designerId=${shareWithId}`);
+  const [shareWithNamesArr, setShareWithNamesArr] = useState([]);
+  const getShareWithData = async (shareWithIds) => {
+    const res = await postReq(`${apiLinks.pmt}/api/projects/get-profiles-by-userids`, { userIds: [...shareWithIds] });
     if (res && !res.error) {
-      setShareWithDataArr((prev) => {
-        return [...prev, res.data.data.data[0]];
-      });
+      setShareWithDataArr(res.data);
     } else {
       console.log(res.error);
     }
   };
 
   useEffect(() => {
+    if (shareWithDataArr) {
+      let x = shareWithDataArr.map((curElem) => {
+        return curElem.data.data[0].fullName;
+      });
+      setShareWithNamesArr([...new Set(x)]);
+    }
+  }, [shareWithDataArr]);
+
+  useEffect(() => {
     setShareWithDataArr([]);
   }, [detailsVersionBox]);
+
   useEffect(() => {
     if (detailsVersionBox && detailsVersionBox.file && detailsVersionBox.file.shareWith) {
-      detailsVersionBox.file.shareWith.forEach((curElem) => {
-        getShareWithData(curElem);
-      });
+      let x = [...detailsVersionBox.file.shareWith];
+      if (detailsVersionBox.file.approvalRequestTo && detailsVersionBox.file.approvalRequestTo !== "") {
+        x.push(detailsVersionBox.file.approvalRequestTo);
+      }
+      if (detailsVersionBox.file.executionRequestTo && detailsVersionBox.file.executionRequestTo !== "") {
+        x.push(detailsVersionBox.file.executionRequestTo);
+      }
+      getShareWithData(x);
     }
   }, [detailsVersionBox]);
 
@@ -78,8 +92,8 @@ const FileDetailsAndVersion = () => {
       label: "Shared With",
       data:
         shareWithDataArr.length > 0
-          ? shareWithDataArr.map((curElem) => {
-              return `${curElem.fullName}, `;
+          ? shareWithNamesArr.map((curElem) => {
+              return `${curElem}, `;
             })
           : "-",
     },

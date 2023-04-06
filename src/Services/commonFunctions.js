@@ -129,12 +129,17 @@ export const approveFile = async (fileObj, modalName) => {
   //   console.log(res.error);
   // }
 
-  const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
+  const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}&userId=${getUserId()}`, { status: 2 });
   if (res && !res.error) {
     store.dispatch(setModalState({ modal: modalName, state: false }));
-    store.dispatch(clearArrayForApproval());
+    store.dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+    // store.dispatch(clearArrayForApproval());
     getFiles(1);
   } else {
+    store.dispatch(setModalState({ modal: modalName, state: false }));
+    store.dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+    // store.dispatch(clearArrayForApproval());
+    getFiles(1);
     console.log(res.error);
   }
 };

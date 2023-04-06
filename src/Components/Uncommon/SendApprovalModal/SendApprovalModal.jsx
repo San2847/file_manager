@@ -9,10 +9,11 @@ import { setModalState, saveArrayForApproval, clearArrayForApproval, inputNotify
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
+import { getUserId } from "../../../Services/authService";
 
 const SendApprovalModal = () => {
   const dispatch = useDispatch();
-  const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray, notifyMessage } = useSelector((state) => state.filemanager);
+  const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray, notifyMessage, profileData } = useSelector((state) => state.filemanager);
   const [notify, setNotify] = useState(false);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState({});
@@ -44,19 +45,27 @@ const SendApprovalModal = () => {
           console.log(res.error);
         }
       } else {
-        const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-execution`, obj);
-        if (res && !res.error) {
-          dispatch(clearArrayForApproval());
-          dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
-          setSelectedTeamMember({});
-          saveFileChangesAsVersion({
-            container: arrayForApproval[0].container,
-            file: arrayForApproval[0].file,
-            text: `File sent for execution to ${selectedTeamMember.memberName}-+-${notifyMessage}`,
-          });
-          getFiles(3);
-        } else {
-          console.log(res.error);
+        if (notifyMessage) {
+          const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-execution`, obj);
+          if (res && !res.error) {
+            dispatch(clearArrayForApproval());
+            dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
+            setSelectedTeamMember({});
+            saveFileChangesAsVersion({
+              container: arrayForApproval[0].container,
+              file: arrayForApproval[0].file,
+              text: `File sent for execution to ${selectedTeamMember.memberName} because ${notifyMessage}`,
+            });
+            arr.forEach(async (curel) => {
+              const feedRes = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${curel.container._id}&fileId=${curel.file._id}`, {
+                sendBy: getUserId(),
+                message: `${notifyMessage}~-+-~${profileData.fullName}`,
+              });
+            });
+            getFiles(3);
+          } else {
+            console.log(res.error);
+          }
         }
       }
     }
