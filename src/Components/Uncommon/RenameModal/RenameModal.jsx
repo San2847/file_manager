@@ -6,6 +6,7 @@ import { selectFileFolderToBeRenamed, setModalState } from "../../../Redux/slice
 import { postReq } from "../../../Services/api";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import styles from "./renameModal.module.css";
+import { getUserId } from "../../../Services/authService";
 
 const RenameModal = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,9 @@ const RenameModal = () => {
 
   const submitRename = async () => {
     if (fileFolderToBeRenamed.tab === "onlyFiles") {
-      const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.fileOrFold.folderId}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
+      const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.fileOrFold.folderId}&fileId=${fileFolderToBeRenamed.fileOrFold._id}&userId=${getUserId()}`, {
+        fileName: itemName,
+      });
       if (res && !res.error) {
         dispatch(setModalState({ modal: "renameModal", state: false }));
         saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
