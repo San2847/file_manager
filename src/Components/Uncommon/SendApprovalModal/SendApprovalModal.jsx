@@ -62,11 +62,11 @@ const SendApprovalModal = () => {
                 message: `${notifyMessage}~-+-~${profileData.fullName}`,
               });
               if (feedRes && !feedRes.error) {
-                dispatch(inputNotifyMessage(""));
               } else {
                 console.log(feedRes.error);
               }
             });
+            dispatch(inputNotifyMessage(""));
             getFiles(3);
           } else {
             console.log(res.error);

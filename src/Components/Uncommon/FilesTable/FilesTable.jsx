@@ -595,7 +595,7 @@ const FilesTable = ({ fileData }) => {
                             alignItems: "center",
                           }}
                         >
-                          {!curElem.folderName && curElem.fileDetails[0] && (curElem.fileDetails[0].approvalRequestName || curElem.fileDetails[0].approvalRequestName) && (
+                          {!curElem.folderName && curElem.fileDetails[0] && (curElem.fileDetails[0].approvalRequestName || curElem.fileDetails[0].executionRequestName) && (
                             <span
                               className={`${styles.senderInitial} me-1`}
                               title={
