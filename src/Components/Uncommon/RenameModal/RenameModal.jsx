@@ -27,7 +27,9 @@ const RenameModal = () => {
       }
     } else {
       if (fileFolderToBeRenamed.type === "outside" || fileFolderToBeRenamed.type === "inside") {
-        const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.container._id}&fileId=${fileFolderToBeRenamed.fileOrFold._id}`, { fileName: itemName });
+        const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileFolderToBeRenamed.container._id}&fileId=${fileFolderToBeRenamed.fileOrFold._id}&userId=${getUserId()}`, {
+          fileName: itemName,
+        });
         if (res && !res.error) {
           dispatch(setModalState({ modal: "renameModal", state: false }));
           saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
