@@ -35,7 +35,7 @@ import fileDownload from "js-file-download";
 
 const OnlyFilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
-  const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns , fileCheckBoxArr} = useSelector((state) => state.filemanager);
+  const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns, fileCheckBoxArr } = useSelector((state) => state.filemanager);
   const newVerUploadRef = useRef(null);
   const [addedFilesArr, setAddedFilesArr] = useState([]);
 
@@ -216,7 +216,7 @@ const OnlyFilesTable = ({ fileData }) => {
     let x = fileCheckBoxArr.map((curElem) => {
       return curElem.fileOrFold;
     });
-  }, [fileCheckBoxArr])
+  }, [fileCheckBoxArr]);
 
   useEffect(() => {
     setAddedFilesArr([]);
@@ -232,10 +232,10 @@ const OnlyFilesTable = ({ fileData }) => {
       <RenameModal />
       <input type="file" onChange={handleNewVersionUpload} className="d-none" ref={newVerUploadRef} />
       <div className="d-flex mb-2 px-2">
-        <div className={allSelectCheckboxState ? styles.activeCheckbox : styles.customCheckbox} onClick={selectAllFiles}>
-          <BsCheck />
-        </div>
-        <div style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "1.5rem", display: "flex", alignItems: "center" }}>
+        <div style={{ width: detailsVersionTab === "" ? "25%" : "50%", fontSize: "12px", color: "#333333", fontWeight: "500", paddingLeft: "0.5rem", display: "flex", alignItems: "center" }}>
+          <div className={allSelectCheckboxState ? styles.activeCheckbox : styles.customCheckbox} style={{ marginRight: "1.5rem" }} onClick={selectAllFiles}>
+            <BsCheck />
+          </div>
           Name
           <AiOutlineArrowUp />
         </div>

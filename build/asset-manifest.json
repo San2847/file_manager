@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/file-manager/static/css/main.a406cec7.css",
-    "main.js": "/file-manager/static/js/main.90b4c1d4.js",
+    "main.css": "/file-manager/static/css/main.c25aa9aa.css",
+    "main.js": "/file-manager/static/js/main.91db0845.js",
     "static/js/787.fa554ae2.chunk.js": "/file-manager/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-manager/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/pdfIcon.svg": "/file-manager/static/media/pdfIcon.63b14eb1790a401672fbd98ab51c7940.svg",
@@ -25,12 +25,12 @@
     "static/media/dashboard.svg": "/file-manager/static/media/dashboard.076cbbb9fa4c65f9c3aef7f62014e150.svg",
     "static/media/person.svg": "/file-manager/static/media/person.dfcc209ee2bb8b0e4bb9a69f656dd5d4.svg",
     "static/media/quotation.svg": "/file-manager/static/media/quotation.db2e4946f306b94d7779d058510c7e3d.svg",
-    "main.a406cec7.css.map": "/file-manager/static/css/main.a406cec7.css.map",
-    "main.90b4c1d4.js.map": "/file-manager/static/js/main.90b4c1d4.js.map",
+    "main.c25aa9aa.css.map": "/file-manager/static/css/main.c25aa9aa.css.map",
+    "main.91db0845.js.map": "/file-manager/static/js/main.91db0845.js.map",
     "787.fa554ae2.chunk.js.map": "/file-manager/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a406cec7.css",
-    "static/js/main.90b4c1d4.js"
+    "static/css/main.c25aa9aa.css",
+    "static/js/main.91db0845.js"
   ]
 }

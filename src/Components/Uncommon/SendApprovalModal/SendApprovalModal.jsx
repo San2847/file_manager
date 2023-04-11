@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./sendApprovalModal.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdClose } from "react-icons/io";
-import { setModalState, saveArrayForApproval, clearArrayForApproval, inputNotifyMessage } from "../../../Redux/slices/filemanagerSlice";
+import { setModalState, saveArrayForApproval, clearArrayForApproval, inputNotifyMessage, clearFileCheckbox } from "../../../Redux/slices/filemanagerSlice";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
@@ -40,6 +40,7 @@ const SendApprovalModal = () => {
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
           saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` });
+          dispatch(clearFileCheckbox());
           getFiles(1);
         } else {
           console.log(res.error);
@@ -54,7 +55,7 @@ const SendApprovalModal = () => {
             saveFileChangesAsVersion({
               container: arrayForApproval[0].container,
               file: arrayForApproval[0].file,
-              text: `File sent for execution to ${selectedTeamMember.memberName} because ${notifyMessage}`,
+              text: `File sent for execution to ${selectedTeamMember.memberName} - ${notifyMessage}`,
             });
             arr.forEach(async (curel) => {
               const feedRes = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${curel.container._id}&fileId=${curel.file._id}`, {
@@ -67,6 +68,7 @@ const SendApprovalModal = () => {
               }
             });
             dispatch(inputNotifyMessage(""));
+            dispatch(clearFileCheckbox());
             getFiles(3);
           } else {
             console.log(res.error);
@@ -169,6 +171,7 @@ const SendApprovalModal = () => {
                 dispatch(clearArrayForApproval());
                 dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
                 // dispatch(setModalState({ modal: "uploadFileModal", state: true }));
+                dispatch(inputNotifyMessage(""));
               }}
             >
               Cancel

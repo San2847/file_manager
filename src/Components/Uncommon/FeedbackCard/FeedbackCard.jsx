@@ -6,7 +6,7 @@ import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 
-const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, profileData }) => {
+const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, profileData, getFeedbackRefresh }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyText, setReplyText] = useState("");
 
@@ -17,9 +17,10 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
         message: `${replyText}~-+-~${profileData.fullName}`,
       });
       if (res && !res.error) {
-        getFiles(1);
+        // getFiles(1);
         setShowReplyBox(false);
         scrollFileContainerToTop();
+        getFeedbackRefresh();
       } else {
         console.log(res.error);
       }

@@ -22,9 +22,9 @@ const FileDetailsAndVersion = () => {
   const [singleFile, setSingleFile] = useState({});
 
   const getFileTypeString = (fileT) => {
-    let fileExt = fileT.split("/")[1].toUpperCase();
+    let fileExt = fileT.split("/")[1] ? fileT.split("/")[1].toUpperCase() : "";
     let fileFormat = fileT.split("/")[0].split("");
-    fileFormat[0] = fileFormat[0].toUpperCase();
+    fileFormat[0] = fileFormat[0] ? fileFormat[0].toUpperCase() : "";
     let newFileFormat = fileFormat.join("");
     return `${fileExt} ${newFileFormat}`;
   };
@@ -92,8 +92,12 @@ const FileDetailsAndVersion = () => {
       label: "Shared With",
       data:
         shareWithDataArr.length > 0
-          ? shareWithNamesArr.map((curElem) => {
-              return `${curElem}, `;
+          ? shareWithNamesArr.map((curElem, index) => {
+              if (index === shareWithNamesArr.length - 1) {
+                return `${curElem}`;
+              } else {
+                return `${curElem}, `;
+              }
             })
           : "-",
     },
