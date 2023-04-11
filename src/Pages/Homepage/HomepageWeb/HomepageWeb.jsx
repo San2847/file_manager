@@ -101,7 +101,7 @@ const HomepageWeb = () => {
       }
       if (i === files.length - 1) {
         setUploadingFile(0);
-        getFiles(1);
+        getFiles(1, id);
       }
     }
   };
@@ -143,7 +143,7 @@ const HomepageWeb = () => {
       }
       if (i === files.length - 1) {
         setUploadingFile(0);
-        getFiles();
+        getFiles(1, id);
         sendObj["fileDetails"] = [...arr];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendObj);
         if (upRes && !upRes.error) {
@@ -162,7 +162,7 @@ const HomepageWeb = () => {
   const deleteEmptyFile = async (fileContainerId) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/delete-folder?id=${fileContainerId}`);
     if (res && !res.error) {
-      getFiles(1);
+      getFiles(1, id);
     } else {
       console.log(res.error);
     }
@@ -191,7 +191,7 @@ const HomepageWeb = () => {
 
   useEffect(() => {
     if (fileTypeTab) {
-      getFiles(statusObj[fileTypeTab]);
+      getFiles(statusObj[fileTypeTab], id);
     }
     dispatch(clearFileCheckbox());
   }, [fileTypeTab]);

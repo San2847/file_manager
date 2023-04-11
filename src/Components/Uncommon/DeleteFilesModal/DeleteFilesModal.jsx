@@ -6,16 +6,20 @@ import { clearFileCheckbox, savePrepareDeleteArr, setModalState } from "../../..
 import { postReq } from "../../../Services/api";
 import { getFiles } from "../../../Services/commonFunctions";
 import styles from "./deleteFilesModal.module.css";
+import { useParams } from "react-router-dom";
 
 const DeleteFilesModal = () => {
   const dispatch = useDispatch();
   const { deleteModal, reduxPrepareDeleteArr } = useSelector((state) => state.filemanager);
+
+  const { id } = useParams();
+
   const deleteMultipleFiles = async () => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/delete-files`, reduxPrepareDeleteArr);
     if (res && !res.error) {
       dispatch(savePrepareDeleteArr([]));
       dispatch(clearFileCheckbox());
-      getFiles(1);
+      getFiles(1, id);
     } else {
       console.log(res.error);
     }

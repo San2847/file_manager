@@ -25,7 +25,7 @@ const CreateFolderModal = () => {
       };
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, obj);
       if (res && !res.error) {
-        getFiles(1);
+        getFiles(1, id);
         setFolderNameText("");
         dispatch(setModalState({ modal: "createFolderModal", state: false }));
       } else {

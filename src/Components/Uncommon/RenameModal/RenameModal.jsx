@@ -7,11 +7,14 @@ import { postReq } from "../../../Services/api";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import styles from "./renameModal.module.css";
 import { getUserId } from "../../../Services/authService";
+import { useParams } from "react-router-dom";
 
 const RenameModal = () => {
   const dispatch = useDispatch();
   const { renameModal, fileFolderToBeRenamed } = useSelector((state) => state.filemanager);
   const [itemName, setItemName] = useState("");
+
+  const { id } = useParams();
 
   const submitRename = async () => {
     if (fileFolderToBeRenamed.tab === "onlyFiles") {
@@ -26,7 +29,7 @@ const RenameModal = () => {
       if (res && !res.error) {
         dispatch(setModalState({ modal: "renameModal", state: false }));
         saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
-        getFiles(2);
+        getFiles(2, id);
       } else {
         console.log(res.error);
       }
@@ -43,7 +46,7 @@ const RenameModal = () => {
         if (res && !res.error) {
           dispatch(setModalState({ modal: "renameModal", state: false }));
           saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
-          getFiles(1);
+          getFiles(1, id);
         } else {
           console.log(res.error);
         }
@@ -52,7 +55,7 @@ const RenameModal = () => {
         if (res && !res.error) {
           dispatch(setModalState({ modal: "renameModal", state: false }));
           saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
-          getFiles(1);
+          getFiles(1, id);
         } else {
           console.log(res.error);
         }

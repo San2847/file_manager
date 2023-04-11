@@ -14,6 +14,7 @@ import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
 import { getFileStatus } from "../../../Services/commonFunctions";
+import { useParams } from "react-router-dom";
 
 const UploadFileModal = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const UploadFileModal = () => {
   const [tabState, setTabState] = useState("drive");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const { id } = useParams();
 
   const uploadFileRef = useRef(null);
   const uploadMoreRef = useRef(null);
@@ -35,6 +38,7 @@ const UploadFileModal = () => {
       if (res && !res.error) {
         let sendingObj = {
           userId: getUserId(),
+          projectId: id,
         };
         let eachFileObj = {};
         eachFileObj["uuId"] = uuid();
@@ -60,7 +64,7 @@ const UploadFileModal = () => {
         console.log(res.error);
       }
       if (i === files.length - 1) {
-        getFiles(1);
+        getFiles(1, id);
       }
     }
   };
@@ -103,6 +107,18 @@ const UploadFileModal = () => {
     }
   };
 
+  const [projectArr, setProjectArr] = useState([]);
+  useEffect(() => {
+    if (id) {
+      let x = fileFolderArr.filter((curElem) => {
+        return curElem.projectId === id;
+      });
+      setProjectArr([...x]);
+    } else {
+      setProjectArr([...fileFolderArr]);
+    }
+  }, [fileFolderArr]);
+
   const [selectionArr, setSelectionArr] = useState([]);
   useEffect(() => {
     let x = arrayForApproval.map((curElem) => {
@@ -112,7 +128,8 @@ const UploadFileModal = () => {
   }, [arrayForApproval]);
   useEffect(() => {
     if (uploadFileModal) {
-      getFiles(1);
+      getFiles(1, id);
+      setUploadedFiles([]);
     }
   }, [uploadFileModal]);
   return (
@@ -141,8 +158,8 @@ const UploadFileModal = () => {
                 <div style={{ width: "17.5%", fontSize: "12px", display: "flex", justifyContent: "center", fontWeight: "500" }}>Last Modified</div>
               </div>
               <div className={styles.contentContainer}>
-                {fileFolderArr &&
-                  fileFolderArr.map((curElem) => {
+                {projectArr &&
+                  projectArr.map((curElem) => {
                     return (
                       <>
                         <div

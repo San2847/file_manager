@@ -32,12 +32,15 @@ import { getReq, postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import fileDownload from "js-file-download";
+import { useParams } from "react-router-dom";
 
 const OnlyFilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
   const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns, fileCheckBoxArr } = useSelector((state) => state.filemanager);
   const newVerUploadRef = useRef(null);
   const [addedFilesArr, setAddedFilesArr] = useState([]);
+
+  const { id } = useParams();
 
   let inlineInactive = {
     pointerEvents: "none",
@@ -130,7 +133,7 @@ const OnlyFilesTable = ({ fileData }) => {
   const approveFiles = async (item) => {
     const appRes = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${item.folderId}&fileId=${item._id}`, { status: 2 });
     if (appRes && !appRes.error) {
-      getFiles(0);
+      getFiles(0, id);
     } else {
       console.log(appRes.error);
     }
@@ -141,7 +144,7 @@ const OnlyFilesTable = ({ fileData }) => {
     if (res && !res.error) {
       const feedRes = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${res.data._id}&fileId=${item._id}`);
       if (feedRes && !feedRes.error) {
-        getFiles(2);
+        getFiles(2, id);
       } else {
         console.log(feedRes.error);
       }

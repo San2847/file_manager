@@ -6,15 +6,18 @@ import { setModalState } from "../../../../Redux/slices/filemanagerSlice";
 import { postReq } from "../../../../Services/api";
 import { getFiles } from "../../../../Services/commonFunctions";
 import styles from "./deleteFolderModal.module.css";
+import { useParams } from "react-router-dom";
 
 const DeleteFolderModal = () => {
   const dispatch = useDispatch();
   const { deleteFolderModal, folderToBeDeleted } = useSelector((state) => state.filemanager);
 
+  const { id } = useParams();
+
   const deleteTheFolder = async () => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/delete-folder?id=${folderToBeDeleted}`);
     if (res && !res.error) {
-      getFiles(1);
+      getFiles(1, id);
     } else {
       console.log(res.error);
     }

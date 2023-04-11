@@ -8,11 +8,14 @@ import { clearFileCheckbox, setModalState } from "../../../Redux/slices/filemana
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
+import { useParams } from "react-router-dom";
 
 const MoveModal = () => {
   const dispatch = useDispatch();
   const { moveModal, fileFolderArr, fileCheckBoxArr } = useSelector((state) => state.filemanager);
   const [onlyFolders, setOnlyFolders] = useState([]);
+
+  const { id } = useParams();
 
   const [selectedFolder, setSelectedFolder] = useState({});
 
@@ -52,7 +55,7 @@ const MoveModal = () => {
     sendObj["fileDetails"] = [...y];
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/move-files?type=${type}`, sendObj);
     if (res && !res.error) {
-      getFiles(1);
+      getFiles(1, id);
       setSelectedFolder({});
       dispatch(setModalState({ modal: "moveModal", state: false }));
       dispatch(clearFileCheckbox());

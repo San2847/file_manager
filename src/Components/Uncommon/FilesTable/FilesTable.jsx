@@ -36,10 +36,13 @@ import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
 import fileDownload from "js-file-download";
+import { useParams } from "react-router-dom";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
   const { fileCheckBoxArr, detailsVersionTab, loading, versionConfirmationReturns, profileData } = useSelector((state) => state.filemanager);
+
+  const { id } = useParams();
 
   const newVerUploadRef = useRef(null);
 
@@ -81,7 +84,7 @@ const FilesTable = ({ fileData }) => {
         setShowInput("");
         setDrawType("");
         setSpaceName("");
-        getFiles(1);
+        getFiles(1, id);
       } else {
         console.log(res.error);
       }
@@ -162,8 +165,9 @@ const FilesTable = ({ fileData }) => {
     }
   };
 
+  console.log(openedInfo);
   const getFileInfo = async () => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${openedInfo.container._id}&fileId=${openedInfo.file._id}`);
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${openedInfo.container._id}&uuId=${openedInfo.file.uuId}`);
     if (res && !res.error) {
       // console.log(res.data);
     } else {
@@ -192,7 +196,7 @@ const FilesTable = ({ fileData }) => {
       message: `${feedbackText}~-+-~${profileData.fullName}`,
     });
     if (res && !res.error) {
-      getFiles(1);
+      getFiles(1, id);
       saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `A feedback has been added by ${profileData.fullName}~-+-~${feedbackText}` });
       setFileFeedArr([...res.data.fileDetails[0].feedBack]);
       setOpenedGiveFeed("");
@@ -203,12 +207,24 @@ const FilesTable = ({ fileData }) => {
     }
   };
   const getFileFeedback = async (fileObj) => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
-    if (res && !res.error) {
-      setFileFeedArr([...res.data]);
+    const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-all-feedbacks?uuId=${fileObj.file.uuId}`);
+    if (feres && !feres.error) {
+      console.log(feres);
+      setFileFeedArr([
+        ...feres.data.sort((a, b) => {
+          return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+        }),
+      ]);
     } else {
-      console.log(res.error);
+      console.log(feres.error);
     }
+
+    // const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${fileObj.container._id}&uuId=${fileObj.file.uuId}`);
+    // if (res && !res.error) {
+    //   setFileFeedArr([...res.data]);
+    // } else {
+    //   console.log(res.error);
+    // }
   };
   const readFeedback = async (fileObj) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
@@ -274,7 +290,7 @@ const FilesTable = ({ fileData }) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
     if (res && !res.error) {
       saveFileChangesAsVersion({ container: fileObj.container, file: fileObj.file, text: `has been approved by ${profileData.fullName}` });
-      getFiles(1);
+      getFiles(1, id);
     } else {
       console.log(res.error);
     }
@@ -625,8 +641,8 @@ const FilesTable = ({ fileData }) => {
                         {detailsVersionTab === "" && (
                           <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                             {!curElem.folderName && showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) !== "none" ? (
-                              showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
-                                <div className="d-flex">
+                              <>
+                                {curElem.fileDetails[0].status !== 2 && (
                                   <div
                                     className={styles.approveTick}
                                     title="Approve"
@@ -637,22 +653,26 @@ const FilesTable = ({ fileData }) => {
                                   >
                                     <BsCheck />
                                   </div>
-                                  <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
-                                    <RiChatNewLine />
+                                )}
+                                {showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
+                                  <div className="d-flex">
+                                    <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
+                                      <RiChatNewLine />
+                                    </div>
                                   </div>
-                                </div>
-                              ) : openedInfo?.file && openedInfo?.file?._id === curElem?.fileDetails[0]?._id ? (
-                                <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
-                              ) : (
-                                <RiChatQuoteLine
-                                  className={styles.commentButton}
-                                  onClick={(event) => {
-                                    openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
-                                    getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
-                                    readFeedback({ container: curElem, file: curElem.fileDetails[0] });
-                                  }}
-                                />
-                              )
+                                ) : openedInfo?.file && openedInfo?.file?._id === curElem?.fileDetails[0]?._id ? (
+                                  <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                ) : (
+                                  <RiChatQuoteLine
+                                    className={styles.commentButton}
+                                    onClick={(event) => {
+                                      openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                      getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                      readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                    }}
+                                  />
+                                )}
+                              </>
                             ) : (
                               "-"
                             )}

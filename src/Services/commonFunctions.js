@@ -4,10 +4,10 @@ import store from "../Redux/store";
 import { getReq, postReq } from "./api";
 import { getUserId } from "./authService";
 
-export const getFiles = async (status) => {
+export const getFiles = async (status, id) => {
   if (status === 1) {
     store.dispatch(setLoadingState(true));
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&type=1`);
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&projectId=${id}&type=1`);
     if (res && !res.error) {
       let sortedItems = res.data.sort((a, b) => {
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -25,7 +25,7 @@ export const getFiles = async (status) => {
     }
   } else {
     store.dispatch(setLoadingState(true));
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&type=1&status=${status}`);
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&projectId=${id}&type=1&status=${status}`);
     if (res && !res.error) {
       let sortedItems = res.data.sort((a, b) => {
         return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();

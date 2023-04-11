@@ -10,11 +10,14 @@ import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import { getUserId } from "../../../Services/authService";
+import { useParams } from "react-router-dom";
 
 const SendApprovalModal = () => {
   const dispatch = useDispatch();
   const { sendApprovalModal, arrayForApproval, filesGoingFor, teamMemberArray, notifyMessage, profileData } = useSelector((state) => state.filemanager);
   const [notify, setNotify] = useState(false);
+
+  const { id } = useParams();
 
   const [selectedTeamMember, setSelectedTeamMember] = useState({});
 
@@ -37,11 +40,12 @@ const SendApprovalModal = () => {
         const res = await postReq(`${apiLinks.pmt}/api/file-manager/send-file-approval`, obj);
         if (res && !res.error) {
           dispatch(clearArrayForApproval());
+          dispatch(inputNotifyMessage(""));
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
           saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` });
           dispatch(clearFileCheckbox());
-          getFiles(1);
+          getFiles(1, id);
         } else {
           console.log(res.error);
         }
@@ -69,7 +73,7 @@ const SendApprovalModal = () => {
             });
             dispatch(inputNotifyMessage(""));
             dispatch(clearFileCheckbox());
-            getFiles(3);
+            getFiles(3, id);
           } else {
             console.log(res.error);
           }

@@ -9,10 +9,13 @@ import { BsCheck } from "react-icons/bs";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getFiles, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
+import { useParams } from "react-router-dom";
 
 const UploadNewVersion = () => {
   const dispatch = useDispatch();
   const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
+
+  const {id} = useParams();
 
   const [shareChecks, setShareChecks] = useState([]);
 
@@ -23,11 +26,12 @@ const UploadNewVersion = () => {
       fileType: newFileForVersion.fileType,
       fileSize: newFileForVersion.fileSize,
       type: 1,
+      uuId: fileToNewVersion[0].file.uuId,
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {
-      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file.uuId);
-      getFiles(1);
+      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file._id);
+      getFiles(1, id);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
       dispatch(setModalState({ modal: "versionConfirmation", state: false }));
       dispatch(saveFileToNewVersion(fileToNewVersion[0]));
