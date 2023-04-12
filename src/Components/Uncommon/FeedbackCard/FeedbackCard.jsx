@@ -5,10 +5,16 @@ import { createDateString, getFiles, scrollFileContainerToTop } from "../../../S
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, profileData, getFeedbackRefresh }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyText, setReplyText] = useState("");
+
+  const { id } = useParams();
+
+  const { fileTypeTab } = useSelector((state) => state.filemanager);
 
   const sendReply = async () => {
     if (replyText) {
@@ -17,7 +23,9 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
         message: `${replyText}~-+-~${profileData.fullName}`,
       });
       if (res && !res.error) {
-        // getFiles(1);
+        if (fileTypeTab === "discussion") {
+          getFiles(0, id);
+        }
         setShowReplyBox(false);
         scrollFileContainerToTop();
         getFeedbackRefresh();
