@@ -1,0 +1,32 @@
+.container {
+  height: 100%;
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.filesHeading {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.blueStripe {
+  height: 3rem;
+  width: 100%;
+  background-color: #003566;
+  border-radius: 8px 8px 0 0;
+  color: #ffffff;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tableHere {
+  border: 1px solid #cccccc;
+  border-radius: 0 0 8px 8px;
+  height: 20rem;
+  overflow-y: scroll;
+}

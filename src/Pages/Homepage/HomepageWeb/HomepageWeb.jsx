@@ -36,6 +36,7 @@ import CreateFolderModal from "../../../Components/Uncommon/CreateFolderModal/Cr
 import SelfApprovalConfirmationModal from "../../../Components/Uncommon/SelfApprovalConfirmationModal/SelfApprovalConfirmationModal";
 import ShareModal from "../../../Components/Uncommon/ShareModal/ShareModal";
 import { useParams } from "react-router-dom";
+import FileLanding from "./FileLanding/FileLanding";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
@@ -216,7 +217,7 @@ const HomepageWeb = () => {
       }
     }
   }, [fileCheckBoxArr]);
-  return (
+  return id ? (
     <>
       <SendApprovalModal />
       <UploadFileModal />
@@ -346,6 +347,20 @@ const HomepageWeb = () => {
                         : fileFolderArr
                     }
                   />
+                ) : fileTypeTab === "discussion" ? (
+                  <OnlyFilesTable
+                    fileData={
+                      id
+                        ? onlyFilesArr
+                            .filter((cur) => {
+                              return cur.projectId === id;
+                            })
+                            .filter((curElem) => {
+                              return curElem.isSendForApproval;
+                            })
+                        : onlyFilesArr
+                    }
+                  />
                 ) : (
                   <OnlyFilesTable
                     fileData={
@@ -366,6 +381,12 @@ const HomepageWeb = () => {
             </div>
           </div>
         </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="container-box">
+        <FileLanding />
       </div>
     </>
   );

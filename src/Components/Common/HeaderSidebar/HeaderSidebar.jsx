@@ -29,9 +29,9 @@ const HeaderSidebar = () => {
       setProfileData({ ...res.data.data });
       dispatch(saveProfileData({ ...res.data.data }));
     } else {
-      // console.log(res.error);
-      // localStorage.clear();
-      // window.location.assign(`${BASE_URL}`);
+      console.log(res.error);
+      localStorage.clear();
+      window.location.assign(`${BASE_URL}`);
     }
   };
 

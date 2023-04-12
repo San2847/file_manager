@@ -36,7 +36,7 @@ import { useParams } from "react-router-dom";
 
 const OnlyFilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
-  const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns, fileCheckBoxArr } = useSelector((state) => state.filemanager);
+  const { detailsVersionTab, loading, fileTypeTab, versionConfirmationReturns, fileCheckBoxArr, profileData } = useSelector((state) => state.filemanager);
   const newVerUploadRef = useRef(null);
   const [addedFilesArr, setAddedFilesArr] = useState([]);
 
@@ -139,41 +139,48 @@ const OnlyFilesTable = ({ fileData }) => {
     }
   };
 
+  const [fileFeedArr, setFileFeedArr] = useState([]);
   const getFileFeedback = async (item) => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
-    if (res && !res.error) {
-      const feedRes = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${res.data._id}&fileId=${item._id}`);
-      if (feedRes && !feedRes.error) {
-        getFiles(2, id);
-      } else {
-        console.log(feedRes.error);
-      }
+    // const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
+    // if (res && !res.error) {
+    //   const feedRes = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${res.data._id}&fileId=${item._id}`);
+    //   if (feedRes && !feedRes.error) {
+    //     getFiles(2, id);
+    //   } else {
+    //     console.log(feedRes.error);
+    //   }
+    // } else {
+    //   console.log(res.error);
+    // }
+    const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-all-feedbacks?uuId=${item.uuId}`);
+    if (feres && !feres.error) {
+      setFileFeedArr([
+        ...feres.data.sort((a, b) => {
+          return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+        }),
+      ]);
     } else {
-      console.log(res.error);
+      console.log(feres.error);
     }
   };
   const readFeedback = async (item) => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
-    if (res && !res.error) {
-      const readRes = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${res.data._id}&fileId=${item._id}`);
-      if (readRes && !readRes.error) {
-        // console.log(readRes);
-      } else {
-        console.log(readRes.error);
-      }
+    const readRes = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${item.folderId}&fileId=${item._id}`);
+    if (readRes && !readRes.error) {
+      // console.log(readRes);
     } else {
-      console.log(res.error);
+      console.log(readRes.error);
     }
   };
 
   const [openedFeedback, setOpenedFeedback] = useState("");
-  const openFeedbacks = (item) => {
+  const openFeedbacks = (event, item) => {
     if (openedFeedback._id === item._id) {
       setOpenedFeedback("");
     } else {
       setOpenedFeedback(item);
     }
   };
+  
   const [openedGiveFeed, setOpenedGiveFeed] = useState("");
   const openGiveFeed = (event, obj) => {
     event.stopPropagation();
@@ -446,11 +453,20 @@ const OnlyFilesTable = ({ fileData }) => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div className={styles.feedbackContainer} style={{ height: openedFeedback._id === curElem._id ? "10rem" : "0" }}>
+                  <div className={styles.feedbackContainer} style={{ height: openedFeedback._id === curElem._id ? "fit-content" : "0" }}>
                     <div style={{ height: "fit-content", width: "100%", padding: "0.5rem" }}>
                       {curElem.feedBack &&
                         curElem.feedBack.map((cur, index) => {
-                          return <FeedbackCard feedData={cur} currentVer={index === 0} name={curElem.fileName} />;
+                          return (
+                            <FeedbackCard
+                              feedData={cur}
+                              currentVer={index === 0}
+                              name={curElem.fileName}
+                              containerAndFile={{ container: { _id: curElem.folderId }, file: curElem }}
+                              profileData={profileData}
+                              getFeedbackRefresh={() => openFeedbacks(undefined, { container: { _id: curElem.folderId }, file: curElem })}
+                            />
+                          );
                         })}
                     </div>
                   </div>

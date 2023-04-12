@@ -165,7 +165,6 @@ const FilesTable = ({ fileData }) => {
     }
   };
 
-  console.log(openedInfo);
   const getFileInfo = async () => {
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${openedInfo.container._id}&uuId=${openedInfo.file.uuId}`);
     if (res && !res.error) {
