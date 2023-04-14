@@ -1,14 +1,15 @@
 import { MdOutlineDashboard, MdTimeline, MdOutlineSpaceDashboard } from "react-icons/md";
-import { TbFolders, TbCurrencyRupee, TbReportAnalytics } from "react-icons/tb";
+import { TbFolders, TbCurrencyRupee, TbReportAnalytics, TbUsers } from "react-icons/tb";
 import { IoMdFolderOpen } from "react-icons/io";
 import { CiViewList } from "react-icons/ci";
 import { RiChat1Line } from "react-icons/ri";
 import { FaMoneyCheckAlt } from "react-icons/fa";
+import design_quo_icon from "../AllProjectListPanel/InnerSidebarIcons/design_quo_icon.svg";
 
 let BASE_URL = "http://erp.essentiaenvironments.com";
 export const sidebarLinks = [
   {
-    label: "Manage Leads",
+    label: "Dashboard",
     link: "",
     icon: (
       <div
@@ -21,7 +22,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <MdOutlineDashboard />
@@ -29,11 +29,36 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
+    href: `${BASE_URL}/admin/`,
+    accessName: "default",
+  },
+  {
+    label: "Manage Leads",
+    link: "",
+    icon: (
+      <div
+        style={{
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#2CA9BC",
+          color: "#ffffff",
+          borderRadius: "4px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TbUsers />
+      </div>
+    ),
+    visible: true,
+    active: false,
     href: `${BASE_URL}/leads/`,
+    accessName: "crm",
   },
   {
     label: "All Projects",
-    link: "",
+    // link: "/all-projects",
     icon: (
       <div
         style={{
@@ -45,7 +70,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <TbFolders />
@@ -54,6 +78,7 @@ export const sidebarLinks = [
     visible: true,
     active: false,
     href: `${BASE_URL}/pmt/`,
+    accessName: "pmt",
   },
   {
     label: "Design Quotation",
@@ -63,21 +88,21 @@ export const sidebarLinks = [
         style={{
           width: "1.8rem",
           height: "1.8rem",
-          backgroundColor: "#f586ff",
+          backgroundColor: "#197278",
           color: "#ffffff",
           borderRadius: "4px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
-        <TbCurrencyRupee />
+        <img src={design_quo_icon} style={{ height: "18px" }} />
       </div>
     ),
     visible: true,
     active: false,
     href: `${BASE_URL}/quotation/enterprise-landing-page`,
+    accessName: "quotation",
   },
   {
     label: "Quotation",
@@ -93,7 +118,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <TbCurrencyRupee />
@@ -102,9 +126,10 @@ export const sidebarLinks = [
     visible: true,
     active: false,
     href: `${BASE_URL}/quotation/`,
+    accessName: "quotation",
   },
   {
-    label: "Files",
+    label: "File Manager",
     link: "",
     icon: (
       <div
@@ -117,7 +142,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <IoMdFolderOpen />
@@ -125,7 +149,8 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: true,
-    href: "#",
+    href: `${BASE_URL}/file-manager/`,
+    accessName: "fileManager",
   },
   {
     label: "Timelines",
@@ -141,7 +166,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <MdTimeline />
@@ -149,7 +173,8 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/timeline-dashboard/`,
+    href: `${BASE_URL}/timeline/timeline-dashboard`,
+    accessName: "timelines",
   },
   {
     label: "Task Manager",
@@ -165,7 +190,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <CiViewList />
@@ -173,7 +197,8 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/task-manager-dashboard/`,
+    href: `${BASE_URL}/timeline/task-manager-dashboard`,
+    accessName: "taskManager",
   },
   {
     label: "MOM",
@@ -185,7 +210,6 @@ export const sidebarLinks = [
           height: "1.8rem",
           fontSize: "10px",
           borderRadius: "4px",
-          marginRight: "0.5rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -199,6 +223,7 @@ export const sidebarLinks = [
     visible: true,
     active: false,
     href: `${BASE_URL}/mom/`,
+    accessName: "mom",
   },
   {
     label: "Moodboard",
@@ -214,14 +239,13 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <MdOutlineSpaceDashboard />
       </div>
     ),
     visible: false,
-    active: false,
+    active: true,
     href: `${BASE_URL}/moodboard`,
   },
   {
@@ -234,7 +258,6 @@ export const sidebarLinks = [
           height: "1.8rem",
           fontSize: "10px",
           borderRadius: "4px",
-          marginRight: "0.5rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -248,6 +271,7 @@ export const sidebarLinks = [
     visible: true,
     active: false,
     href: `${BASE_URL}/po/`,
+    accessName: "purchaseOrder",
   },
 
   {
@@ -264,7 +288,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <FaMoneyCheckAlt />
@@ -273,6 +296,7 @@ export const sidebarLinks = [
     visible: true,
     active: false,
     href: `${BASE_URL}/account/`,
+    accessName: "accounts",
   },
   {
     label: "Chat",
@@ -288,7 +312,6 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <RiChat1Line />
@@ -312,14 +335,38 @@ export const sidebarLinks = [
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: "0.5rem",
         }}
       >
         <TbReportAnalytics />
       </div>
     ),
+    visible: true,
+    active: false,
+    href: `${BASE_URL}/timeline/dpr`,
+    accessName: "reports",
+  },
+  {
+    label: "Running Bill",
+    link: "",
+    icon: (
+      <div
+        style={{
+          width: "1.8rem",
+          height: "1.8rem",
+          backgroundColor: "#247BA0",
+          color: "#ffffff",
+          borderRadius: "4px",
+          // marginRight:"12px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FaMoneyCheckAlt />
+      </div>
+    ),
     visible: false,
     active: false,
-    href: "#",
+    href: `${BASE_URL}/running-bill/`,
   },
 ];

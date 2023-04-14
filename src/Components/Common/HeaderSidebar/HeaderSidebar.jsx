@@ -43,6 +43,24 @@ const HeaderSidebar = () => {
     // }
   };
 
+  const [aclData, setAclData] = useState([]);
+  const getAclData = async () => {
+    const res = await getReq(`${apiLinks.crm}/user/get-features-list?userId=${localStorage.getItem("userId")}`);
+    if (res && !res.error) {
+      // setProfileData({ ...res.data.data });
+      setAclData(res?.data?.data)
+      // console.log(res.data)
+    }
+    // else {
+    //   console.log(res.error);
+    //   localStorage.clear();
+    //   window.location.assign(`${BASE_URL_ESS}`);
+    // }
+  };
+
+  useEffect(() => {
+    getAclData()
+  }, [])
   useEffect(() => {
     getProfileData();
   }, []);
@@ -122,7 +140,7 @@ const HeaderSidebar = () => {
               <div className={styles.linksContainer}>
                 {sidebarLinks.map((curElem, index) => {
                   return (
-                    curElem.visible && (
+                    curElem.visible && (aclData.includes(curElem?.accessName) || curElem?.accessName === "default") && (
                       <div key={index} className={curElem.active ? styles.activeSidebarItem : styles.sidebarItem}>
                         {curElem.link ? (
                           <Link to={curElem.link} className={styles.sidebarLink}>

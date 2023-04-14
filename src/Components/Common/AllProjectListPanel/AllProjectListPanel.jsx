@@ -11,7 +11,20 @@ import { apiLinks } from "../../../constants/constants";
 const AllProjectListPanel = ({ projectId }) => {
   const navigateTo = useNavigate();
   const [projects, setProjects] = useState([]);
-
+  const [aclData, setAclData] = useState([]);
+  const getAclData = async () => {
+    const res = await getReq(`${apiLinks.crm}/user/get-features-list?userId=${localStorage.getItem("userId")}`);
+    if (res && !res.error) {
+      // setProfileData({ ...res.data.data });
+      setAclData(res?.data?.data)
+      // console.log(res.data)
+    }
+    // else {
+    //   console.log(res.error);
+    //   localStorage.clear();
+    //   window.location.assign(`${BASE_URL_ESS}`);
+    // }
+  };
   const getProjects = async () => {
     const res = await getReq(`${apiLinks.pmt}/api/projects/getProjects?projectId=${projectId}`);
     if (res && !res.error) {
@@ -25,6 +38,11 @@ const AllProjectListPanel = ({ projectId }) => {
     getProjects();
   }, [projectId]);
 
+  useEffect(() => {
+    getAclData()
+  },[])
+  // console.log(projects);
+
   return (
     <React.Fragment>
       {/* {firstStep} */}
@@ -35,11 +53,11 @@ const AllProjectListPanel = ({ projectId }) => {
         </div>
         <div className={styles.projectInsideContainer}>
           {innerLinks.map((curElem) => {
-            if (curElem.visible) {
+            if (curElem.visible && (aclData.includes(curElem?.accessName) || curElem?.accessName === "default")) {
               return (
                 <div className={curElem.active ? styles.projectInsideLinksActive : styles.projectInsideLinksInactive} onClick={() => window.location.assign(curElem.href)}>
                   {curElem.icon}
-                  <span className="w-100 ps-3">{curElem.label}</span>
+                  <span className="w-100" style={{ marginLeft: "0.75rem" }}>{curElem.label}</span>
                 </div>
               );
             }
