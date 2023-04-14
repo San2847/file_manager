@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const FileLanding = () => {
   const navigateTo = useNavigate();
   const [projectFileData, setProjectFileData] = useState([]);
+  const [filteredProjectData, setFilteredProjectData] = useState([]);
   const getProjectFileData = async () => {
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/details-with-project`);
     if (res && !res.error) {
@@ -18,9 +19,19 @@ const FileLanding = () => {
       console.log(res.error);
     }
   };
+
+  const [showInput, setShowInput] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
   useEffect(() => {
     getProjectFileData();
   }, []);
+  useEffect(() => {
+    let x = projectFileData.filter((curElem) => {
+      return curElem.projectName.startsWith(searchText);
+    });
+    setFilteredProjectData([...x]);
+  }, [searchText]);
   return (
     <div className={styles.container}>
       <div className="mb-4">
@@ -40,8 +51,15 @@ const FileLanding = () => {
       <div className={styles.tableContainer}>
         <div className={styles.blueStripe}>
           <div>PROJECT LIST</div>
-          <div>
-            <BsSearch />
+          <div className="d-flex align-items-center">
+            {showInput && (
+              <div className={styles.searchInput}>
+                <input type="text" value={searchText} onChange={(event) => setSearchText(event.target.value)} />
+              </div>
+            )}
+            <div onClick={() => setShowInput(!showInput)} className={showInput ? styles.searchActive : styles.searchInactive}>
+              <BsSearch />
+            </div>
           </div>
         </div>
         <div className={styles.tableHere}>
@@ -56,8 +74,8 @@ const FileLanding = () => {
               </tr>
             </thead>
             <tbody>
-              {projectFileData &&
-                projectFileData.map((curElem) => {
+              {filteredProjectData &&
+                filteredProjectData.map((curElem) => {
                   return (
                     <tr style={{ cursor: "pointer" }} onClick={() => navigateTo(`/${curElem.projectId}`)}>
                       <td>{curElem.projectName}</td>

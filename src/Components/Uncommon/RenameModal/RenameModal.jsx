@@ -11,8 +11,9 @@ import { useParams } from "react-router-dom";
 
 const RenameModal = () => {
   const dispatch = useDispatch();
-  const { renameModal, fileFolderToBeRenamed } = useSelector((state) => state.filemanager);
+  const { renameModal, fileFolderToBeRenamed, fileFolderArr } = useSelector((state) => state.filemanager);
   const [itemName, setItemName] = useState("");
+  const [allFileNameArr, setAllFileNameArr] = useState([]);
 
   const { id } = useParams();
 
@@ -23,12 +24,12 @@ const RenameModal = () => {
           fileFolderToBeRenamed.container.projectId ? fileFolderToBeRenamed.container.projectId : ""
         }`,
         {
-          fileName: itemName,
+          fileName: allFileNameArr.includes(itemName) ? `${itemName}-copy` : itemName,
         }
       );
       if (res && !res.error) {
         dispatch(setModalState({ modal: "renameModal", state: false }));
-        saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
+        saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" }, undefined, id);
         getFiles(2, id);
       } else {
         console.log(res.error);
@@ -40,12 +41,12 @@ const RenameModal = () => {
             fileFolderToBeRenamed.container.projectId ? fileFolderToBeRenamed.container.projectId : ""
           }`,
           {
-            fileName: itemName,
+            fileName: allFileNameArr.includes(itemName) ? `${itemName}-copy` : itemName,
           }
         );
         if (res && !res.error) {
           dispatch(setModalState({ modal: "renameModal", state: false }));
-          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
+          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" }, undefined, id);
           getFiles(1, id);
         } else {
           console.log(res.error);
@@ -54,7 +55,7 @@ const RenameModal = () => {
         const res = await postReq(`${apiLinks.pmt}/api/file-manager/rename-folder?id=${fileFolderToBeRenamed.fileOrFold._id}`, { folderName: itemName });
         if (res && !res.error) {
           dispatch(setModalState({ modal: "renameModal", state: false }));
-          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" });
+          saveFileChangesAsVersion({ container: fileFolderToBeRenamed.container, file: fileFolderToBeRenamed.fileOrFold, text: "File name is changed" }, undefined, id);
           getFiles(1, id);
         } else {
           console.log(res.error);
@@ -62,6 +63,18 @@ const RenameModal = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (fileFolderArr) {
+      let x = fileFolderArr.flatMap((curElem) => {
+        return curElem.fileDetails;
+      });
+      let y = x.map((curElem) => {
+        return curElem.fileName;
+      });
+      setAllFileNameArr([...y]);
+    }
+  }, [fileFolderArr]);
 
   useEffect(() => {
     if (Object.keys(fileFolderToBeRenamed).length > 0) {

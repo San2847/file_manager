@@ -30,7 +30,7 @@ const UploadNewVersion = () => {
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {
-      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file._id);
+      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file._id, id);
       getFiles(1, id);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
       dispatch(setModalState({ modal: "versionConfirmation", state: false }));

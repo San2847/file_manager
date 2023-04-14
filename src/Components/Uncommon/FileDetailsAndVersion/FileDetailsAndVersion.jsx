@@ -56,7 +56,7 @@ const FileDetailsAndVersion = () => {
   useEffect(() => {
     if (shareWithDataArr) {
       let x = shareWithDataArr.map((curElem) => {
-        return curElem.data.data[0].fullName;
+        return curElem.data.data[0] ? curElem.data.data[0].fullName : "test";
       });
       setShareWithNamesArr([...new Set(x)]);
     }
@@ -201,26 +201,26 @@ const FileDetailsAndVersion = () => {
                         <BsFileEarmarkFill color="#43A6DD" fontSize={14} style={{ marginRight: "0.25rem" }} />
                       </div>
                       {curElem.feedBack && curElem.feedBack.length > 0 ? (
-                        <div style={{ fontSize: "14px", width: "90%" }}>
+                        <div style={{ fontSize: "14px", width: "90%", wordBreak: "break-word" }}>
                           <b>{curElem && curElem.fileName}</b>
                           {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[0] ? curElem.versionText.split("~-+-~")[0] : ""}` : ""}
                         </div>
                       ) : (
-                        <div style={{ fontSize: "14px", width: "90%" }}>
+                        <div style={{ fontSize: "14px", width: "90%", wordBreak: "break-word" }}>
                           <b>{curElem && curElem.fileName}</b>
                           {curElem.versionText ? ` ${curElem.versionText}` : ""}
                         </div>
                       )}
                     </div>
                     <div>
-                      {curElem.feedBack && curElem.feedBack.length > 0 && <RiChatQuoteLine style={{ marginRight: "0.25rem" }} />}
+                      {/* {curElem.feedBack && curElem.feedBack.length > 0 && <RiChatQuoteLine style={{ marginRight: "0.25rem" }} />} */}
                       <a href={curElem.fileLink} target="_blank" style={{ textDecoration: "none", color: "#000000" }}>
                         <HiOutlineDocumentMagnifyingGlass />
                       </a>
                     </div>
                   </div>
                   <div>
-                    {curElem.feedBack && curElem.feedBack.length > 0 && (
+                    {curElem.feedBack && curElem.feedBack.length > 0 && curElem.versionText.split("~-+-~")[1] && (
                       <div style={{ fontSize: "12px", width: "100%", backgroundColor: "#ffffff", padding: "0.5rem", borderRadius: "4px" }}>
                         {curElem.versionText && curElem.versionText.split("~-+-~") ? ` ${curElem.versionText.split("~-+-~")[1] ? curElem.versionText.split("~-+-~")[1] : ""}` : ""}
                       </div>

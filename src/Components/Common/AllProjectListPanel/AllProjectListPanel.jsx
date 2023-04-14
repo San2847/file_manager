@@ -24,7 +24,6 @@ const AllProjectListPanel = ({ projectId }) => {
   useEffect(() => {
     getProjects();
   }, [projectId]);
-  console.log(projects);
 
   return (
     <React.Fragment>

@@ -131,10 +131,10 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
             {showReplyBox && (
               <div className={styles.replyInput}>
                 <textarea rows="4" value={replyText} onChange={(event) => setReplyText(event.target.value)}></textarea>
-                <div className={styles.sendForApproval}>
+                {/* <div className={styles.sendForApproval}>
                   <input className="me-2" type="checkbox" />
                   Send for approval
-                </div>
+                </div> */}
               </div>
             )}
             <div className="d-flex justify-content-end">

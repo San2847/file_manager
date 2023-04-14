@@ -9,6 +9,7 @@ import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { RiChatNewLine, RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import {
+  addSingleFileToCheckboxArr,
   clearFileCheckbox,
   handleDetailsVersionBox,
   saveArrayForApproval,
@@ -40,7 +41,7 @@ import { useParams } from "react-router-dom";
 
 const FilesTable = ({ fileData }) => {
   const dispatch = useDispatch();
-  const { fileCheckBoxArr, detailsVersionTab, loading, versionConfirmationReturns, profileData } = useSelector((state) => state.filemanager);
+  const { fileCheckBoxArr, detailsVersionTab, loading, versionConfirmationReturns, profileData, fileTypeTab } = useSelector((state) => state.filemanager);
 
   const { id } = useParams();
 
@@ -80,7 +81,7 @@ const FilesTable = ({ fileData }) => {
       }
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${elem._id}&fileId=${inElem ? inElem._id : elem.fileDetails[0]._id}`, obj);
       if (res && !res.error) {
-        saveFileChangesAsVersion(contObj);
+        saveFileChangesAsVersion(contObj, undefined, id);
         setShowInput("");
         setDrawType("");
         setSpaceName("");
@@ -114,6 +115,7 @@ const FilesTable = ({ fileData }) => {
     }
     if (openedInfo.file && openedInfo.file._id === obj.file._id) {
       setOpenedInfo("");
+      getFiles(1, id);
     } else {
       setOpenedInfo(obj);
     }
@@ -196,7 +198,7 @@ const FilesTable = ({ fileData }) => {
     });
     if (res && !res.error) {
       getFiles(1, id);
-      saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `A feedback has been added by ${profileData.fullName}~-+-~${feedbackText}` });
+      saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `A feedback has been added by ${profileData.fullName}~-+-~${feedbackText}` }, undefined, id);
       setFileFeedArr([...res.data.fileDetails[0].feedBack]);
       setOpenedGiveFeed("");
       setFeedbackText("");
@@ -208,7 +210,6 @@ const FilesTable = ({ fileData }) => {
   const getFileFeedback = async (fileObj) => {
     const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-all-feedbacks?uuId=${fileObj.file.uuId}`);
     if (feres && !feres.error) {
-      console.log(feres);
       setFileFeedArr([
         ...feres.data.sort((a, b) => {
           return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
@@ -288,7 +289,7 @@ const FilesTable = ({ fileData }) => {
   const approveFiles = async (fileObj) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/edit-file?id=${fileObj.container._id}&fileId=${fileObj.file._id}`, { status: 2 });
     if (res && !res.error) {
-      saveFileChangesAsVersion({ container: fileObj.container, file: fileObj.file, text: `has been approved by ${profileData.fullName}` });
+      saveFileChangesAsVersion({ container: fileObj.container, file: fileObj.file, text: `has been approved by ${profileData.fullName}` }, undefined, id);
       getFiles(1, id);
     } else {
       console.log(res.error);
@@ -641,7 +642,7 @@ const FilesTable = ({ fileData }) => {
                           <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                             {!curElem.folderName && showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) !== "none" ? (
                               <>
-                                {curElem.fileDetails[0].status !== 2 && (
+                                {curElem.fileDetails[0].status !== 2 && !curElem.fileDetails[0].isSendForExecution && (
                                   <div
                                     className={styles.approveTick}
                                     title="Approve"
@@ -759,6 +760,18 @@ const FilesTable = ({ fileData }) => {
                                   >
                                     Upload new version
                                   </Dropdown.Item>
+                                  {!curElem.folderName && (
+                                    <Dropdown.Item
+                                      style={{ fontSize: "12px" }}
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        dispatch(addSingleFileToCheckboxArr({ container: curElem, fileOrFold: curElem.fileDetails[0], type: "outside" }));
+                                        dispatch(setModalState({ modal: "moveModal", state: true }));
+                                      }}
+                                    >
+                                      Move to
+                                    </Dropdown.Item>
+                                  )}
                                   <Dropdown.Item
                                     style={{ fontSize: "12px" }}
                                     onClick={(event) => {
@@ -996,7 +1009,7 @@ const FilesTable = ({ fileData }) => {
                                           </div>
                                         </>
                                       )}
-                                      <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>{cur.lastUpdated}</div>
+                                      <div style={{ width: detailsVersionTab === "" ? "15%" : "20%", fontSize: "12px", color: "#333333", fontWeight: "400" }}>{makeDateString(cur.updateTime)}</div>
                                       <div
                                         style={{
                                           width: detailsVersionTab === "" ? "15%" : "20%",
@@ -1024,8 +1037,8 @@ const FilesTable = ({ fileData }) => {
                                       {detailsVersionTab === "" && (
                                         <div style={{ width: "10%", fontSize: "18px", fontWeight: "400", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
                                           {showApprovalOrFeed({ container: curElem, file: cur }) !== "none" ? (
-                                            showApprovalOrFeed({ container: curElem, file: cur }) === "approval" ? (
-                                              <div className="d-flex">
+                                            <>
+                                              {cur.status !== 2 && !cur.isSendForExecution && (
                                                 <div
                                                   className={styles.approveTick}
                                                   title="Approve"
@@ -1036,22 +1049,26 @@ const FilesTable = ({ fileData }) => {
                                                 >
                                                   <BsCheck />
                                                 </div>
-                                                <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
-                                                  <RiChatNewLine />
+                                              )}
+                                              {showApprovalOrFeed({ container: curElem, file: cur }) === "approval" ? (
+                                                <div className="d-flex">
+                                                  <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: cur })}>
+                                                    <RiChatNewLine />
+                                                  </div>
                                                 </div>
-                                              </div>
-                                            ) : openedInfo?.file && openedInfo?.file?._id === cur?._id ? (
-                                              <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
-                                            ) : (
-                                              <RiChatQuoteLine
-                                                className={styles.commentButton}
-                                                onClick={(event) => {
-                                                  openInfo(event, { container: curElem, file: cur });
-                                                  getFileFeedback({ container: curElem, file: cur });
-                                                  readFeedback({ container: curElem, file: cur });
-                                                }}
-                                              />
-                                            )
+                                              ) : openedInfo?.file && openedInfo?.file?._id === cur?._id ? (
+                                                <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: cur })} />
+                                              ) : (
+                                                <RiChatQuoteLine
+                                                  className={styles.commentButton}
+                                                  onClick={(event) => {
+                                                    openInfo(event, { container: curElem, file: cur });
+                                                    getFileFeedback({ container: curElem, file: cur });
+                                                    readFeedback({ container: curElem, file: cur });
+                                                  }}
+                                                />
+                                              )}
+                                            </>
                                           ) : (
                                             "-"
                                           )}
@@ -1127,6 +1144,16 @@ const FilesTable = ({ fileData }) => {
                                               Upload new version
                                             </Dropdown.Item>
                                             <Dropdown.Item
+                                              style={{ fontSize: "12px" }}
+                                              onClick={(event) => {
+                                                event.stopPropagation();
+                                                dispatch(addSingleFileToCheckboxArr({ container: curElem, fileOrFold: cur, type: "inside" }));
+                                                dispatch(setModalState({ modal: "moveModal", state: true }));
+                                              }}
+                                            >
+                                              Move to
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
                                               style={
                                                 getFileStatus(cur) === "Approved" || getFileStatus(cur) === "In-Execution" || getFileStatus(cur) === "Approval Pending"
                                                   ? { fontSize: "12px", ...inlineInactive }
@@ -1198,6 +1225,8 @@ const FilesTable = ({ fileData }) => {
                                                 name={openedInfo.file ? openedInfo.file.fileName : ""}
                                                 containerAndFile={{ container: curElem, file: cur }}
                                                 uploadNewVersionFunc={uploadNewVersion}
+                                                profileData={profileData}
+                                                getFeedbackRefresh={() => openInfo(undefined, { container: curElem, file: cur })}
                                               />
                                             );
                                           })}

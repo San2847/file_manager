@@ -4,13 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearArrayForApproval, setModalState } from "../../../Redux/slices/filemanagerSlice";
 import { approveFile } from "../../../Services/commonFunctions";
 import styles from "./selfApprovalConfirmationModal.module.css";
+import { setFilesGoingFor } from "../../../Redux/slices/filemanagerSlice";
+import { useParams } from "react-router-dom";
 
 const SelfApprovalConfirmationModal = () => {
   const dispatch = useDispatch();
   const { selfApprovalConfirmation, arrayForApproval } = useSelector((state) => state.filemanager);
+  const { id } = useParams();
 
   const approveSingleFile = (fileObj) => {
-    approveFile(fileObj, "selfApprovalConfirmation");
+    approveFile(fileObj, "selfApprovalConfirmation", id);
   };
   const closeAndClean = () => {
     dispatch(clearArrayForApproval());
@@ -25,6 +28,7 @@ const SelfApprovalConfirmationModal = () => {
           <button
             className="outlineButton"
             onClick={() => {
+              dispatch(setFilesGoingFor("approval"));
               dispatch(setModalState({ modal: "selfApprovalConfirmation", state: false }));
               dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
             }}

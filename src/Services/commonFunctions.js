@@ -47,7 +47,7 @@ export const createDateString = (dateStr) => {
   return `${date}-${month}-${year}`;
 };
 
-export const saveFileChangesAsVersion = async (contFile, uuId) => {
+export const saveFileChangesAsVersion = async (contFile, uuId, projId) => {
   let obj = {
     userId: getUserId(),
   };
@@ -60,7 +60,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId) => {
     obj["fileDetails"] = y;
     const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
     if (verRes && !verRes.error) {
-      getFiles(1);
+      getFiles(1, projId);
     } else {
       console.log(verRes.error);
     }
@@ -76,7 +76,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId) => {
       obj["fileDetails"] = y;
       const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
       if (verRes && !verRes.error) {
-        getFiles(1);
+        getFiles(1, projId);
       } else {
         console.log(verRes.error);
       }
@@ -91,7 +91,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId) => {
           obj["fileDetails"] = x;
           const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
           if (verRes && !verRes.error) {
-            getFiles(1);
+            getFiles(1, projId);
           } else {
             console.log(verRes.error);
           }
@@ -107,7 +107,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId) => {
           obj["fileDetails"] = z;
           const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
           if (verRes && !verRes.error) {
-            getFiles(1);
+            getFiles(1, projId);
           } else {
             console.log(verRes.error);
           }
@@ -119,7 +119,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId) => {
   }
 };
 
-export const approveFile = async (fileObj, modalName) => {
+export const approveFile = async (fileObj, modalName, projId) => {
   // const res = await postReq(`${apiLinks.pmt}/api/file-manager/self-approved?type=2`, { approvedBy: getUserId(), files: [{ id: fileObj.container._id, fileId: fileObj.file._id }] });
   // if (res && !res.error) {
   //   store.dispatch(setModalState({ modal: modalName, state: false }));
@@ -134,12 +134,12 @@ export const approveFile = async (fileObj, modalName) => {
     store.dispatch(setModalState({ modal: modalName, state: false }));
     store.dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
     // store.dispatch(clearArrayForApproval());
-    getFiles(1);
+    getFiles(1, projId);
   } else {
     store.dispatch(setModalState({ modal: modalName, state: false }));
     store.dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
     // store.dispatch(clearArrayForApproval());
-    getFiles(1);
+    getFiles(1, projId);
     console.log(res.error);
   }
 };

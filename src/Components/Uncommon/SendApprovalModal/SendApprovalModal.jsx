@@ -43,7 +43,7 @@ const SendApprovalModal = () => {
           dispatch(inputNotifyMessage(""));
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
-          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` });
+          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` }, undefined, id);
           dispatch(clearFileCheckbox());
           getFiles(1, id);
         } else {
@@ -60,7 +60,7 @@ const SendApprovalModal = () => {
               container: arrayForApproval[0].container,
               file: arrayForApproval[0].file,
               text: `File sent for execution to ${selectedTeamMember.memberName} - ${notifyMessage}`,
-            });
+            }, undefined, id);
             arr.forEach(async (curel) => {
               const feedRes = await postReq(`${apiLinks.pmt}/api/file-manager/send-feedback?id=${curel.container._id}&fileId=${curel.file._id}`, {
                 sendBy: getUserId(),

@@ -92,7 +92,7 @@ const HomepageWeb = () => {
         sendingObj["fileDetails"] = [{ ...eachFileObj }];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendingObj);
         if (upRes && !upRes.error) {
-          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails[0], text: "has been uploaded." });
+          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails[0], text: "has been uploaded." }, undefined, id);
         } else {
           console.log(upRes.error);
         }
@@ -148,7 +148,7 @@ const HomepageWeb = () => {
         sendObj["fileDetails"] = [...arr];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendObj);
         if (upRes && !upRes.error) {
-          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails, text: "has been uploaded" });
+          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails, text: "has been uploaded" }, undefined, id);
         } else {
           console.log(upRes.error);
         }
@@ -191,11 +191,11 @@ const HomepageWeb = () => {
   }, [fileCheckBoxArr]);
 
   useEffect(() => {
-    if (fileTypeTab) {
+    if (fileTypeTab && id) {
       getFiles(statusObj[fileTypeTab], id);
     }
     dispatch(clearFileCheckbox());
-  }, [fileTypeTab]);
+  }, [fileTypeTab, id]);
 
   useEffect(() => {
     if (allEmptyFiles[0] && allEmptyFiles[0].length > 0) {

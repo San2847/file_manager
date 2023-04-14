@@ -30,3 +30,35 @@
   height: 20rem;
   overflow-y: scroll;
 }
+
+.searchInput input {
+  outline: none;
+  margin-right: 0.5rem;
+  border-radius: 6px;
+  border: none;
+  padding: 0.25rem 1rem;
+  width: 12rem;
+  font-size: 12px;
+  height: 1.8rem;
+}
+
+.searchActive {
+  background-color: #ffffff;
+  color: #003566;
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.searchInactive {
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
