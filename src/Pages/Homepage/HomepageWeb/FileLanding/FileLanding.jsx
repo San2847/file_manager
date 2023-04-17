@@ -27,11 +27,15 @@ const FileLanding = () => {
     getProjectFileData();
   }, []);
   useEffect(() => {
-    let x = projectFileData.filter((curElem) => {
-      return curElem.projectName.startsWith(searchText);
-    });
-    setFilteredProjectData([...x]);
-  }, [searchText]);
+    if (searchText) {
+      let x = projectFileData.filter((curElem) => {
+        return curElem.projectName.startsWith(searchText);
+      });
+      setFilteredProjectData([...x]);
+    } else {
+      setFilteredProjectData([...projectFileData]);
+    }
+  }, [searchText, projectFileData]);
   return (
     <div className={styles.container}>
       <div className="mb-4">
