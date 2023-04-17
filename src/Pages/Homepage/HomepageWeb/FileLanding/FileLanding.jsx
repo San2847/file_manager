@@ -6,8 +6,11 @@ import { Table } from "react-bootstrap";
 import { getReq } from "../../../../Services/api";
 import { apiLinks } from "../../../../constants/constants";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { saveProjectId } from "../../../../Redux/slices/filemanagerSlice";
 
 const FileLanding = () => {
+  const dispatch = useDispatch();
   const navigateTo = useNavigate();
   const [projectFileData, setProjectFileData] = useState([]);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
@@ -81,7 +84,13 @@ const FileLanding = () => {
               {filteredProjectData &&
                 filteredProjectData.map((curElem) => {
                   return (
-                    <tr style={{ cursor: "pointer" }} onClick={() => navigateTo(`/${curElem.projectId}`)}>
+                    <tr
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        dispatch(saveProjectId(curElem.projectId));
+                        navigateTo(`/${curElem.projectId}`);
+                      }}
+                    >
                       <td>{curElem.projectName}</td>
                       <td>{curElem.allFiles}</td>
                       <td>{curElem.approvedFiles}</td>

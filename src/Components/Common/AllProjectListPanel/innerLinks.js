@@ -21,7 +21,7 @@ export const innerLinks = [
     icon: <img src={dashboard} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/project-dashboard/`,
+    href: `project-dashboard/`,
     accessName: "default",
   },
   {
@@ -30,7 +30,7 @@ export const innerLinks = [
     icon: <img src={updates} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/pmt/project-discussion`,
+    href: `pmt/project-discussion`,
     accessName: "pmt",
   },
   {
@@ -39,7 +39,7 @@ export const innerLinks = [
     icon: <img src={files} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: true,
-    href: `${BASE_URL}/file-manager/${localStorage.getItem("projectId")}`,
+    href: `file-manager/`,
     accessName: "fileManager",
   },
   {
@@ -48,7 +48,7 @@ export const innerLinks = [
     icon: <img src={mom} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/mom/${localStorage.getItem("projectId")}`,
+    href: `mom/`,
     accessName: "mom",
   },
   // {
@@ -62,7 +62,7 @@ export const innerLinks = [
   //   ),
   //   visible: false,
   //   active: false,
-  //   href: `${BASE_URL}/quotation/enterprise-landing-page`,
+  //   href: `quotation/enterprise-landing-page`,
   //   accessName: "quotation",
   // },
   {
@@ -71,7 +71,7 @@ export const innerLinks = [
     icon: <img src={quotation} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/quotation/${localStorage.getItem("projectId")}`,
+    href: `quotation/`,
     accessName: "quotation",
   },
   {
@@ -80,20 +80,16 @@ export const innerLinks = [
     icon: <img src={timeline} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/timeline/${localStorage.getItem("projectId")}`,
+    href: `timeline/timeline/`,
     accessName: "timelines",
   },
   {
     label: "Task Manager",
     link: "",
-    icon: (
-      <img src={taskmanager} style={{ height: "28.8px", width: "28.8px" }} />
-    ),
+    icon: <img src={taskmanager} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/task-manager/${localStorage.getItem(
-      "projectId"
-    )}`,
+    href: `timeline/task-manager/`,
     accessName: "taskManager",
   },
   {
@@ -102,7 +98,7 @@ export const innerLinks = [
     icon: <img src={accounts} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/account/account/${localStorage.getItem("projectId")}`,
+    href: `account/account/`,
     accessName: "accounts",
   },
   {
@@ -111,7 +107,7 @@ export const innerLinks = [
     icon: <img src={moodboard} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: false,
     active: false,
-    href: `${BASE_URL}/moodboard`,
+    href: `moodboard`,
   },
   {
     label: "Vendor & PO’s",
@@ -119,19 +115,17 @@ export const innerLinks = [
     icon: <img src={po} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/po/single-project/${localStorage.getItem("projectId")}`,
+    href: `po/single-project/`,
     accessName: "purchaseOrder",
   },
 
   {
     label: "Running Bill",
     link: "",
-    icon: (
-      <img src={runningbill} style={{ height: "28.8px", width: "28.8px" }} />
-    ),
+    icon: <img src={runningbill} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/running-bill/`,
+    href: `running-bill/`,
     accessName: "runningBill",
   },
 
@@ -141,7 +135,7 @@ export const innerLinks = [
     icon: <img src={reports} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/dpr/${localStorage.getItem("projectId")}`,
+    href: `timeline/dpr/`,
     accessName: "reports",
   },
 ];

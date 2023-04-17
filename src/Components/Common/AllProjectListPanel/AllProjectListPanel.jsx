@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { AiOutlineLeft } from "react-icons/ai";
 import styles from "./allProjectListPanel.module.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { innerLinks } from "./innerLinks";
 import { getReq } from "../../../Services/api";
-import { apiLinks } from "../../../constants/constants";
+import { BASE_URL, apiLinks } from "../../../constants/constants";
 
 const AllProjectListPanel = ({ projectId }) => {
   const navigateTo = useNavigate();
+  const projectIdForNav = useSelector((state) => state.filemanager.projectId);
   const [projects, setProjects] = useState([]);
   const [aclData, setAclData] = useState([]);
   const getAclData = async () => {
     const res = await getReq(`${apiLinks.crm}/user/get-features-list?userId=${localStorage.getItem("userId")}`);
     if (res && !res.error) {
       // setProfileData({ ...res.data.data });
-      setAclData(res?.data?.data)
+      setAclData(res?.data?.data);
       // console.log(res.data)
     }
     // else {
@@ -39,8 +40,8 @@ const AllProjectListPanel = ({ projectId }) => {
   }, [projectId]);
 
   useEffect(() => {
-    getAclData()
-  },[])
+    getAclData();
+  }, []);
   // console.log(projects);
 
   return (
@@ -55,9 +56,20 @@ const AllProjectListPanel = ({ projectId }) => {
           {innerLinks.map((curElem) => {
             if (curElem.visible && (aclData.includes(curElem?.accessName) || curElem?.accessName === "default")) {
               return (
-                <div className={curElem.active ? styles.projectInsideLinksActive : styles.projectInsideLinksInactive} onClick={() => window.location.assign(curElem.href)}>
+                <div
+                  className={curElem.active ? styles.projectInsideLinksActive : styles.projectInsideLinksInactive}
+                  onClick={() => {
+                    if (curElem.href === "pmt/project-discussion") {
+                      window.location.assign(`${BASE_URL}/${curElem.href}`);
+                    } else {
+                      window.location.assign(`${BASE_URL}/${curElem.href}${projectIdForNav}`);
+                    }
+                  }}
+                >
                   {curElem.icon}
-                  <span className="w-100" style={{ marginLeft: "0.75rem" }}>{curElem.label}</span>
+                  <span className="w-100" style={{ marginLeft: "0.75rem" }}>
+                    {curElem.label}
+                  </span>
                 </div>
               );
             }

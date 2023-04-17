@@ -7,6 +7,7 @@ import {
   clearFileCheckbox,
   saveArrayForApproval,
   savePrepareDeleteArr,
+  saveProjectId,
   selectFileTypeTab,
   selectInternalTab,
   setFilesGoingFor,
@@ -217,6 +218,12 @@ const HomepageWeb = () => {
       }
     }
   }, [fileCheckBoxArr]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(saveProjectId(id));
+    }
+  }, [id]);
   return id ? (
     <>
       <SendApprovalModal />

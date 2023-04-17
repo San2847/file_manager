@@ -47,6 +47,8 @@ const initialState = {
   profileData: {},
 
   notifyMessage: "",
+
+  projectId: "",
 };
 
 export const filemanagerSlice = createSlice({
@@ -199,6 +201,10 @@ export const filemanagerSlice = createSlice({
     addSingleFileToCheckboxArr: (state, action) => {
       state.fileCheckBoxArr = [action.payload];
     },
+
+    saveProjectId: (state, action) => {
+      state.projectId = action.payload;
+    },
   },
 });
 
@@ -234,6 +240,7 @@ export const {
   selectAllCheckBoxes,
   fillFileCheckbox,
   addSingleFileToCheckboxArr,
+  saveProjectId,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;
