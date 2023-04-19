@@ -28,7 +28,8 @@ const HeaderSidebar = () => {
     if (res && !res.error) {
       setProfileData({ ...res.data.data });
       dispatch(saveProfileData({ ...res.data.data }));
-    } else {
+    } 
+    else {
       console.log(res.error);
       localStorage.clear();
       window.location.assign(`${BASE_URL}`);

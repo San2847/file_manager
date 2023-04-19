@@ -51,20 +51,20 @@ export const innerLinks = [
     href: `mom/`,
     accessName: "mom",
   },
-  // {
-  //   label: "Design Quotation",
-  //   link: "",
-  //   icon: (
-  //     <img
-  //       src={design_quotation_icon}
-  //       style={{ height: "28.8px", width: "28.8px" }}
-  //     />
-  //   ),
-  //   visible: false,
-  //   active: false,
-  //   href: `quotation/enterprise-landing-page`,
-  //   accessName: "quotation",
-  // },
+  {
+    label: "Design Quotation",
+    link: "",
+    icon: (
+      <img
+        src={design_quotation_icon}
+        style={{ height: "28.8px", width: "28.8px" }}
+      />
+    ),
+    visible: true,
+    active: false,
+    href: `quotation/enterprise-landing-page/inner/`,
+    accessName: "quotation",
+  },
   {
     label: "Quotation",
     link: "",
