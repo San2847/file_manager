@@ -8,6 +8,7 @@ import { apiLinks } from "../../../../constants/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { saveProjectId } from "../../../../Redux/slices/filemanagerSlice";
+import { AiOutlineClose } from "react-icons/ai";
 
 const FileLanding = () => {
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ const FileLanding = () => {
               </div>
             )}
             <div onClick={() => setShowInput(!showInput)} className={showInput ? styles.searchActive : styles.searchInactive}>
-              <BsSearch />
+              {showInput ? <AiOutlineClose /> : <BsSearch />}
             </div>
           </div>
         </div>

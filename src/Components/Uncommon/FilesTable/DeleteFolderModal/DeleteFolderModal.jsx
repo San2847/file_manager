@@ -2,7 +2,7 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { apiLinks } from "../../../../constants/constants";
-import { setModalState } from "../../../../Redux/slices/filemanagerSlice";
+import { clearFileCheckbox, setModalState } from "../../../../Redux/slices/filemanagerSlice";
 import { postReq } from "../../../../Services/api";
 import { getFiles } from "../../../../Services/commonFunctions";
 import styles from "./deleteFolderModal.module.css";
@@ -18,6 +18,7 @@ const DeleteFolderModal = () => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/delete-folder?id=${folderToBeDeleted}`);
     if (res && !res.error) {
       getFiles(1, id);
+      dispatch(clearFileCheckbox());
     } else {
       console.log(res.error);
     }

@@ -867,6 +867,18 @@ const FilesTable = ({ fileData }) => {
                       </div>
 
                       {!curElem.folderName && (
+                        <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
+                          <div className={styles.feedbackContainer}>
+                            <textarea name="feedbackText" rows="3" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
+                            <div className="d-flex justify-content-end">
+                              <button className={styles.submitFeed} onClick={submitFeedback}>
+                                Submit Feedback
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {!curElem.folderName && (
                         <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
                           <div className={styles.feedbackContainer}>
                             {fileFeedArr &&
@@ -886,18 +898,7 @@ const FilesTable = ({ fileData }) => {
                           </div>
                         </div>
                       )}
-                      {!curElem.folderName && (
-                        <div className={styles.feedbackBox} style={openedGiveFeed.file && openedGiveFeed.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
-                          <div className={styles.feedbackContainer}>
-                            <textarea name="feedbackText" rows="5" value={feedbackText} onChange={inputFeedback} className={styles.feedbackInput}></textarea>
-                            <div className="d-flex justify-content-end">
-                              <button className={styles.submitFeed} onClick={submitFeedback}>
-                                Submit Feedback
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                      
 
                       {curElem.folderName && (
                         <div

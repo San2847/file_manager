@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/file-manager/static/css/main.3721305d.css",
-    "main.js": "/file-manager/static/js/main.758fb835.js",
+    "main.css": "/file-manager/static/css/main.8d837166.css",
+    "main.js": "/file-manager/static/js/main.84c4a4f6.js",
     "static/js/787.fa554ae2.chunk.js": "/file-manager/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-manager/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/pdfIcon.svg": "/file-manager/static/media/pdfIcon.13ea69b5572e130a046a69fb9905d679.svg",
@@ -11,10 +11,10 @@
     "static/media/po.svg": "/file-manager/static/media/po.373f858a0c77aa729e764aba8a905eeb.svg",
     "static/media/comp_logo.svg": "/file-manager/static/media/comp_logo.413001bf5eeec20750cbebc97f340202.svg",
     "static/media/team.svg": "/file-manager/static/media/team.e9a53c0a66d47b773daf0419ba44322a.svg",
-    "static/media/runningbill.svg": "/file-manager/static/media/runningbill.d24ff36dfcdbc295013c9526f89c13d4.svg",
-    "static/media/design_quotation_icon.svg": "/file-manager/static/media/design_quotation_icon.e5aef3264689f1d36721dda8d50e4211.svg",
+    "static/media/runningbill.svg": "/file-manager/static/media/runningbill.8f5a9faeabc46b95c8d47889670b417a.svg",
+    "static/media/design_quotation_icon.svg": "/file-manager/static/media/design_quotation_icon.15af9f8bda2261447f06df85348fa82f.svg",
     "static/media/timeline.svg": "/file-manager/static/media/timeline.23ca8246346fd81428350e2192b8dd43.svg",
-    "static/media/design_quo_icon.svg": "/file-manager/static/media/design_quo_icon.21ab8a2ea71ac5033717742923cceddc.svg",
+    "static/media/design_quo_icon.svg": "/file-manager/static/media/design_quo_icon.d85e6e85ced3b5f63af2c4aa27fa88ae.svg",
     "static/media/mom.svg": "/file-manager/static/media/mom.408df28d7643e0447794d944d09c8576.svg",
     "static/media/medal.svg": "/file-manager/static/media/medal.337b7ab75765f4b63ae8f31c4dbfa5b5.svg",
     "static/media/whatsapp.svg": "/file-manager/static/media/whatsapp.11d781a186d1798c2d3f160b1787f531.svg",
@@ -28,12 +28,12 @@
     "static/media/dashboard.svg": "/file-manager/static/media/dashboard.076cbbb9fa4c65f9c3aef7f62014e150.svg",
     "static/media/person.svg": "/file-manager/static/media/person.dfcc209ee2bb8b0e4bb9a69f656dd5d4.svg",
     "static/media/quotation.svg": "/file-manager/static/media/quotation.db2e4946f306b94d7779d058510c7e3d.svg",
-    "main.3721305d.css.map": "/file-manager/static/css/main.3721305d.css.map",
-    "main.758fb835.js.map": "/file-manager/static/js/main.758fb835.js.map",
+    "main.8d837166.css.map": "/file-manager/static/css/main.8d837166.css.map",
+    "main.84c4a4f6.js.map": "/file-manager/static/js/main.84c4a4f6.js.map",
     "787.fa554ae2.chunk.js.map": "/file-manager/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3721305d.css",
-    "static/js/main.758fb835.js"
+    "static/css/main.8d837166.css",
+    "static/js/main.84c4a4f6.js"
   ]
 }

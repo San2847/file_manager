@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dropdown, Modal } from "react-bootstrap";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,6 +44,10 @@ const ShareModal = () => {
     navigator.clipboard.writeText(text);
     setCopyButtonText("Copied");
   };
+  useEffect(() => {
+    setCopyButtonText("Copy Link")
+  }, [shareModal])
+  
   return (
     <Modal show={shareModal} centered>
       <Modal.Body>

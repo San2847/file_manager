@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createDateString, getFiles } from "../../../Services/commonFunctions";
 import { FaFolder } from "react-icons/fa";
 import { clearFileCheckbox, setModalState } from "../../../Redux/slices/filemanagerSlice";
-import { postReq } from "../../../Services/api";
+import { getReq, postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
 import { useParams } from "react-router-dom";
@@ -16,7 +16,7 @@ const MoveModal = () => {
   const [onlyFolders, setOnlyFolders] = useState([]);
 
   const { id } = useParams();
-
+  console.log({ fileCheckBoxArr })
   const [selectedFolder, setSelectedFolder] = useState({});
 
   const moveFilesTo = async () => {
@@ -63,7 +63,15 @@ const MoveModal = () => {
       console.log(res.error);
     }
   };
-
+  const getAllFolderData = async () => {
+    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-folders-by-projectId?${localStorage.getItem("userId")}`);
+    if (res && !res.error) {
+      console.log(res)
+      // setProfileData({ ...res.data.data });
+      // setAclData(res?.data?.data);
+      // console.log(res.data)
+    }
+  }
   useEffect(() => {
     if (fileFolderArr && fileFolderArr.length > 0) {
       let x = fileFolderArr.filter((curElem) => {
@@ -72,6 +80,10 @@ const MoveModal = () => {
       setOnlyFolders([...x]);
     }
   }, [fileFolderArr]);
+  useEffect(() => {
+    getAllFolderData()
+  }, [])
+
   return (
     <Modal show={moveModal} centered size="md">
       <Modal.Header className={styles.heading}>Move files to</Modal.Header>

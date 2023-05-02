@@ -71,7 +71,7 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
                 Current Version
               </div>
             )}
-            {feedData.message.split && feedData.message.split("~-+-~")[1] && (
+            {feedData.message?.split && feedData.message?.split("~-+-~")[1] && (
               <div
                 style={{
                   backgroundColor: "#C0F1DD",
@@ -84,13 +84,13 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
                   color: "#26AD74",
                 }}
               >
-                {feedData && feedData.message.split("~-+-~") ? feedData.message.split("~-+-~")[1] : ""}
+                {feedData && feedData.message?.split("~-+-~") ? feedData.message?.split("~-+-~")[1] : ""}
               </div>
             )}
           </div>
           <div style={{ fontSize: "10px", color: "#333333CC" }}>{feedData ? createDateString(feedData.dateTime) : ""}</div>
         </div>
-        <div style={{ fontSize: "14px" }}>{feedData && feedData.message.split("~-+-~") ? feedData.message.split("~-+-~")[0] : ""}</div>
+        <div style={{ fontSize: "14px" }}>{feedData && feedData.message?.split("~-+-~") ? feedData.message?.split("~-+-~")[0] : ""}</div>
         {feedData.feedBackReply &&
           feedData.feedBackReply.map((curElem) => {
             return (
@@ -99,7 +99,7 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <div className="d-flex align-items-center">
                       <div className={styles.replyHeading}>Comment on this reply</div>
-                      {curElem.message && curElem.message.split("~-+-~") && (
+                      {curElem.message && curElem.message?.split("~-+-~") && (
                         <div
                           style={{
                             backgroundColor: "#E6CCFF",
@@ -112,13 +112,13 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
                             color: "#A041FF",
                           }}
                         >
-                          {curElem.message.split("~-+-~")[1] ? curElem.message.split("~-+-~")[1] : ""}
+                          {curElem.message?.split("~-+-~")[1] ? curElem.message?.split("~-+-~")[1] : ""}
                         </div>
                       )}
                     </div>
                     <div className={styles.replyDate}>{createDateString(curElem.dateTime)}</div>
                   </div>
-                  <div className={styles.replyText}>{curElem.message && curElem.message.split("~-+-~") ? curElem.message.split("~-+-~")[0] : ""}</div>
+                  <div className={styles.replyText}>{curElem.message && curElem.message?.split("~-+-~") ? curElem.message?.split("~-+-~")[0] : ""}</div>
                 </div>
               </div>
             );
