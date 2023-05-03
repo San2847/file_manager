@@ -140,6 +140,10 @@ const OnlyFilesTable = ({ fileData }) => {
   };
 
   const [fileFeedArr, setFileFeedArr] = useState([]);
+  
+  //final data after removing the duplicate comments
+  const [finalFeedBack, setFinalFeedBack] = useState([]);
+
   const getFileFeedback = async (item) => {
     // const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
     // if (res && !res.error) {
@@ -163,6 +167,21 @@ const OnlyFilesTable = ({ fileData }) => {
       console.log(feres.error);
     }
   };
+
+//for removing the duplicate data coming from the api on feedback
+  useEffect(() => {
+    const result = fileFeedArr.reduce((accumulator, current) => {
+      let exists = accumulator.find(item => {
+        return item._id === current._id;
+      });
+      if (!exists) {
+        accumulator = accumulator.concat(current);
+      }
+      return accumulator;
+    }, []);
+    setFinalFeedBack(result)
+  }, [fileFeedArr])
+
   const readFeedback = async (item) => {
     const readRes = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${item.folderId}&fileId=${item._id}`);
     if (readRes && !readRes.error) {

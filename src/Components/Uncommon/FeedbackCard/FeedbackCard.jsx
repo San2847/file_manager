@@ -34,6 +34,7 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
       }
     }
   };
+  console.log(feedData)
   return (
     <>
       <div className={currentVer ? styles.firstFeedback : styles.eachFeedback}>

@@ -188,6 +188,10 @@ const FilesTable = ({ fileData }) => {
 
   const [feedbackText, setFeedbackText] = useState("");
   const [fileFeedArr, setFileFeedArr] = useState([]);
+
+  //final data after removing the duplicate comments
+  const [finalFeedBack, setFinalFeedBack] = useState([]);
+
   const inputFeedback = (event) => {
     setFeedbackText(event.target.value);
   };
@@ -219,6 +223,8 @@ const FilesTable = ({ fileData }) => {
       console.log(feres.error);
     }
 
+   
+    
     // const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${fileObj.container._id}&uuId=${fileObj.file.uuId}`);
     // if (res && !res.error) {
     //   setFileFeedArr([...res.data]);
@@ -226,6 +232,20 @@ const FilesTable = ({ fileData }) => {
     //   console.log(res.error);
     // }
   };
+
+//for removing the duplicate data coming from the api on feedback
+  useEffect(() => {
+    const result = fileFeedArr.reduce((accumulator, current) => {
+      let exists = accumulator.find(item => {
+        return item._id === current._id;
+      });
+      if (!exists) {
+        accumulator = accumulator.concat(current);
+      }
+      return accumulator;
+    }, []);
+    setFinalFeedBack(result)
+  }, [fileFeedArr])
   const readFeedback = async (fileObj) => {
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
     if (res && !res.error) {
@@ -597,8 +617,8 @@ const FilesTable = ({ fileData }) => {
                           {curElem.folderName
                             ? makeDateString(curElem.updatedAt)
                             : curElem.fileDetails[0] && curElem.fileDetails[0].updateTime
-                            ? makeDateString(curElem.fileDetails[0].updateTime)
-                            : "-"}
+                              ? makeDateString(curElem.fileDetails[0].updateTime)
+                              : "-"}
                         </div>
                         <div
                           style={{
@@ -620,15 +640,15 @@ const FilesTable = ({ fileData }) => {
                                 curElem.fileDetails[0].executionRequestName
                                   ? curElem.fileDetails[0].executionRequestName
                                   : curElem.fileDetails[0].approvalRequestName
-                                  ? curElem.fileDetails[0].approvalRequestName
-                                  : ""
+                                    ? curElem.fileDetails[0].approvalRequestName
+                                    : ""
                               }
                             >
                               {curElem.fileDetails[0].executionRequestName
                                 ? curElem.fileDetails[0].executionRequestName.split("")[0]
                                 : curElem.fileDetails[0].approvalRequestName
-                                ? curElem.fileDetails[0].approvalRequestName.split("")[0]
-                                : ""}
+                                  ? curElem.fileDetails[0].approvalRequestName.split("")[0]
+                                  : ""}
                             </span>
                           )}
                           {curElem.folderName ? "" : curElem.fileDetails[0] && getFileStatus(curElem.fileDetails[0])}
@@ -722,9 +742,9 @@ const FilesTable = ({ fileData }) => {
                               <Dropdown.Item
                                 style={
                                   !curElem.folderName &&
-                                  (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
-                                    getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
-                                    getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                    (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                      getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                      getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
                                     ? { fontSize: "12px", ...inlineInactive }
                                     : { fontSize: "12px" }
                                 }
@@ -788,9 +808,9 @@ const FilesTable = ({ fileData }) => {
                                   <Dropdown.Item
                                     style={
                                       !curElem.folderName &&
-                                      (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
-                                        getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
-                                        getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
+                                        (getFileStatus(curElem.fileDetails[0]) === "Approved" ||
+                                          getFileStatus(curElem.fileDetails[0]) === "In-Execution" ||
+                                          getFileStatus(curElem.fileDetails[0]) === "Approval Pending")
                                         ? { fontSize: "12px", ...inlineInactive }
                                         : { fontSize: "12px" }
                                     }
@@ -845,10 +865,10 @@ const FilesTable = ({ fileData }) => {
                                       ? { fontSize: "12px", ...inlineInactive }
                                       : { fontSize: "12px", color: "red" }
                                     : curElem.fileDetails.some((each) => {
-                                        return getFileStatus(each) !== "-";
-                                      })
-                                    ? { fontSize: "12px", ...inlineInactive }
-                                    : { fontSize: "12px", color: "red" }
+                                      return getFileStatus(each) !== "-";
+                                    })
+                                      ? { fontSize: "12px", ...inlineInactive }
+                                      : { fontSize: "12px", color: "red" }
                                 }
                                 onClick={(event) => {
                                   event.stopPropagation();
@@ -881,8 +901,9 @@ const FilesTable = ({ fileData }) => {
                       {!curElem.folderName && (
                         <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === curElem.fileDetails[0]._id ? { height: "fit-content" } : { height: "0" }}>
                           <div className={styles.feedbackContainer}>
-                            {fileFeedArr &&
-                              fileFeedArr.map((eachFeed, index) => {
+                            {finalFeedBack &&
+                              finalFeedBack.map((eachFeed, index) => {
+                                console.log(eachFeed)
                                 return (
                                   <FeedbackCard
                                     feedData={eachFeed}
@@ -898,7 +919,7 @@ const FilesTable = ({ fileData }) => {
                           </div>
                         </div>
                       )}
-                      
+
 
                       {curElem.folderName && (
                         <div
