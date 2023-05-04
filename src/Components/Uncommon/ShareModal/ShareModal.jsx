@@ -51,7 +51,7 @@ const ShareModal = () => {
   const goToWhtsapp = () => {
     const data = filesToBeSharedArr.map((item) => item.file.fileLink).join(' , ')
     console.log(data)
-    let url = "https://wa.me/918797255306?text=" + data; window.open(url, "_blank").focus()
+    let url = "https://wa.me?text=" + data; window.open(url, "_blank").focus()
   }
   console.log(filesToBeSharedArr)
   return (
