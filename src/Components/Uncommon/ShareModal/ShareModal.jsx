@@ -47,7 +47,13 @@ const ShareModal = () => {
   useEffect(() => {
     setCopyButtonText("Copy Link")
   }, [shareModal])
-  
+
+  const goToWhtsapp = () => {
+    const data = filesToBeSharedArr.map((item) => item.file.fileLink).join(' , ')
+    console.log(data)
+    let url = "https://wa.me/918797255306?text=" + data; window.open(url, "_blank").focus()
+  }
+  console.log(filesToBeSharedArr)
   return (
     <Modal show={shareModal} centered>
       <Modal.Body>
@@ -57,19 +63,23 @@ const ShareModal = () => {
             <AiOutlineClose />
           </div>
         </div>
-        <div className={styles.linkContainerDiv}>
-          <div style={{ whiteSpace: "nowrap", overflow: "scroll", width: "78%" }} ref={linkTextRef}>
-            {filesToBeSharedArr &&
-              filesToBeSharedArr.map((curElem, index) => {
-                if (index === filesToBeSharedArr.length - 1) {
-                  return `${curElem.file.fileLink}`;
-                } else {
-                  return `${curElem.file.fileLink},`;
-                }
-              })}
+        {filesToBeSharedArr?.length <= 1 ?
+          <div className={styles.linkContainerDiv}>
+            <div style={{ whiteSpace: "nowrap", overflow: "scroll", width: "78%" }} ref={linkTextRef}>
+              {filesToBeSharedArr &&
+                filesToBeSharedArr.map((curElem, index) => {
+                  if (index === filesToBeSharedArr.length - 1) {
+                    return `${curElem.file.fileLink}`;
+                  } else {
+                    return `${curElem.file.fileLink},`;
+                  }
+                })}
+            </div>
+            <button onClick={copyText}>{copyButtonText}</button>
           </div>
-          <button onClick={copyText}>{copyButtonText}</button>
-        </div>
+          : ""
+        }
+
         {showDropdown && (
           <Dropdown>
             <Dropdown.Toggle className={styles.teamSelectDrop}>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.memberName : "Select"}</Dropdown.Toggle>
@@ -87,7 +97,7 @@ const ShareModal = () => {
             <div>E-Mail</div>
           </div>
           <div className={styles.eachIconContainer}>
-            <img src={whatsapp} alt="" />
+            <img src={whatsapp} alt="" onClick={goToWhtsapp} />
             <div>Whatsapp</div>
           </div>
           <div className={styles.eachIconContainer}>

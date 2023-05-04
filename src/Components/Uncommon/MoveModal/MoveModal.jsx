@@ -14,6 +14,7 @@ const MoveModal = () => {
   const dispatch = useDispatch();
   const { moveModal, fileFolderArr, fileCheckBoxArr } = useSelector((state) => state.filemanager);
   const [onlyFolders, setOnlyFolders] = useState([]);
+  const [folderData, setFolderData] = useState([]);
 
   const { id } = useParams();
   console.log({ fileCheckBoxArr })
@@ -63,15 +64,7 @@ const MoveModal = () => {
       console.log(res.error);
     }
   };
-  const getAllFolderData = async () => {
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-folders-by-projectId?${localStorage.getItem("userId")}`);
-    if (res && !res.error) {
-      console.log(res)
-      // setProfileData({ ...res.data.data });
-      // setAclData(res?.data?.data);
-      // console.log(res.data)
-    }
-  }
+
   useEffect(() => {
     if (fileFolderArr && fileFolderArr.length > 0) {
       let x = fileFolderArr.filter((curElem) => {
@@ -81,7 +74,17 @@ const MoveModal = () => {
     }
   }, [fileFolderArr]);
   useEffect(() => {
+    const getAllFolderData = async () => {
+      const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-folders-by-projectId?projectId=${id}`);
+      console.log(res)
+      if (res && !res.error) {
+        // setProfileData({ ...res.data.data });
+        setFolderData(res?.data);
+        // console.log(res.data)
+      }
+    }
     getAllFolderData()
+
   }, [])
 
   return (
@@ -105,8 +108,8 @@ const MoveModal = () => {
               <div style={{ width: "30%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>-</div>
               <div style={{ width: "30%", fontSize: "12px", display: "flex", justifyContent: "center", color: "#333333CC" }}>-</div>
             </div>
-            {onlyFolders &&
-              onlyFolders.map((curElem) => {
+            {folderData &&
+              folderData.map((curElem) => {
                 return (
                   <>
                     <div className={`${styles.eachCard} ${selectedFolder._id === curElem._id && styles.activeCard}`} onClick={(event) => setSelectedFolder(curElem)}>

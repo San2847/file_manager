@@ -6,7 +6,7 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import styles from "./onlyFilesTable.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdImage } from "react-icons/io";
-import { createDateString, getFiles, getFileStatus, showApprovalOrFeed } from "../../../Services/commonFunctions";
+import { createDateString, downloadFile, getFiles, getFileStatus, showApprovalOrFeed } from "../../../Services/commonFunctions";
 import { RiChatNewLine, RiChatQuoteFill, RiChatQuoteLine } from "react-icons/ri";
 import FeedbackCard from "../FeedbackCard/FeedbackCard";
 import { Dropdown } from "react-bootstrap";
@@ -17,6 +17,7 @@ import {
   handleDetailsVersionBox,
   saveArrayForApproval,
   saveFileToNewVersion,
+  saveFilesToBeShared,
   saveNewFileForVersion,
   savePrepareDeleteArr,
   selectAllCheckBoxes,
@@ -100,10 +101,6 @@ const OnlyFilesTable = ({ fileData }) => {
     }
   };
 
-  const downloadFile = (file) => {
-    fileDownload(file.fileLink, `${file.fileName}`);
-  };
-
   const deleteSingleFileOrFolder = async (item) => {
     const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-single-file?uuId=${item.uuId}`);
     if (res && !res.error) {
@@ -140,7 +137,7 @@ const OnlyFilesTable = ({ fileData }) => {
   };
 
   const [fileFeedArr, setFileFeedArr] = useState([]);
-  
+
   //final data after removing the duplicate comments
   const [finalFeedBack, setFinalFeedBack] = useState([]);
 
@@ -168,7 +165,7 @@ const OnlyFilesTable = ({ fileData }) => {
     }
   };
 
-//for removing the duplicate data coming from the api on feedback
+  //for removing the duplicate data coming from the api on feedback
   useEffect(() => {
     const result = fileFeedArr.reduce((accumulator, current) => {
       let exists = accumulator.find(item => {
@@ -199,7 +196,7 @@ const OnlyFilesTable = ({ fileData }) => {
       setOpenedFeedback(item);
     }
   };
-  
+
   const [openedGiveFeed, setOpenedGiveFeed] = useState("");
   const openGiveFeed = (event, obj) => {
     event.stopPropagation();
@@ -454,10 +451,19 @@ const OnlyFilesTable = ({ fileData }) => {
                           <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "details" }))}>
                             File Details
                           </Dropdown.Item>
-                          <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile(curElem)}>
+                          <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile([curElem])}>
                             Download
                           </Dropdown.Item>
-                          <Dropdown.Item style={{ fontSize: "12px" }}>Share</Dropdown.Item>
+                          <Dropdown.Item
+                            style={{ fontSize: "12px" }}
+                            onClick={(event) => {
+                              // event.stopPropagation();
+                              dispatch(saveFilesToBeShared([{ container: { _id: curElem.folderId }, file: curElem }]));
+                              dispatch(setModalState({ modal: "shareModal", state: true }));
+                            }}
+                          >
+                            Share
+                          </Dropdown.Item>
                           <Dropdown.Item
                             style={
                               getFileStatus(curElem) === "Approved" || getFileStatus(curElem) === "In-Execution" || getFileStatus(curElem) === "Approval Pending"
@@ -471,7 +477,7 @@ const OnlyFilesTable = ({ fileData }) => {
                         </Dropdown.Menu>
                       </Dropdown>
                     </div>
-                  </div>
+                  </div >
                   <div className={styles.feedbackContainer} style={{ height: openedFeedback._id === curElem._id ? "fit-content" : "0" }}>
                     <div style={{ height: "fit-content", width: "100%", padding: "0.5rem" }}>
                       {curElem.feedBack &&
@@ -494,7 +500,7 @@ const OnlyFilesTable = ({ fileData }) => {
             })
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };

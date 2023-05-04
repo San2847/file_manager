@@ -6,6 +6,7 @@ import {
   clearAllEmptyFiles,
   clearFileCheckbox,
   saveArrayForApproval,
+  saveFilesToBeShared,
   savePrepareDeleteArr,
   saveProjectId,
   selectFileTypeTab,
@@ -24,7 +25,7 @@ import { postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getProjectId, getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
-import { getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
+import { downloadFile, getFiles, getFileStatus, saveFileChangesAsVersion } from "../../../Services/commonFunctions";
 import OnlyFilesTable from "../../../Components/Uncommon/OnlyFilesTable/OnlyFilesTable";
 import { BsBoxArrowInRight, BsShare } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -184,8 +185,8 @@ const HomepageWeb = () => {
       let x =
         fileCheckBoxArr.length > 0
           ? fileCheckBoxArr.every((curElem) => {
-              return !curElem.fileOrFold.isSendForExecution;
-            })
+            return !curElem.fileOrFold.isSendForExecution;
+          })
           : false;
       setSendExecButtonShow(x);
     }
@@ -224,6 +225,7 @@ const HomepageWeb = () => {
       dispatch(saveProjectId(id));
     }
   }, [id]);
+
   return id ? (
     <>
       <SendApprovalModal />
@@ -243,13 +245,19 @@ const HomepageWeb = () => {
               {fileCheckBoxArr.length} {fileCheckBoxArr.length > 1 ? "files" : "file"} selected
             </div>
             <div className="d-flex justify-content-between w-100">
-              <div className={styles.eachOption}>
+              <div className={styles.eachOption}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  // dispatch(saveFilesToBeShared([{ container: fileCheckBoxArr.map((curElem) => curElem.container), file: fileCheckBoxArr.map((curElem) => curElem.fileOrFold) }]));
+                  dispatch(saveFilesToBeShared(fileCheckBoxArr.map((curElem) => { return { container: curElem.container, file: curElem.fileOrFold } })));
+                  dispatch(setModalState({ modal: "shareModal", state: true }));
+                }}>
                 <BsShare />
               </div>
               <div className={disableDelete ? styles.disabledOption : styles.eachOption} onClick={openDeleteModal}>
                 <FaRegTrashAlt />
               </div>
-              <div className={styles.eachOption}>
+              <div className={styles.eachOption} onClick={() => downloadFile(fileCheckBoxArr.map((item) => item.fileOrFold))}>
                 <AiOutlineDownload fontSize={18} />
               </div>
               <div className={styles.eachOption} onClick={() => dispatch(setModalState({ modal: "moveModal", state: true }))}>
@@ -349,8 +357,8 @@ const HomepageWeb = () => {
                     fileData={
                       id
                         ? fileFolderArr.filter((curElem) => {
-                            return curElem.projectId === id;
-                          })
+                          return curElem.projectId === id;
+                        })
                         : fileFolderArr
                     }
                   />
@@ -359,12 +367,12 @@ const HomepageWeb = () => {
                     fileData={
                       id
                         ? onlyFilesArr
-                            .filter((cur) => {
-                              return cur.projectId === id;
-                            })
-                            .filter((curElem) => {
-                              return curElem.isSendForApproval;
-                            })
+                          .filter((cur) => {
+                            return cur.projectId === id;
+                          })
+                          .filter((curElem) => {
+                            return curElem.isSendForApproval;
+                          })
                         : onlyFilesArr
                     }
                   />
@@ -373,8 +381,8 @@ const HomepageWeb = () => {
                     fileData={
                       id
                         ? onlyFilesArr.filter((cur) => {
-                            return cur.projectId === id;
-                          })
+                          return cur.projectId === id;
+                        })
                         : onlyFilesArr
                     }
                   />
@@ -388,7 +396,7 @@ const HomepageWeb = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   ) : (
     <>

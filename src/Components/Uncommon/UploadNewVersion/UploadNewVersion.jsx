@@ -15,9 +15,10 @@ const UploadNewVersion = () => {
   const dispatch = useDispatch();
   const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   const [shareChecks, setShareChecks] = useState([]);
+  console.log({ fileToNewVersion })
 
   const updateFileVersion = async () => {
     const obj = {
@@ -30,7 +31,7 @@ const UploadNewVersion = () => {
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {
-      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file._id, id);
+      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file.uuid, id);
       getFiles(1, id);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
       dispatch(setModalState({ modal: "versionConfirmation", state: false }));

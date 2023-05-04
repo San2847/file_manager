@@ -32,7 +32,7 @@ import LoadingSekeleton from "../../Common/LoadingSkeleton/LoadingSekeleton";
 import RenameModal from "../RenameModal/RenameModal";
 import { getReq, postReq, putReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
-import { getFiles, getFileStatus, saveFileChangesAsVersion, scrollFileContainerToTop } from "../../../Services/commonFunctions";
+import { downloadFile, getFiles, getFileStatus, saveFileChangesAsVersion, scrollFileContainerToTop } from "../../../Services/commonFunctions";
 import DeleteFolderModal from "./DeleteFolderModal/DeleteFolderModal";
 import { getUserId } from "../../../Services/authService";
 import uuid from "react-uuid";
@@ -223,8 +223,8 @@ const FilesTable = ({ fileData }) => {
       console.log(feres.error);
     }
 
-   
-    
+
+
     // const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-feedback?id=${fileObj.container._id}&uuId=${fileObj.file.uuId}`);
     // if (res && !res.error) {
     //   setFileFeedArr([...res.data]);
@@ -233,7 +233,7 @@ const FilesTable = ({ fileData }) => {
     // }
   };
 
-//for removing the duplicate data coming from the api on feedback
+  //for removing the duplicate data coming from the api on feedback
   useEffect(() => {
     const result = fileFeedArr.reduce((accumulator, current) => {
       let exists = accumulator.find(item => {
@@ -316,9 +316,10 @@ const FilesTable = ({ fileData }) => {
     }
   };
 
-  const downloadFile = (file) => {
-    fileDownload(file.fileLink, `${file.fileName}`);
-  };
+  // const downloadFile = (file) => {
+  //   fileDownload(file.fileLink, `${file.fileName}`);
+  // };
+
 
   const [uploaderData, setUploaderData] = useState([]);
   const getUploaderData = async (userIdArr) => {
@@ -839,7 +840,10 @@ const FilesTable = ({ fileData }) => {
                                   >
                                     Send for Execution
                                   </Dropdown.Item>
-                                  <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => downloadFile(curElem.fileDetails[0])}>
+                                  <Dropdown.Item style={{ fontSize: "12px" }} onClick={() =>
+                                    // downloadFile(e)}
+                                    downloadFile([curElem.fileDetails[0]])}
+                                  >
                                     Download
                                   </Dropdown.Item>
                                 </>

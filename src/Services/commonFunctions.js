@@ -221,3 +221,19 @@ export const scrollFileContainerToTop = () => {
   const ele = document.getElementById("file-container-div");
   ele.scrollTop = 0;
 };
+
+
+export const downloadFile = (file) => {
+  console.log(file)
+  for (let i = 0; i < file.length; i++) {
+    fetch(file[i].fileLink).then(response => response.blob()).then(blob => {
+      const blobURl = window.URL.createObjectURL(new Blob([blob]))
+      const aTag = document.createElement('a')
+      aTag.href = blobURl
+      aTag.setAttribute('download', file[i].fileName)
+      document.body.appendChild(aTag)
+      aTag.click();
+      aTag.remove();
+    })
+  }
+};
