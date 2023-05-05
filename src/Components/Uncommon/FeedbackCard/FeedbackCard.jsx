@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./feedbackCard.module.css";
 import feedbackIcon from "../../../Assets/feedbackIcon.svg";
-import { createDateString, getFiles, scrollFileContainerToTop } from "../../../Services/commonFunctions";
+import { createDateString, getFiles, saveFileChangesAsVersion, scrollFileContainerToTop } from "../../../Services/commonFunctions";
 import { postReq } from "../../../Services/api";
 import { apiLinks } from "../../../constants/constants";
 import { getUserId } from "../../../Services/authService";
@@ -29,12 +29,12 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
         setShowReplyBox(false);
         scrollFileContainerToTop();
         getFeedbackRefresh();
+        saveFileChangesAsVersion({ container: containerAndFile.container, file: containerAndFile.file, text: "Reply has been sent"});
       } else {
         console.log(res.error);
       }
     }
   };
-  console.log(feedData)
   return (
     <>
       <div className={currentVer ? styles.firstFeedback : styles.eachFeedback}>

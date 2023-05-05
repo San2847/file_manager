@@ -107,6 +107,7 @@ const HomepageWeb = () => {
         getFiles(1, id);
       }
     }
+    event.target.value = "";
   };
 
   const openDeleteModal = () => {
@@ -122,7 +123,7 @@ const HomepageWeb = () => {
     const folderName = files[0].webkitRelativePath.split("/")[0];
     let sendObj = {
       userId: getUserId(),
-      projectId: getProjectId(),
+      projectId: id,
       folderName: allFolders.includes(folderName) ? `${folderName}-copy` : folderName,
     };
     let arr = [];
@@ -156,6 +157,8 @@ const HomepageWeb = () => {
         }
       }
     }
+    event.target.value = "";
+
   };
 
   const createEmptyFolder = async () => {

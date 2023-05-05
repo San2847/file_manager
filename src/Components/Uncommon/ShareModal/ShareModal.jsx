@@ -53,7 +53,6 @@ const ShareModal = () => {
     console.log(data)
     let url = "https://wa.me?text=" + data; window.open(url, "_blank").focus()
   }
-  console.log(filesToBeSharedArr)
   return (
     <Modal show={shareModal} centered>
       <Modal.Body>

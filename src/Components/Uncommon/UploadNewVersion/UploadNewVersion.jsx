@@ -18,7 +18,6 @@ const UploadNewVersion = () => {
   const { id } = useParams();
 
   const [shareChecks, setShareChecks] = useState([]);
-  console.log({ fileToNewVersion })
 
   const updateFileVersion = async () => {
     const obj = {

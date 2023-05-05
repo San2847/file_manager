@@ -343,6 +343,7 @@ const FilesTable = ({ fileData }) => {
       console.log(res.error);
     }
   };
+  console.log({ fileCheckBoxArr })
 
   const [allSelectCheckboxState, setAllSelectCheckboxState] = useState(false);
   const selectAllFiles = () => {
@@ -364,6 +365,33 @@ const FilesTable = ({ fileData }) => {
         }
       });
       dispatch(selectAllCheckBoxes(x));
+
+      //for selection of outerfiles only
+      // // let allFiles = fileData
+      // //   .map((curEl) => {
+      // //     return curEl.fileDetails;
+      // //   })
+      // //   .flat();
+      // let updatedFiles = fileData
+      //   .filter((curEl) => {
+      //     return !curEl.folderName;
+      //   })
+      //   .flat();
+      // if (fileCheckBoxArr.length === updatedFiles.length) {
+      //   dispatch(clearFileCheckbox());
+      // } else {
+      //   let selectedFileData = updatedFiles.flatMap((curElem) => {
+      //     if (!curElem.folderName) {
+      //       return { container: curElem, fileOrFold: curElem.fileDetails[0], type: "outside" };
+      //     }
+      //     // else {
+      //     //   return curElem.fileDetails.map((cur) => {
+      //     //     return { container: curElem, fileOrFold: cur, type: "inside" };
+      //     //   });
+      //     // }
+      //   }).filter((curElem) => curElem !== undefined);
+      //   dispatch(selectAllCheckBoxes(selectedFileData));
+      // }
     }
   };
 
@@ -907,7 +935,6 @@ const FilesTable = ({ fileData }) => {
                           <div className={styles.feedbackContainer}>
                             {finalFeedBack &&
                               finalFeedBack.map((eachFeed, index) => {
-                                console.log(eachFeed)
                                 return (
                                   <FeedbackCard
                                     feedData={eachFeed}

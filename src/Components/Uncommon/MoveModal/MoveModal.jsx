@@ -17,7 +17,6 @@ const MoveModal = () => {
   const [folderData, setFolderData] = useState([]);
 
   const { id } = useParams();
-  console.log({ fileCheckBoxArr })
   const [selectedFolder, setSelectedFolder] = useState({});
 
   const moveFilesTo = async () => {
@@ -76,7 +75,6 @@ const MoveModal = () => {
   useEffect(() => {
     const getAllFolderData = async () => {
       const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-folders-by-projectId?projectId=${id}`);
-      console.log(res)
       if (res && !res.error) {
         // setProfileData({ ...res.data.data });
         setFolderData(res?.data);
