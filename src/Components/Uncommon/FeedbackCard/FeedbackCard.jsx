@@ -14,8 +14,8 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
 
   const { id } = useParams();
 
-  const { fileTypeTab } = useSelector((state) => state.filemanager);
-
+  const { fileTypeTab, feedbackTempArr } = useSelector((state) => state.filemanager);
+  console.log(feedbackTempArr)
   const sendReply = async () => {
     if (replyText) {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/reply-feedback?id=${containerAndFile.container._id}&fileId=${containerAndFile.file._id}&feedbackId=${feedData._id}`, {
@@ -29,12 +29,13 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
         setShowReplyBox(false);
         scrollFileContainerToTop();
         getFeedbackRefresh();
-        saveFileChangesAsVersion({ container: containerAndFile.container, file: containerAndFile.file, text: "Reply has been sent"});
+        saveFileChangesAsVersion({ container: containerAndFile.container, file: containerAndFile.file, text: `Reply has been sent~-+-~${replyText}` });
       } else {
         console.log(res.error);
       }
     }
   };
+
   return (
     <>
       <div className={currentVer ? styles.firstFeedback : styles.eachFeedback}>
@@ -85,45 +86,45 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
                   color: "#26AD74",
                 }}
               >
-                {feedData && feedData.message?.split("~-+-~") ? feedData.message?.split("~-+-~")[1] : ""}
+                {feedData && feedData.message?.split("~-+-~")[1] ? feedData.message?.split("~-+-~")[1] : ""}
               </div>
             )}
           </div>
           <div style={{ fontSize: "10px", color: "#333333CC" }}>{feedData ? createDateString(feedData.dateTime) : ""}</div>
         </div>
-        <div style={{ fontSize: "14px" }}>{feedData && feedData.message?.split("~-+-~") ? feedData.message?.split("~-+-~")[0] : ""}</div>
-        {feedData.feedBackReply &&
-          feedData.feedBackReply.map((curElem) => {
-            return (
-              <div className={styles.eachReplyContainer}>
-                <div className={styles.eachReply}>
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <div className="d-flex align-items-center">
-                      <div className={styles.replyHeading}>Comment on this reply</div>
-                      {curElem.message && curElem.message?.split("~-+-~") && (
-                        <div
-                          style={{
-                            backgroundColor: "#E6CCFF",
-                            padding: "0 1rem",
-                            borderRadius: "30px",
-                            fontSize: "10px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            color: "#A041FF",
-                          }}
-                        >
-                          {curElem.message?.split("~-+-~")[1] ? curElem.message?.split("~-+-~")[1] : ""}
-                        </div>
-                      )}
-                    </div>
-                    <div className={styles.replyDate}>{createDateString(curElem.dateTime)}</div>
+        <div style={{ fontSize: "14px" }}>{feedData && feedData.message?.split("~-+-~")[0] ? feedData.message?.split("~-+-~")[0] : ""}</div>
+        {feedData?.feedBackReply?.map((curElem) => {
+          console.log(curElem.message)
+          return (
+            <div className={styles.eachReplyContainer}>
+              <div className={styles.eachReply}>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <div className="d-flex align-items-center">
+                    <div className={styles.replyHeading}>Comment on this reply</div>
+                    {curElem.message && curElem.message.split("~-+-~")[1] && (
+                      <div
+                        style={{
+                          backgroundColor: "#E6CCFF",
+                          padding: "0 1rem",
+                          borderRadius: "30px",
+                          fontSize: "10px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          color: "#A041FF",
+                        }}
+                      >
+                        {curElem.message?.split("~-+-~")[1] ? curElem.message?.split("~-+-~")[1] : ""}
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.replyText}>{curElem.message && curElem.message?.split("~-+-~") ? curElem.message?.split("~-+-~")[0] : ""}</div>
+                  <div className={styles.replyDate}>{createDateString(curElem.dateTime)}</div>
                 </div>
+                <div className={styles.replyText}>{curElem.message && curElem.message?.split("~-+-~")[0] ? curElem.message?.split("~-+-~")[0] : ""}</div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
 
       {currentVer && (

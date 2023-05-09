@@ -49,6 +49,8 @@ const initialState = {
   notifyMessage: "",
 
   projectId: "",
+
+  feedbackTempArr: [],
 };
 
 export const filemanagerSlice = createSlice({
@@ -205,6 +207,10 @@ export const filemanagerSlice = createSlice({
     saveProjectId: (state, action) => {
       state.projectId = action.payload;
     },
+
+    saveFeedbackTemp: (state, action) => {
+      state.feedbackTempArr = action.payload;
+    }
   },
 });
 
@@ -241,6 +247,7 @@ export const {
   fillFileCheckbox,
   addSingleFileToCheckboxArr,
   saveProjectId,
+  saveFeedbackTemp,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 
 const UploadNewVersion = () => {
   const dispatch = useDispatch();
-  const { uploadNewVersion, fileToNewVersion, newFileForVersion } = useSelector((state) => state.filemanager);
+  const { uploadNewVersion, fileToNewVersion, newFileForVersion, feedbackTempArr } = useSelector((state) => state.filemanager);
 
   const { id } = useParams();
 
@@ -27,6 +27,7 @@ const UploadNewVersion = () => {
       fileSize: newFileForVersion.fileSize,
       type: 1,
       uuId: fileToNewVersion[0].file.uuId,
+      feedBack: feedbackTempArr,
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {

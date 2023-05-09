@@ -56,6 +56,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId, projId) => {
     y["updateTime"] = new Date();
     y["versionText"] = contFile.text;
     y["uuId"] = uuId;
+    y["feedBack"] = contFile.file.feedBack;
     delete y["_id"];
     obj["fileDetails"] = y;
     const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
@@ -71,6 +72,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId, projId) => {
       y.forEach((curElem) => {
         curElem["updateTime"] = new Date();
         curElem["versionText"] = contFile.text;
+        curElem["feedBack"] = contFile.file.feedBack;
         delete curElem["_id"];
       });
       obj["fileDetails"] = y;
@@ -87,6 +89,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId, projId) => {
           let x = res.data[0].fileDetails;
           x[0]["updateTime"] = new Date();
           x[0]["versionText"] = contFile.text;
+          x[0]["feedBack"] = contFile.file.feedBack;
           delete x[0]["_id"];
           obj["fileDetails"] = x;
           const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);
@@ -103,6 +106,7 @@ export const saveFileChangesAsVersion = async (contFile, uuId, projId) => {
           });
           z[0]["updateTime"] = new Date();
           z[0]["versionText"] = contFile.text;
+          z[0]["feedBack"] = contFile.file.feedBack;
           delete z[0]["_id"];
           obj["fileDetails"] = z;
           const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions`, obj);

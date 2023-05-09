@@ -13,6 +13,7 @@ import {
   clearFileCheckbox,
   handleDetailsVersionBox,
   saveArrayForApproval,
+  saveFeedbackTemp,
   saveFilesToBeShared,
   saveFileToNewVersion,
   saveFolderToBeDeleted,
@@ -219,6 +220,11 @@ const FilesTable = ({ fileData }) => {
           return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
         }),
       ]);
+      dispatch(saveFeedbackTemp([
+        ...feres.data.sort((a, b) => {
+          return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+        }),
+      ]))
     } else {
       console.log(feres.error);
     }
@@ -343,7 +349,6 @@ const FilesTable = ({ fileData }) => {
       console.log(res.error);
     }
   };
-  console.log({ fileCheckBoxArr })
 
   const [allSelectCheckboxState, setAllSelectCheckboxState] = useState(false);
   const selectAllFiles = () => {
@@ -935,6 +940,7 @@ const FilesTable = ({ fileData }) => {
                           <div className={styles.feedbackContainer}>
                             {finalFeedBack &&
                               finalFeedBack.map((eachFeed, index) => {
+                                console.log(eachFeed)
                                 return (
                                   <FeedbackCard
                                     feedData={eachFeed}
