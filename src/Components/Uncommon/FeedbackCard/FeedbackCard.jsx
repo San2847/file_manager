@@ -15,7 +15,6 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
   const { id } = useParams();
 
   const { fileTypeTab, feedbackTempArr } = useSelector((state) => state.filemanager);
-  console.log(feedbackTempArr)
   const sendReply = async () => {
     if (replyText) {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/reply-feedback?id=${containerAndFile.container._id}&fileId=${containerAndFile.file._id}&feedbackId=${feedData._id}`, {
@@ -94,7 +93,6 @@ const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewV
         </div>
         <div style={{ fontSize: "14px" }}>{feedData && feedData.message?.split("~-+-~")[0] ? feedData.message?.split("~-+-~")[0] : ""}</div>
         {feedData?.feedBackReply?.map((curElem) => {
-          console.log(curElem.message)
           return (
             <div className={styles.eachReplyContainer}>
               <div className={styles.eachReply}>

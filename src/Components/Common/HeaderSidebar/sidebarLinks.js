@@ -6,7 +6,7 @@ import { RiChat1Line } from "react-icons/ri";
 import { FaMoneyCheckAlt } from "react-icons/fa";
 import design_quo_icon from "../AllProjectListPanel/InnerSidebarIcons/design_quo_icon.svg";
 
-let BASE_URL = "http://erp.essentiaenvironments.com";
+let BASE_URL = "https://erp.essentiaenvironments.com";
 export const sidebarLinks = [
   {
     label: "Dashboard",

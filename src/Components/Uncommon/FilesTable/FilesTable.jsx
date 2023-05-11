@@ -203,7 +203,7 @@ const FilesTable = ({ fileData }) => {
     });
     if (res && !res.error) {
       getFiles(1, id);
-      saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `A feedback has been added by ${profileData.fullName}~-+-~${feedbackText}` }, undefined, id);
+      saveFileChangesAsVersion({ container: openedGiveFeed.container, file: openedGiveFeed.file, text: `is a feedback has been added by ${profileData.fullName}${" "}${feedbackText}` }, undefined, id);
       setFileFeedArr([...res.data.fileDetails[0].feedBack]);
       setOpenedGiveFeed("");
       setFeedbackText("");
@@ -940,7 +940,6 @@ const FilesTable = ({ fileData }) => {
                           <div className={styles.feedbackContainer}>
                             {finalFeedBack &&
                               finalFeedBack.map((eachFeed, index) => {
-                                console.log(eachFeed)
                                 return (
                                   <FeedbackCard
                                     feedData={eachFeed}

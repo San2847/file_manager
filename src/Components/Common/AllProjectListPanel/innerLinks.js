@@ -13,7 +13,7 @@ import runningbill from "./InnerSidebarIcons/runningbill.svg";
 import design_quotation_icon from "./InnerSidebarIcons/design_quotation_icon.svg";
 
 let projectId = localStorage.getItem("projectId");
-let BASE_URL = "http://erp.essentiaenvironments.com";
+let BASE_URL = "https://erp.essentiaenvironments.com";
 export const innerLinks = [
   {
     label: "Project Dashboard",
