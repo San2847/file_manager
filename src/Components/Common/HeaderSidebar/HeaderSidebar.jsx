@@ -13,7 +13,7 @@ import { getToken } from "../../../Services/authService";
 import { useDispatch } from "react-redux";
 import { saveProfileData } from "../../../Redux/slices/filemanagerSlice";
 import AllProjectListPanel from "../AllProjectListPanel/AllProjectListPanel";
-
+import { IoLogOutOutline } from "react-icons/io5";
 const HeaderSidebar = () => {
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -118,7 +118,69 @@ const HeaderSidebar = () => {
             </div>
             {isDropdownOpen && (
               <div className={styles.dropdown} ref={dropdownRef}>
-                <div className={styles.dropdownItem} onClick={handleDropdownItemClick}>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    window.location.assign(
+                      `${BASE_URL}/my-profile/myprofile/personal`);
+                  }}
+                >
+                  My Profile
+                </div>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    // dispatch(myprofileState(4));
+                    window.location.assign(
+                      `${BASE_URL}/my-profile/myprofile/accesspanel`);
+                  }}
+                >
+                  Access Panel
+                </div>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    // dispatch(myprofileState(3));
+                    window.location.assign(
+                      `${BASE_URL}/my-profile/myprofile/userdirectory`);
+                  }}
+                >
+                  User Directory
+                </div>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    // dispatch(myprofileState(7));
+                    window.location.assign(
+                      `${BASE_URL}/my-profile/myprofile/feedback`);
+                  }}
+                >
+                  Send Feedback
+                </div>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    // dispatch(myprofileState(5));
+                    window.location.assign(
+                      `${BASE_URL}/library/`
+                    );
+                  }}
+                >
+                  Library & Templates
+                </div>
+                <div
+                  style={{}}
+                  className={styles.dropdownItem}
+                  onClick={handleDropdownItemClick}
+                >
+                  <span>
+                    <IoLogOutOutline />
+                  </span>{" "}
                   Sign Out
                 </div>
               </div>
