@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/file-manager/static/css/main.8d837166.css",
-    "main.js": "/file-manager/static/js/main.6ac644dd.js",
+    "main.css": "/file-manager/static/css/main.cdcaa034.css",
+    "main.js": "/file-manager/static/js/main.e96bb953.js",
     "static/js/787.fa554ae2.chunk.js": "/file-manager/static/js/787.fa554ae2.chunk.js",
     "static/media/Inter-VariableFont_slnt,wght.ttf": "/file-manager/static/media/Inter-VariableFont_slnt,wght.aadb65ac45347ff46699.ttf",
     "static/media/pdfIcon.svg": "/file-manager/static/media/pdfIcon.13ea69b5572e130a046a69fb9905d679.svg",
@@ -16,6 +16,7 @@
     "static/media/timeline.svg": "/file-manager/static/media/timeline.23ca8246346fd81428350e2192b8dd43.svg",
     "static/media/design_quo_icon.svg": "/file-manager/static/media/design_quo_icon.d85e6e85ced3b5f63af2c4aa27fa88ae.svg",
     "static/media/mom.svg": "/file-manager/static/media/mom.408df28d7643e0447794d944d09c8576.svg",
+    "static/media/input_circle.svg": "/file-manager/static/media/input_circle.cf18d5e83c15ad05c660fd7e8b9352a1.svg",
     "static/media/medal.svg": "/file-manager/static/media/medal.337b7ab75765f4b63ae8f31c4dbfa5b5.svg",
     "static/media/whatsapp.svg": "/file-manager/static/media/whatsapp.11d781a186d1798c2d3f160b1787f531.svg",
     "static/media/mailIcon.svg": "/file-manager/static/media/mailIcon.40a00f0142e0a0f68e71429ae315927b.svg",
@@ -30,12 +31,12 @@
     "static/media/dashboard.svg": "/file-manager/static/media/dashboard.076cbbb9fa4c65f9c3aef7f62014e150.svg",
     "static/media/person.svg": "/file-manager/static/media/person.dfcc209ee2bb8b0e4bb9a69f656dd5d4.svg",
     "static/media/quotation.svg": "/file-manager/static/media/quotation.db2e4946f306b94d7779d058510c7e3d.svg",
-    "main.8d837166.css.map": "/file-manager/static/css/main.8d837166.css.map",
-    "main.6ac644dd.js.map": "/file-manager/static/js/main.6ac644dd.js.map",
+    "main.cdcaa034.css.map": "/file-manager/static/css/main.cdcaa034.css.map",
+    "main.e96bb953.js.map": "/file-manager/static/js/main.e96bb953.js.map",
     "787.fa554ae2.chunk.js.map": "/file-manager/static/js/787.fa554ae2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8d837166.css",
-    "static/js/main.6ac644dd.js"
+    "static/css/main.cdcaa034.css",
+    "static/js/main.e96bb953.js"
   ]
 }

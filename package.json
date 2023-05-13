@@ -12,6 +12,7 @@
     "bootstrap": "^5.2.3",
     "dotenv-webpack": "^8.0.1",
     "js-file-download": "^0.4.12",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.1",
     "react-dom": "^18.2.0",

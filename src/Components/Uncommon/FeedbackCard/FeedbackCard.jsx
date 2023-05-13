@@ -8,13 +8,13 @@ import { getUserId } from "../../../Services/authService";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, profileData, getFeedbackRefresh }) => {
+const FeedbackCard = ({ feedData, currentVer, name, containerAndFile, uploadNewVersionFunc, getFeedbackRefresh }) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [replyText, setReplyText] = useState("");
 
   const { id } = useParams();
 
-  const { fileTypeTab, feedbackTempArr } = useSelector((state) => state.filemanager);
+  const { fileTypeTab, feedbackTempArr, profileData } = useSelector((state) => state.filemanager);
   const sendReply = async () => {
     if (replyText) {
       const res = await postReq(`${apiLinks.pmt}/api/file-manager/reply-feedback?id=${containerAndFile.container._id}&fileId=${containerAndFile.file._id}&feedbackId=${feedData._id}`, {

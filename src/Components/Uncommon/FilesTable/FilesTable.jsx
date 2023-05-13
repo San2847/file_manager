@@ -213,21 +213,22 @@ const FilesTable = ({ fileData }) => {
     }
   };
   const getFileFeedback = async (fileObj) => {
-    const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-all-feedbacks?uuId=${fileObj.file.uuId}`);
+    console.log({ fileObj })
+    const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-versioning?uuId=${fileObj.file.uuId}`);
+    console.log({ feres })
     if (feres && !feres.error) {
-      setFileFeedArr([
-        ...feres.data.sort((a, b) => {
-          return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
-        }),
-      ]);
-      dispatch(saveFeedbackTemp([
-        ...feres.data.sort((a, b) => {
-          return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
-        }),
-      ]))
+      setFileFeedArr([...feres.data]);
+      dispatch(saveFeedbackTemp([...feres.data]))
     } else {
       console.log(feres.error);
     }
+    // const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-all-feedbacks?uuId=${fileObj.file.uuId}`);
+    // if (feres && !feres.error) {
+    //   setFileFeedArr([...feres.data]);
+    //   dispatch(saveFeedbackTemp([...feres.data]))
+    // } else {
+    //   console.log(feres.error);
+    // }
 
 
 
@@ -710,19 +711,36 @@ const FilesTable = ({ fileData }) => {
                                 )}
                                 {showApprovalOrFeed({ container: curElem, file: curElem.fileDetails[0] ? curElem.fileDetails[0] : undefined }) === "approval" ? (
                                   <div className="d-flex">
-                                    <div className={styles.addFeed} title="Give Feedback" onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}>
+                                    <div className={styles.addFeed} title="Give Feedback"
+                                      // onClick={(event) => openGiveFeed(event, { container: curElem, file: curElem.fileDetails[0] })}
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem.fileDetails[0] }, tab: "feedBack/reply" }));
+                                      }}
+                                    >
                                       <RiChatNewLine />
                                     </div>
                                   </div>
                                 ) : openedInfo?.file && openedInfo?.file?._id === curElem?.fileDetails[0]?._id ? (
-                                  <RiChatQuoteFill className={styles.commentButton} onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })} />
+                                  <RiChatQuoteFill className={styles.commentButton}
+                                    // onClick={(event) => openInfo(event, { container: curElem, file: curElem.fileDetails[0] })}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem.fileDetails[0] }, tab: "feedBack/reply" }));
+                                    }}
+                                  />
                                 ) : (
                                   <RiChatQuoteLine
                                     className={styles.commentButton}
+                                    // onClick={(event) => {
+                                    //   openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                    //   getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                    //   readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                    // }}
                                     onClick={(event) => {
-                                      openInfo(event, { container: curElem, file: curElem.fileDetails[0] });
+                                      event.stopPropagation();
                                       getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
-                                      readFeedback({ container: curElem, file: curElem.fileDetails[0] });
+                                      dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem.fileDetails[0] }, tab: "feedBack/reply" }));
                                     }}
                                   />
                                 )}
@@ -1189,9 +1207,9 @@ const FilesTable = ({ fileData }) => {
                                             >
                                               Rename
                                             </Dropdown.Item>
-                                            <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => dispatch(handleDetailsVersionBox({ item: { container: curElem, file: cur }, tab: "version" }))}>
+                                            {/* <Dropdown.Item style={{ fontSize: "12px" }} onClick={() => dispatch(handleDetailsVersionBox({ item: { container: curElem, file: cur }, tab: "version" }))}>
                                               Version History
-                                            </Dropdown.Item>
+                                            </Dropdown.Item> */}
                                             <Dropdown.Item
                                               style={{ fontSize: "12px" }}
                                               onClick={(event) => {

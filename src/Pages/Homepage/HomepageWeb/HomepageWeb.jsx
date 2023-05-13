@@ -39,6 +39,7 @@ import SelfApprovalConfirmationModal from "../../../Components/Uncommon/SelfAppr
 import ShareModal from "../../../Components/Uncommon/ShareModal/ShareModal";
 import { useParams } from "react-router-dom";
 import FileLanding from "./FileLanding/FileLanding";
+import FileFeedbackReply from "../../../Components/Uncommon/FileFeedbackReply/FileFeedbackReply";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
@@ -341,7 +342,7 @@ const HomepageWeb = () => {
           </div>
 
           <div style={{ width: "100%", height: "75%", display: "flex", justifyContent: "space-between" }}>
-            <div className={styles.filesTableContainer} style={detailsVersionTab === "" ? { width: "100%" } : { width: "70%" }}>
+            <div className={styles.filesTableContainer} style={detailsVersionTab === "" && detailsVersionTab !== "feedBack/reply" ? { width: "100%" } : { width: "70%" }}>
               <div className="d-flex justify-content-end mb-2">
                 {user === "internal" && (
                   <div className={styles.internalTabContainer}>
@@ -395,7 +396,7 @@ const HomepageWeb = () => {
               )}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
-              <FileDetailsAndVersion />
+              {detailsVersionTab === "version" || detailsVersionTab === "details" ? <FileDetailsAndVersion /> : <FileFeedbackReply />}
             </div>
           </div>
         </div>

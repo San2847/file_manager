@@ -36,6 +36,7 @@ const FileDetailsAndVersion = () => {
       }&designerId=${detailsVersionBox.container.userId ? detailsVersionBox.container.userId : singleFile.userId}`
     );
     if (res && !res.error) {
+      console.log(res)
       setUserData(res.data.data.data[0]);
     } else {
       console.log(res.error);

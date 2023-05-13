@@ -96,8 +96,6 @@ export const filemanagerSlice = createSlice({
     },
 
     handleDetailsVersionBox: (state, action) => {
-      console.log(state)
-      console.log(action)
       state.detailsVersionTab = action.payload.tab;
       state.detailsVersionBox = action.payload.item;
     },
