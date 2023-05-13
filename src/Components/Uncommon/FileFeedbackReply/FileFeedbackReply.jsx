@@ -34,6 +34,7 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
             );
             console.log(res)
             if (res.data) {
+                setReplyText("")
                 disptach(handleDetailsVersionBox({ item: {}, tab: "" }))
                 getFiles(1, id)
             }
@@ -89,27 +90,32 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                     {feedbackTempArr.map((item, inx) => {
                         return (
                             <>
-                                <div className={styles.chatBox}>
-                                    <div>
-                                        {item.feedBack.map((data, inx) => {
-                                            return (
-                                                <>
-                                                    <div className="d-flex">
-                                                        <div className={styles.chat}>{data.message?.split('~-+-~')[1]}</div>
-                                                        <span className={styles.chatHeaderVersion}><span>{item?.version}</span></span>
-                                                    </div>
-                                                    <div className={styles.chatHeader}>{data.message?.split('~-+-~')[0]}</div>
-                                                </>
-                                            )
-                                        })}
+                                {item.feedBack.length ?
+                                    <><div className={styles.chatBox}>
 
+                                        <div>
+                                            {item.feedBack.map((data, inx) => {
+                                                return (
+                                                    <>
+                                                        <div className="d-flex">
+                                                            <div className={styles.chat}>{data.message?.split('~-+-~')[1]}</div>
+                                                            <span className={styles.chatHeaderVersion}><span>{item?.version}</span></span>
+                                                        </div>
+                                                        <div className={styles.chatHeader}>{data.message?.split('~-+-~')[0]}</div>
+                                                    </>
+                                                );
+                                            })}
+
+                                        </div>
                                     </div>
-                                </div>
-                                <br />
-                                <div className={styles.newVersionText}>
-                                    <h5>Version updated to {item?.fileName} </h5>
-                                    <p>{moment(item.updateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(item.updateTime, "HH:mm:ss").format("LT")}</p>
-                                </div>
+                                        <br />
+                                        <div className={styles.newVersionText}>
+                                            <h5>Version updated to {item?.fileName} </h5>
+                                            <p>{moment(item.updateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(item.updateTime, "HH:mm:ss").format("LT")}</p>
+                                        </div>
+                                    </>
+                                    : ""
+                                }
                             </>
                         )
                     })}
