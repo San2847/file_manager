@@ -222,3 +222,15 @@
   line-height: 17px;
   color: #4d4d4d;
 }
+.chatTime {
+  width: 54px;
+  height: 15px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #b5b5b5;
+  padding-top: 3px;
+  padding-left: 3px;
+}

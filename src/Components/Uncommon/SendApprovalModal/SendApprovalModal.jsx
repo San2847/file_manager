@@ -43,7 +43,7 @@ const SendApprovalModal = () => {
           dispatch(inputNotifyMessage(""));
           dispatch(setModalState({ modal: "sendApprovalModal", state: false }));
           setSelectedTeamMember({});
-          saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` }, undefined, id);
+          // saveFileChangesAsVersion({ container: arrayForApproval[0].container, file: arrayForApproval[0].file, text: `File sent for approval to ${selectedTeamMember.memberName}` }, undefined, id);
           dispatch(clearFileCheckbox());
           getFiles(1, id);
         } else {

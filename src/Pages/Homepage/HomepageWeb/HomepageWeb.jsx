@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "../../../Components/Common/Breadcrumb/Breadcrumb";
 import {
   clearAllEmptyFiles,
+  clearFeedbackTempArr,
   clearFileCheckbox,
   saveArrayForApproval,
   saveFilesToBeShared,
@@ -95,11 +96,13 @@ const HomepageWeb = () => {
         sendingObj["fileDetails"] = [{ ...eachFileObj }];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendingObj);
         if (upRes && !upRes.error) {
-          saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails[0], text: "has been uploaded." }, undefined, id);
+          // saveFileChangesAsVersion({ container: upRes.data, file: upRes.data.fileDetails[0], text: "has been uploaded." }, undefined, id);
         } else {
           console.log(upRes.error);
         }
         dispatch(setFileUploadProgress(0));
+        dispatch(clearFeedbackTempArr())
+
       } else {
         console.log(res.error);
       }

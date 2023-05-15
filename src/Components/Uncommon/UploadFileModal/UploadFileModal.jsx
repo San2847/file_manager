@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./uploadFileModal.module.css";
 import pdfIcon from "../../../Assets/pdfIcon.svg";
 import { IoMdImage } from "react-icons/io";
-import { clearArrayForApproval, saveArrayForApproval, setFilesGoingFor, setModalState } from "../../../Redux/slices/filemanagerSlice";
+import { clearArrayForApproval, clearFeedbackTempArr, saveArrayForApproval, setFilesGoingFor, setModalState } from "../../../Redux/slices/filemanagerSlice";
 import { getFiles } from "../../../Services/commonFunctions";
 import { AiOutlinePlus } from "react-icons/ai";
 import { postReq, putReq } from "../../../Services/api";
@@ -55,6 +55,7 @@ const UploadFileModal = () => {
           setUploadedFiles((prev) => {
             return [...prev, upRes.data];
           });
+          dispatch(clearFeedbackTempArr());
         } else {
           setLoading(false);
           console.log(upRes.error);

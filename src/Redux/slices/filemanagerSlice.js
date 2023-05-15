@@ -210,6 +210,9 @@ export const filemanagerSlice = createSlice({
 
     saveFeedbackTemp: (state, action) => {
       state.feedbackTempArr = action.payload;
+    },
+    clearFeedbackTempArr: (state) => {
+      state.feedbackTempArr = [];
     }
   },
 });
@@ -248,6 +251,7 @@ export const {
   addSingleFileToCheckboxArr,
   saveProjectId,
   saveFeedbackTemp,
+  clearFeedbackTempArr,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

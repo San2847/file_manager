@@ -18,7 +18,7 @@ const UploadNewVersion = () => {
   const { id } = useParams();
 
   const [shareChecks, setShareChecks] = useState([]);
-
+  console.log({ feedbackTempArr })
   const updateFileVersion = async () => {
     const obj = {
       fileName: newFileForVersion.fileName,
@@ -27,7 +27,7 @@ const UploadNewVersion = () => {
       fileSize: newFileForVersion.fileSize,
       type: 1,
       uuId: fileToNewVersion[0].file.uuId,
-      feedBack: feedbackTempArr,
+      feedBack: feedbackTempArr.map((item) => item.feedBack[0]),
     };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {

@@ -100,6 +100,7 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                                                         <div className="d-flex">
                                                             <div className={styles.chat}>{data.message?.split('~-+-~')[1]}</div>
                                                             <span className={styles.chatHeaderVersion}><span>{item?.version}</span></span>
+                                                            <span className={styles.chatTime}><span>{moment(data.dateTime, "HH:mm:ss").format("LT")}</span></span>
                                                         </div>
                                                         <div className={styles.chatHeader}>{data.message?.split('~-+-~')[0]}</div>
                                                     </>
