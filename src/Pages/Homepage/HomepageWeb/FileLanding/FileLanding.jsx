@@ -61,7 +61,7 @@ const FileLanding = () => {
       </div>
 
       <div className={styles.tableContainer}>
-        <div className={styles.blueStripe}>
+        {/* <div className={styles.blueStripe}>
           <div>PROJECT LIST</div>
           <div className="d-flex align-items-center">
             {showInput && (
@@ -82,7 +82,7 @@ const FileLanding = () => {
               {showInput ? <AiOutlineClose /> : <BsSearch />}
             </div>
           </div>
-        </div>
+        </div> */}
         <div className={styles.tableHere}>
           <Table bordered hover>
             <thead>

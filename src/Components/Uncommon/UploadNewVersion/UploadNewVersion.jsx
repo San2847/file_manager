@@ -18,7 +18,7 @@ const UploadNewVersion = () => {
   const { id } = useParams();
 
   const [shareChecks, setShareChecks] = useState([]);
-  console.log({ feedbackTempArr })
+  console.log({ newFileForVersion })
   const updateFileVersion = async () => {
     const obj = {
       fileName: newFileForVersion.fileName,
@@ -29,9 +29,18 @@ const UploadNewVersion = () => {
       uuId: fileToNewVersion[0].file.uuId,
       feedBack: feedbackTempArr.map((item) => item.feedBack[0]),
     };
+    const obj1 = {
+      fileName: feedbackTempArr[0].fileName,
+      fileLink: feedbackTempArr[0].fileLink,
+      fileType: feedbackTempArr[0].fileType,
+      fileSize: feedbackTempArr[0].fileSize,
+      type: 1,
+      uuId: fileToNewVersion[0].file.uuId,
+      feedBack: feedbackTempArr.map((item) => item.feedBack[0]),
+    };
     const res = await postReq(`${apiLinks.pmt}/api/file-manager/upload-new-version?id=${fileToNewVersion[0].container._id}&fileId=${fileToNewVersion[0].file._id}`, obj);
     if (res && !res.error) {
-      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj, text: "is the new version" }, fileToNewVersion[0].file.uuid, id);
+      saveFileChangesAsVersion({ container: fileToNewVersion[0].container, file: obj1, text: "is the new version" }, fileToNewVersion[0].file.uuid, id);
       getFiles(1, id);
       dispatch(setModalState({ modal: "uploadNewVersion", state: false }));
       dispatch(setModalState({ modal: "versionConfirmation", state: false }));

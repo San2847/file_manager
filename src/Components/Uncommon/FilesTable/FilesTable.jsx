@@ -217,7 +217,7 @@ const FilesTable = ({ fileData }) => {
     const feres = await getReq(`${apiLinks.pmt}/api/file-manager/get-file-versioning?uuId=${fileObj.file.uuId}`);
     console.log({ feres })
     if (feres && !feres.error) {
-      setFileFeedArr([...feres.data]);
+      setFileFeedArr([...feres.data.reverse()]);
       dispatch(saveFeedbackTemp([...feres.data]))
     } else {
       console.log(feres.error);
@@ -716,6 +716,7 @@ const FilesTable = ({ fileData }) => {
                                       onClick={(event) => {
                                         event.stopPropagation();
                                         dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem.fileDetails[0] }, tab: "feedBack/reply" }));
+                                        getFileFeedback({ container: curElem, file: curElem.fileDetails[0] })
                                       }}
                                     >
                                       <RiChatNewLine />
@@ -741,6 +742,7 @@ const FilesTable = ({ fileData }) => {
                                       event.stopPropagation();
                                       getFileFeedback({ container: curElem, file: curElem.fileDetails[0] });
                                       dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem.fileDetails[0] }, tab: "feedBack/reply" }));
+                                      readFeedback({ container: curElem, file: curElem.fileDetails[0] });
                                     }}
                                   />
                                 )}

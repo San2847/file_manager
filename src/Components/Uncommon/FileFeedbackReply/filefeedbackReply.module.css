@@ -169,7 +169,7 @@
   padding-top: 5px;
   margin-right: 10px;
   margin-left: 10px;
-  margin-top: 10px;
+  /* margin-bottom: 40px; */
   width: 19.3rem;
   height: auto;
   left: 15px;
@@ -188,7 +188,7 @@
   height: 15px;
   background: #d6ebff;
   border-radius: 50px;
-  margin-top: 0.3rem;
+  margin-top: 0.1rem;
   margin-left: 0.5rem;
 }
 .chatHeaderVersion span {
@@ -233,4 +233,53 @@
   color: #b5b5b5;
   padding-top: 3px;
   padding-left: 3px;
+}
+.firstFeedBack {
+  box-sizing: border-box;
+  /* position: relative; */
+  width: 300px;
+  height: 215px;
+  left: 25px;
+  margin: 18px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  border: 2px solid #000000;
+  border: none;
+}
+.firstFeedBack textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 150px;
+  left: 20px;
+  top: 88px;
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+}
+.firstFeedBack button {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 8px 16px;
+  gap: 10px;
+  position: absolute;
+  width: 80px;
+  height: 33px;
+  left: 232px;
+  top: 194px;
+  background: #003566;
+  border-radius: 50px;
+  border: none;
+}
+.firstFeedBack span {
+  width: 48px;
+  height: 17px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
 }

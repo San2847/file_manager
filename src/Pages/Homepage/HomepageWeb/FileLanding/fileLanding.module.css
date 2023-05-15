@@ -25,10 +25,18 @@
 }
 
 .tableHere {
-  border: 1px solid #cccccc;
+  border: 0px solid #cccccc;
   border-radius: 0 0 8px 8px;
   height: 20rem;
   overflow-y: scroll;
+}
+
+.tableHere td {
+  border: none;
+  background-color: #fafafa;
+}
+.tableHere th {
+  background-color: #dae2f1;
 }
 
 .searchInput input {
