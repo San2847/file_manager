@@ -21,6 +21,8 @@ const HeaderSidebar = () => {
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
+const [data, setData] = useState([]);
+const [unreadCount, setUnreadCount] = useState("")
   const dropdownRef = useRef(null);
 
   const { id } = useParams();
@@ -96,32 +98,73 @@ const HeaderSidebar = () => {
   let readAll = {
     ids: [],
     userId: "",
-  }
-    const [data, setData] = useState([]);
-    let idArray = []
-    // const userIdData = localStorage.getItem("userId")
-    
-    const getNotifications = async () =>{
-      const getNotify = await axios.get(`https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem("userId")}`)
-      setData(getNotify.data.slice(0,9))
-      
-    }
+  };
+
   
-    const readBy = async () => {
-      readAll.ids = [...idArray]
-      readAll.userId = localStorage.getItem("userId")
-      return await axios.post("https://notify-api.essentiaenvironments.com/api/notifications/add-readedBy", readAll) 
-      .then((res)=>getNotifications())
-      .catch((err)=>console.log(err))
-      
+  let idArray = [];
+  // const userIdData = localStorage.getItem("userId")
+
+  const getNotifications = async () => {
+    const getNotify = await axios.get(
+      `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
+        "userId"
+      )}`
+    );
+    setData(getNotify.data.slice(0, 9));
+  };
+
+  const readBy = async () => {
+    readAll.ids = [...idArray];
+    readAll.userId = localStorage.getItem("userId");
+    return await axios
+      .post(
+        "https://notify-api.essentiaenvironments.com/api/notifications/add-readedBy",
+        readAll
+      )
+      .then((res) => getNotifications())
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getNotifications();
+  }, []);
+  const loadMore = async () => {
+    const getNotify = await axios.get(
+      `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
+        "userId"
+      )}`
+    );
+    setData(getNotify.data);
+  };
+
+  const unread = async () => {
+    const getUnread = await axios.get(
+      `https://notify-api.essentiaenvironments.com/api/notifications/get-unread-notification-count?userId=${localStorage.getItem(
+        "userId"
+      )}`
+    );
+    setUnreadCount(getUnread.data.unreadNotification)
+  };
+  useEffect(() => {
+    unread()
+  }, [])
+  const getTime = (date) => {
+    if (date === undefined) {
+      return "-";
+    } else if (typeof date === "string") {
+      date = new Date(date);
     }
-    useEffect(() => {
-      getNotifications();
-    }, []);
-    const loadMore = async () =>{
-      const getNotify = await axios.get(`https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem("userId")}`)
-      setData(getNotify.data)
-    }
+
+    let day = date.getDate();
+    let month = date.toLocaleDateString("default", { month: "short" });
+    let year = date.getFullYear() % 100;
+    let ans = "";
+    ans += day + "-";
+    ans += month + "-";
+    ans += year;
+    return ans;
+  };
+
+
   return (
     <div className={styles.container} style={{ zIndex: isDropdownOpen || isNotification ? "999" : "0" }}>
       <div className={styles.header}>
@@ -150,49 +193,54 @@ const HeaderSidebar = () => {
             <AiOutlineShoppingCart />
           </div> */}
           <div className={styles.notification} >
-            <Dropdown style={{ background: "#fff" }}>
-            
-      <Dropdown.Toggle style={{ background: "#fff", border: "none" }}>
-        <AiOutlineBell className={styles.bellIcon} onClick={handleButtonClickNotification}/>
-      </Dropdown.Toggle>
-                {isNotification && (
-                    <Dropdown.Menu style={{borderColor:"white"}}>
-                    <div className={styles.notifyContainer}>
-                      <div className={styles.headingContainer}>
-                        <div className={styles.notifyHeading}>Notifications</div>
-                        <div className={styles.readUnreadHead} onClick={readBy}>Mark as read</div>
-                      </div>
-                      <div className={styles.adminName}>
-                        {data.map((curelem, i) => {
-                           {idArray.push(curelem._id)}
-                          return (
-                            <>
-                            
-                              <div className={styles.singleAdmin} key={i}>
-                                <div href="#/action-1" className={styles.profile}>
-                                <CgProfile/>
-                                </div>
-            
-                                <div className={styles.adminAndStatus} key={i}>
-                                  <div className={styles.taskname}>Feature Name : {curelem.featureName}</div>
-                                  <div className={styles.taskname}>{curelem.notification}</div>
-                                  <div className={styles.status}>{curelem.updatedAt}</div>
-                                 
-            
-                                </div>
+          <Dropdown style={{ background: "#fff" }}>
+            <Dropdown.Toggle style={{ background: "#fff", border: "none" }}>
+              <span className={styles.unreadCount}>{unreadCount}</span>
+              <AiOutlineBell className={styles.bellIcon} onClick={handleButtonClickNotification}/>
+            </Dropdown.Toggle>
+            {isNotification && (
+              <Dropdown.Menu style={{ borderColor: "white" }}>
+                <div className={styles.notifyContainer}>
+                  <div className={styles.headingContainer}>
+                    <div className={styles.notifyHeading}>Notifications</div>
+                    <div className={styles.readUnreadHead} onClick={readBy}>
+                      Mark as read
+                    </div>
+                  </div>
+                  <div className={styles.adminName}>
+                    {data.map((curelem, i) => {
+                      {
+                        idArray.push(curelem._id);
+                      }
+
+                      return (
+                        <>
+                          <div className={styles.singleAdmin} key={i}>
+                            <div href="#/action-1" className={styles.profile}>
+                              <CgProfile />
+                            </div>
+
+                            <div className={styles.adminAndStatus} key={i}>
+                              {/* <div className={styles.taskname}>Feature Name : {curelem.featureName}</div> */}
+                              <div className={styles.taskname}>
+                                {curelem.notification}
                               </div>
-                            </>
-                          );
-                        })}
-                      </div>
-                      <div className={styles.seeAll} onClick={loadMore}>
-                          Load More
-                    </div>
-                    </div>
-                    
-                  </Dropdown.Menu>
-                )}
-            </Dropdown>
+                              <div className={styles.status}>
+                                {getTime(curelem.updatedAt)}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div className={styles.seeAll} onClick={loadMore}>
+                    Load More
+                  </div>
+                </div>
+              </Dropdown.Menu>
+            )}
+          </Dropdown>
         </div>
           <div className={styles.profileNameBox} onClick={handleButtonClick}>
             <div className={styles.profileName}>
