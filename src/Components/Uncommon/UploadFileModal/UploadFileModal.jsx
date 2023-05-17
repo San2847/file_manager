@@ -45,7 +45,7 @@ const UploadFileModal = () => {
         eachFileObj["fileName"] = files[i].name ? files[i].name : "File";
         eachFileObj["fileLink"] = res.data.locations[0];
         eachFileObj["fileType"] = files[i].type;
-        eachFileObj["fileSize"] = `${Math.round(files[i].size / 1024)} KB`;
+        eachFileObj["fileSize"] = `${Math.round(files[i].size / 1024)} kB`;
         eachFileObj["type"] = 1;
         sendingObj["fileDetails"] = [{ ...eachFileObj }];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendingObj);

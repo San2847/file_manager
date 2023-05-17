@@ -114,27 +114,27 @@ const FileLanding = () => {
                       }}
                     >
                       <td>{curElem.projectName}</td>
-                      <td>{curElem.allFiles}</td>
-                      <td>{curElem.approvedFiles}</td>
-                      <td>{curElem.inDiscussion}</td>
-                      <td>{curElem.inExecution}</td>
+                      <td style={{ textAlign: 'center' }}>{curElem.allFiles}</td>
+                      <td style={{ textAlign: 'center' }}>{curElem.approvedFiles}</td>
+                      <td style={{ textAlign: 'center' }}>{curElem.inDiscussion}</td>
+                      <td style={{ textAlign: 'center' }}>{curElem.inExecution}</td>
                       <td className="d-flex justify-content-between">
                         <div>
                           <img src={rate_review} alt="" style={{ marginRight: "0.5rem" }} />
                           <span style={{ fontWeight: 500, fontSize: "12px" }}>
-                            {curElem.inExecution}
+                            <span style={{ paddingRight: '2px' }}>{curElem.inExecution}</span>
                             {"Feedback"}
                           </span>
                         </div>
                         <div>
                           <img src={task} alt="" style={{ marginRight: "0.5rem" }} />
                           <span style={{ fontWeight: 500, fontSize: "12px" }}>
-                            {curElem.inExecution}
+                            <span style={{ paddingRight: '2px' }}> {curElem.inExecution}</span>
                             {"Approval"}
                           </span>
                         </div>
                       </td>
-                      <td>{curElem.inExecution}</td>
+                      <td style={{ textAlign: 'center' }}>{curElem.inExecution}</td>
                     </tr>
                   );
                 })}

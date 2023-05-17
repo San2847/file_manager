@@ -105,10 +105,10 @@ const SendApprovalModal = () => {
             <span>{Object.keys(selectedTeamMember).length > 0 ? selectedTeamMember.memberName : "Select team member"}</span>
             <BsChevronDown />
           </Dropdown.Toggle>
-          <Dropdown.Menu className="w-100">
+          <Dropdown.Menu className="w-100" style={{ height: '200px', overflowY: 'scroll' }}>
             {teamMemberArray &&
               teamMemberArray.map((curElem) => {
-                return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)}>{curElem.memberName}</Dropdown.Item>;
+                return <Dropdown.Item onClick={() => setSelectedTeamMember(curElem)} >{curElem.memberName}</Dropdown.Item>;
               })}
           </Dropdown.Menu>
         </Dropdown>

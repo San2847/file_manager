@@ -91,7 +91,7 @@ const HomepageWeb = () => {
         eachFileObj["fileName"] = allFiles.includes(files[i].name) ? `${files[i].name}-copy` : files[i].name;
         eachFileObj["fileLink"] = res.data.locations[0];
         eachFileObj["fileType"] = files[i].type;
-        eachFileObj["fileSize"] = `${Math.round(files[i].size / 1024)} KB`;
+        eachFileObj["fileSize"] = `${Math.round(files[i].size / 1024)} kB`;
         eachFileObj["type"] = 1;
         sendingObj["fileDetails"] = [{ ...eachFileObj }];
         const upRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, sendingObj);

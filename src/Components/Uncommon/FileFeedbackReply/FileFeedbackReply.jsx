@@ -88,11 +88,14 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
         filesToUpload.append("files", files[0]);
         const res = await putReq(`${apiLinks.s3api}/api/upload`, filesToUpload);
         if (res && !res.error) {
-            dispatch(saveNewFileForVersion({ fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)}KB`, type: 1 }));
+            const verRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-versions?uuId=${feedbackTempArr[0].uuId}`);
+            console.log(verRes)
+            dispatch(saveNewFileForVersion({ fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)}kB`, type: 1 }));
             dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
+            // getFileFeedback({ container: detailsVersionBox.container, file: detailsVersionBox.file })
             dispatch(setVersionConfirmationReturns(false));
-            disptach(handleDetailsVersionBox({ item: {}, tab: "" }))
-            window.reload();
+            // disptach(handleDetailsVersionBox({ item: {}, tab: "" }))
+            // window.reload();
         } else {
             console.log(res.error);
             dispatch(setVersionConfirmationReturns(false));
@@ -111,7 +114,7 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                                     {detailsVersionBox.file && detailsVersionBox.file.fileName}
                                 </div>
                                 <div className="d-flex align-items-center">
-                                    <div className={styles.closeButton} >
+                                    <div>
                                         <button className={styles.uploadButton} onClick={() => uploadNewVersion(detailsVersionBox.container, detailsVersionBox.container.fileDetails[0])}><img src={input_circle} alt="" /> <span >Upload new version</span></button>
                                     </div>
                                     <div className={styles.closeButton} onClick={() => disptach(handleDetailsVersionBox({ item: {}, tab: "" }))}>
@@ -124,37 +127,41 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                                 {feedbackTempArr.map((item, inx) => {
                                     return (
                                         <>
+                                            {
+                                                item?.version === "V1" ?
+                                                    <div>
+                                                        <div className={styles.newVersionText}>
+                                                            <h5> Uploaded {item?.fileName} file</h5>
+                                                            <p>{moment(item.versionDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(new Date(item.versionDateTime ? item.versionDateTime : item.createdDateTime), "HH:mm:ss").format("LT")}</p>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div>
+                                                        <div className={styles.newVersionText}>
+                                                            <h5> version updated to {item?.fileName}</h5>
+                                                            <p>{moment(item.versionDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(new Date(item.versionDateTime ? item.versionDateTime : item.createdDateTime), "HH:mm:ss").format("LT")}</p>
+                                                        </div>
+                                                    </div>
+                                            }
                                             {item.feedBack.length ?
                                                 <>
-                                                    {
-                                                        item?.version === "V1" ?
-                                                            <div className={styles.newVersionText}>
-                                                                <h5> Uploaded {item?.fileName} file</h5>
-                                                                <p>{moment(item.updateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(item.updateTime, "HH:mm:ss").format("LT")}</p>
-                                                            </div>
-                                                            :
-                                                            <div className={styles.newVersionText}>
-                                                                <h5> version updated {item?.fileName}</h5>
-                                                                <p>{moment(item.updateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(item.updateTime, "HH:mm:ss").format("LT")}</p>
-                                                            </div>
-                                                    }
                                                     <br />
                                                     <div className={styles.chatBox}>
 
                                                         <div>
                                                             {item.feedBack?.map((data, inx) => {
+                                                                console.log(data)
                                                                 return (
-                                                                    <>
+                                                                    <div style={{ paddingTop: '10px' }}>
                                                                         <div className="d-flex">
                                                                             <div className={styles.chat}>{data?.message?.split('~-+-~')[1]}</div>
                                                                             <span className={styles.chatHeaderVersion}><span>{item?.version}</span></span>
-                                                                            <span className={styles.chatTime}><span>{moment(data.dateTime, "HH:mm:ss").format("LT")}</span></span>
+                                                                            <span className={styles.chatTime}><span>{moment(new Date(data.dateTime), "HH:mm:ss").format("LT")}</span></span>
                                                                         </div>
                                                                         <div className={styles.chatHeader}>{data?.message?.split('~-+-~')[0]}</div>
-                                                                    </>
+                                                                    </div>
                                                                 );
                                                             })}
-
                                                         </div>
                                                     </div>
                                                     <br />
@@ -195,15 +202,12 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                             <div className={styles.firstFeedBack}>
                                 <div>
                                     <textarea placeholder="Write a feedback here " onChange={(event) => setReplyText(event.target.value)} value={replyText} />
-                                    {/* <input type="text" /> */}
                                 </div>
                                 <div>
                                     <button type="submit" onClick={sendReply}><span>Submit</span></button>
                                 </div>
                             </div>
                         </div>
-
-
                     </div >
             }
 

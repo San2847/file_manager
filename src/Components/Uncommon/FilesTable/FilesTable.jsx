@@ -159,7 +159,7 @@ const FilesTable = ({ fileData }) => {
     filesToUpload.append("files", files[0]);
     const res = await putReq(`${apiLinks.s3api}/api/upload`, filesToUpload);
     if (res && !res.error) {
-      dispatch(saveNewFileForVersion({ fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)}KB`, type: 1 }));
+      dispatch(saveNewFileForVersion({ fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)}kB`, type: 1 }));
       dispatch(setModalState({ modal: "uploadNewVersion", state: true }));
       dispatch(setVersionConfirmationReturns(false));
     } else {
@@ -508,6 +508,7 @@ const FilesTable = ({ fileData }) => {
           ) : fileData ? (
             <>
               {fileData.map((curElem, index) => {
+                console.log({ curElem })
                 let unreadFeeds =
                   curElem?.fileDetails &&
                   curElem?.fileDetails[0]?.feedBack.filter((curF) => {
@@ -876,6 +877,22 @@ const FilesTable = ({ fileData }) => {
                                     }}
                                   >
                                     Send for Approval
+                                  </Dropdown.Item>
+                                  <Dropdown.Item
+                                    style={
+                                      !curElem.folderName &&
+                                        (getFileStatus(curElem.fileDetails[0]) === "Approved")
+                                        ? { fontSize: "12px" }
+                                        : { fontSize: "12px", ...inlineInactive }
+                                    }
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      // dispatch(setFilesGoingFor("approval"));
+                                      // dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
+                                      // dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                    }}
+                                  >
+                                    Send for Client Approval
                                   </Dropdown.Item>
                                   <Dropdown.Item
                                     style={!curElem.folderName && getFileStatus(curElem.fileDetails[0]) === "In-Execution" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
@@ -1247,6 +1264,21 @@ const FilesTable = ({ fileData }) => {
                                               Send for Approval
                                             </Dropdown.Item>
                                             <Dropdown.Item
+                                              style={
+                                                getFileStatus(cur) === "Approved"
+                                                  ? { fontSize: "12px" }
+                                                  : { fontSize: "12px", ...inlineInactive }
+                                              }
+                                              onClick={(event) => {
+                                                event.stopPropagation();
+                                                // dispatch(setFilesGoingFor("approval"));
+                                                // dispatch(saveArrayForApproval({ container: curElem, file: cur }));
+                                                // dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                              }}
+                                            >
+                                              Send for Clent Approval
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
                                               style={getFileStatus(cur) === "In-Execution" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}
                                               onClick={(event) => {
                                                 event.stopPropagation();
@@ -1290,7 +1322,7 @@ const FilesTable = ({ fileData }) => {
                                           </Dropdown.Menu>
                                         </Dropdown>
                                       </div>
-                                    </div>
+                                    </div >
 
                                     <div className={styles.feedbackBox} style={openedInfo.file && openedInfo.file._id === cur._id ? { height: "fit-content" } : { height: "0" }}>
                                       <div className={styles.feedbackContainer}>
@@ -1331,7 +1363,7 @@ const FilesTable = ({ fileData }) => {
                           </div>
                         </div>
                       )}
-                    </div>
+                    </div >
                   </>
                 );
               })}
@@ -1340,7 +1372,7 @@ const FilesTable = ({ fileData }) => {
             <div>No files to show</div>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };

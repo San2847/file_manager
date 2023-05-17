@@ -67,7 +67,7 @@ const OnlyFilesTable = ({ fileData }) => {
     if (res && !res.error) {
       const savRes = await postReq(`${apiLinks.pmt}/api/file-manager/save-file-details`, {
         userId: getUserId(),
-        fileDetails: [{ uuId: uuid(), fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)} KB`, type: 1 }],
+        fileDetails: [{ uuId: uuid(), fileName: files[0].name, fileLink: res.data.locations[0], fileType: files[0].type, fileSize: `${Math.round(files[0].size / 1024)} kB`, type: 1 }],
       });
       if (savRes && !savRes.error) {
         // dispatch(saveNewFileForVersion({ container: savRes.data, file: savRes.data.fileDetails[0] }));
