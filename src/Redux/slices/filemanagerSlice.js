@@ -19,6 +19,7 @@ const initialState = {
   renameModal: false,
   deleteModal: false,
   sendApprovalModal: false,
+  confirmToClient: false,
   deleteFolderModal: false,
   versionConfirmation: false,
   uploadNewVersion: false,
@@ -51,6 +52,10 @@ const initialState = {
   projectId: "",
 
   feedbackTempArr: [],
+
+  dataForClientApproval: {},
+
+  clientId: "",
 };
 
 export const filemanagerSlice = createSlice({
@@ -213,6 +218,9 @@ export const filemanagerSlice = createSlice({
     },
     clearFeedbackTempArr: (state) => {
       state.feedbackTempArr = [];
+    },
+    saveClientId: (state, action) => {
+      state.clientId = action.payload.clientId
     }
   },
 });
@@ -252,6 +260,7 @@ export const {
   saveProjectId,
   saveFeedbackTemp,
   clearFeedbackTempArr,
+  saveClientId,
 } = filemanagerSlice.actions;
 
 export default filemanagerSlice.reducer;

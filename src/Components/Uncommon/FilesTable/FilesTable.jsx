@@ -11,6 +11,7 @@ import { HiEllipsisVertical } from "react-icons/hi2";
 import {
   addSingleFileToCheckboxArr,
   clearFileCheckbox,
+  forClientApprovalData,
   handleDetailsVersionBox,
   saveArrayForApproval,
   saveFeedbackTemp,
@@ -881,15 +882,15 @@ const FilesTable = ({ fileData }) => {
                                   <Dropdown.Item
                                     style={
                                       !curElem.folderName &&
-                                        (getFileStatus(curElem.fileDetails[0]) === "Approved")
+                                        (getFileStatus(curElem.fileDetails[0]) === "Approved" && curElem.fileDetails[0].isSharedWithClient === 0)
                                         ? { fontSize: "12px" }
                                         : { fontSize: "12px", ...inlineInactive }
                                     }
                                     onClick={(event) => {
                                       event.stopPropagation();
-                                      // dispatch(setFilesGoingFor("approval"));
-                                      // dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
-                                      // dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
+                                      dispatch(setFilesGoingFor("approvalForClient"));
+                                      dispatch(saveArrayForApproval({ container: curElem, file: curElem.fileDetails[0] }));
+                                      dispatch(setModalState({ modal: "confirmToClient", state: true }));
                                     }}
                                   >
                                     Send for Client Approval
@@ -1265,18 +1266,21 @@ const FilesTable = ({ fileData }) => {
                                             </Dropdown.Item>
                                             <Dropdown.Item
                                               style={
-                                                getFileStatus(cur) === "Approved"
+                                                getFileStatus(curElem.fileDetails[0]) === "Approved" && curElem.fileDetails[0].isSharedWithClient === 0
                                                   ? { fontSize: "12px" }
                                                   : { fontSize: "12px", ...inlineInactive }
                                               }
                                               onClick={(event) => {
                                                 event.stopPropagation();
+                                                dispatch(setFilesGoingFor("approvalForClient"));
+                                                dispatch(saveArrayForApproval({ container: curElem, file: cur }));
+                                                dispatch(setModalState({ modal: "confirmToClient", state: true }));
                                                 // dispatch(setFilesGoingFor("approval"));
                                                 // dispatch(saveArrayForApproval({ container: curElem, file: cur }));
                                                 // dispatch(setModalState({ modal: "sendApprovalModal", state: true }));
                                               }}
                                             >
-                                              Send for Clent Approval
+                                              Send for Client Approval
                                             </Dropdown.Item>
                                             <Dropdown.Item
                                               style={getFileStatus(cur) === "In-Execution" ? { fontSize: "12px", ...inlineInactive } : { fontSize: "12px" }}

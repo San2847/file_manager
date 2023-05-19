@@ -41,6 +41,7 @@ import ShareModal from "../../../Components/Uncommon/ShareModal/ShareModal";
 import { useParams } from "react-router-dom";
 import FileLanding from "./FileLanding/FileLanding";
 import FileFeedbackReply from "../../../Components/Uncommon/FileFeedbackReply/FileFeedbackReply";
+import ConfirmToClientModal from "../../../Components/Uncommon/ConfirmToClient/ConfirmToClientModal";
 
 const HomepageWeb = () => {
   const dispatch = useDispatch();
@@ -235,6 +236,7 @@ const HomepageWeb = () => {
 
   return id ? (
     <>
+      <ConfirmToClientModal />
       <SendApprovalModal />
       <UploadFileModal />
       <DeleteFilesModal />
@@ -332,13 +334,13 @@ const HomepageWeb = () => {
               <div className={fileTypeTab === "all" ? styles.activeTab : styles.inactiveTab} onClick={() => dispatch(selectFileTypeTab("all"))}>
                 All Files
               </div>
-              <div className={fileTypeTab === "approved" ? styles.activeTab : styles.inactiveTab} onClick={() => dispatch(selectFileTypeTab("approved"))}>
+              <div className={fileTypeTab === "approved" ? styles.activeTab : styles.inactiveTab} onClick={() => (dispatch(selectFileTypeTab("approved")), dispatch(selectInternalTab("internal")))}>
                 Approved
               </div>
-              <div className={fileTypeTab === "discussion" ? styles.activeTab : styles.inactiveTab} onClick={() => dispatch(selectFileTypeTab("discussion"))}>
+              <div className={fileTypeTab === "discussion" ? styles.activeTab : styles.inactiveTab} onClick={() => (dispatch(selectFileTypeTab("discussion")), dispatch(selectInternalTab("internal")))}>
                 In-Discussion
               </div>
-              <div className={`${fileTypeTab === "execution" ? styles.activeTab : styles.inactiveTab} me-0`} onClick={() => dispatch(selectFileTypeTab("execution"))}>
+              <div className={`${fileTypeTab === "execution" ? styles.activeTab : styles.inactiveTab} me-0`} onClick={() => (dispatch(selectFileTypeTab("execution")), dispatch(selectInternalTab("internal")))}>
                 In-Execution
               </div>
             </div>
@@ -349,10 +351,10 @@ const HomepageWeb = () => {
               <div className="d-flex justify-content-end mb-2">
                 {user === "internal" && (
                   <div className={styles.internalTabContainer}>
-                    <div className={internalTab === "internal" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("internal"))}>
+                    <div className={internalTab === "internal" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => (dispatch(selectInternalTab("internal"), dispatch(selectFileTypeTab("all"))))}>
                       Internal
                     </div>
-                    <div className={internalTab === "client" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => dispatch(selectInternalTab("client"))}>
+                    <div className={internalTab === "client" ? styles.activeInternalTab : styles.inactiveInternalTab} onClick={() => (dispatch(selectInternalTab("client")), getFiles(1, id, 1), dispatch(selectFileTypeTab("all")))}>
                       Client
                     </div>
                   </div>
@@ -394,9 +396,21 @@ const HomepageWeb = () => {
                     }
                   />
                 )
-              ) : (
-                <FilesTable fileData={clientFilesArr} />
-              )}
+              ) : internalTab === "client" ?
+                (
+                  <OnlyFilesTable
+                    fileData={
+                      id
+                        ? onlyFilesArr.filter((cur) => {
+                          return cur.projectId === id;
+                        })
+                        : onlyFilesArr
+                    }
+                  />
+                ) :
+                (
+                  <FilesTable fileData={clientFilesArr} />
+                )}
             </div>
             <div className={styles.detVerContainer} style={detailsVersionTab === "" ? { width: "0", border: "none" } : { width: "28%" }}>
               {detailsVersionTab === "version" || detailsVersionTab === "details" ? <FileDetailsAndVersion /> : <FileFeedbackReply />}

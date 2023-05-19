@@ -72,7 +72,7 @@ const UploadNewVersion = () => {
             </div>
           )}
         </div>
-        <div className={`${styles.smallHeading} mb-2`}>Share for Approval</div>
+        {/* <div className={`${styles.smallHeading} mb-2`}>Share for Approval</div>
         <div className="d-flex">
           <div className="d-flex align-items-center me-2" style={{ userSelect: "none" }}>
             <div
@@ -146,7 +146,7 @@ const UploadNewVersion = () => {
               Internal Team
             </div>
           </div>
-        </div>
+        </div> */}
       </Modal.Body>
       <Modal.Footer>
         <button

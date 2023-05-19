@@ -34,11 +34,11 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
     }, [feedbackTempArr])
 
     console.log(feedbackTempArr)
-    // console.log(detailsVersionBox)
+    console.log(detailsVersionBox)
 
     const sendReply = async () => {
         if (replyText) {
-            const res = await postReq(`${apiLinks.pmt}/api/file-manager/save-new-feedback?id=${detailsVersionBox.container._id}&fileId=${detailsVersionBox.file._id}`, {
+            const res = await postReq(`${apiLinks.pmt}/api/file-manager/save-new-feedback?id=${detailsVersionBox?.container?._id}&fileId=${detailsVersionBox?.file?._id}`, {
                 "feedback": {
                     sendBy: getUserId(),
                     message: `${replyText}~-+-~${profileData.fullName}`,
@@ -48,7 +48,7 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
             console.log(res)
             if (res.data) {
                 setReplyText("")
-                getFileFeedback({ container: detailsVersionBox.container, file: detailsVersionBox.file })
+                getFileFeedback({ container: detailsVersionBox?.container, file: detailsVersionBox?.file })
                 // disptach(handleDetailsVersionBox({ item: {}, tab: "" }))
                 getFiles(1, id);
                 // window.location.reload();
@@ -110,12 +110,12 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                         <input type="file" onChange={handleNewVersionUpload} className="d-none" ref={newVerUploadRef} />
                         <div className={styles.container}>
                             <div className={styles.heading}>
-                                <div className={styles.headingName} title={detailsVersionBox.file && detailsVersionBox.file.fileName}>
-                                    {detailsVersionBox.file && detailsVersionBox.file.fileName}
+                                <div className={styles.headingName} title={detailsVersionBox?.file && detailsVersionBox?.file?.fileName}>
+                                    {detailsVersionBox?.file && detailsVersionBox?.file?.fileName}
                                 </div>
                                 <div className="d-flex align-items-center">
                                     <div>
-                                        <button className={styles.uploadButton} onClick={() => uploadNewVersion(detailsVersionBox.container, detailsVersionBox.container.fileDetails[0])}><img src={input_circle} alt="" /> <span >Upload new version</span></button>
+                                        <button className={styles.uploadButton} onClick={() => uploadNewVersion(detailsVersionBox?.container, detailsVersionBox?.container?.fileDetails[0])}><img src={input_circle} alt="" /> <span >Upload new version</span></button>
                                     </div>
                                     <div className={styles.closeButton} onClick={() => disptach(handleDetailsVersionBox({ item: {}, tab: "" }))}>
                                         <AiOutlineClose />
@@ -188,8 +188,8 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                     :
                     <div className={styles.container}>
                         <div className={styles.heading}>
-                            <div className={styles.headingName} title={detailsVersionBox.file && detailsVersionBox.file.fileName}>
-                                {detailsVersionBox.file && detailsVersionBox.file.fileName}
+                            <div className={styles.headingName} title={detailsVersionBox?.file && detailsVersionBox?.file?.fileName}>
+                                {detailsVersionBox?.file && detailsVersionBox?.file.fileName}
                             </div>
                             <div className="d-flex align-items-center">
                                 <div className={styles.closeButton} onClick={() => disptach(handleDetailsVersionBox({ item: {}, tab: "" }))}>

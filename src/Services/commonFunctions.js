@@ -4,24 +4,48 @@ import store from "../Redux/store";
 import { getReq, postReq } from "./api";
 import { getUserId } from "./authService";
 
-export const getFiles = async (status, id) => {
+export const getFiles = async (status, id, filter) => {
+  console.log(filter)
   if (status === 1) {
-    store.dispatch(setLoadingState(true));
-    const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&projectId=${id}&type=1`);
-    if (res && !res.error) {
-      let sortedItems = res.data.sort((a, b) => {
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-      });
-      // this one to delete any empty file containers
-      let z = res.data.filter((curElem) => {
-        return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
-      });
-      store.dispatch(saveFileAndFolder([...sortedItems]));
-      store.dispatch(saveAllEmptyFiles([...z].flat()));
-      store.dispatch(setLoadingState(false));
+    if (filter !== undefined) {
+      store.dispatch(setLoadingState(true));
+      const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&projectId=${id}&filter=${filter}`);
+      console.log("res1", res)
+      if (res && !res.error) {
+        let sortedItems = res.data.sort((a, b) => {
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        });
+        // this one to delete any empty file containers
+        // let z = res.data.filter((curElem) => {
+        //   return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
+        // });
+        // store.dispatch(saveFileAndFolder([...sortedItems]));
+        // store.dispatch(saveAllEmptyFiles([...z].flat()));
+        store.dispatch(saveOnlyFiles([...sortedItems]));
+        store.dispatch(setLoadingState(false));
+      } else {
+        console.log(res.error);
+        store.dispatch(setLoadingState(false));
+      }
     } else {
-      console.log(res.error);
-      store.dispatch(setLoadingState(false));
+      store.dispatch(setLoadingState(true));
+      const res = await getReq(`${apiLinks.pmt}/api/file-manager/get-files?userId=${getUserId()}&projectId=${id}&type=1&filter=${0}`);
+      console.log("res2", res)
+      if (res && !res.error) {
+        let sortedItems = res.data.sort((a, b) => {
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        });
+        // this one to delete any empty file containers
+        let z = res.data.filter((curElem) => {
+          return curElem.fileDetails.length === 0 && curElem.folderName === undefined;
+        });
+        store.dispatch(saveFileAndFolder([...sortedItems]));
+        store.dispatch(saveAllEmptyFiles([...z].flat()));
+        store.dispatch(setLoadingState(false));
+      } else {
+        console.log(res.error);
+        store.dispatch(setLoadingState(false));
+      }
     }
   } else {
     store.dispatch(setLoadingState(true));

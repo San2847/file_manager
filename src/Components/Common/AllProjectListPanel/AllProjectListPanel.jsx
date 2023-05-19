@@ -7,9 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { innerLinks } from "./innerLinks";
 import { getReq } from "../../../Services/api";
 import { BASE_URL, apiLinks } from "../../../constants/constants";
+import { saveClientId } from "../../../Redux/slices/filemanagerSlice";
 
 const AllProjectListPanel = ({ projectId }) => {
   const navigateTo = useNavigate();
+  const dispatch = useDispatch();
   const projectIdForNav = useSelector((state) => state.filemanager.projectId);
   const [projects, setProjects] = useState([]);
   const [aclData, setAclData] = useState([]);
@@ -30,6 +32,7 @@ const AllProjectListPanel = ({ projectId }) => {
     const res = await getReq(`${apiLinks.pmt}/api/projects/getProjects?projectId=${projectId}`);
     if (res && !res.error) {
       setProjects(res.data.projects[0]);
+      dispatch(saveClientId(res.data.projects[0]))
     } else {
       console.log(res.error);
     }
@@ -42,7 +45,7 @@ const AllProjectListPanel = ({ projectId }) => {
   useEffect(() => {
     getAclData();
   }, []);
-  // console.log(projects);
+  console.log({ projects });
 
   return (
     <React.Fragment>

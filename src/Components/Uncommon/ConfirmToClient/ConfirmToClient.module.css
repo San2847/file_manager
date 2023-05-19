@@ -1,0 +1,21 @@
+.confirm {
+  border: none;
+  background-color: #003566;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #ffffff;
+  margin-left: 20px;
+}
+.noButton {
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  height: 2rem;
+  padding: 0 1rem;
+  color: #888888;
+}
+.modalBody {
+  display: flex;
+  justify-content: center !important;
+}
