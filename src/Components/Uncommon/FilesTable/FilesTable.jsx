@@ -255,7 +255,7 @@ const FilesTable = ({ fileData }) => {
     setFinalFeedBack(result)
   }, [fileFeedArr])
   const readFeedback = async (fileObj) => {
-    const res = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${fileObj.container._id}&fileId=${fileObj.file._id}`);
+    const res = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?uuId=${fileObj.file.uuId}`);
     if (res && !res.error) {
       // console.log(res);
     } else {

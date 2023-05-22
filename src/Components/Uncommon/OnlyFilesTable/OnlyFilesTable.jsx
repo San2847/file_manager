@@ -180,7 +180,7 @@ const OnlyFilesTable = ({ fileData }) => {
   }, [fileFeedArr])
 
   const readFeedback = async (item) => {
-    const readRes = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?id=${item.folderId}&fileId=${item._id}`);
+    const readRes = await postReq(`${apiLinks.pmt}/api/file-manager/read-feedback?uuId=${item.uuId}`);
     if (readRes && !readRes.error) {
       // console.log(readRes);
     } else {
@@ -348,39 +348,39 @@ const OnlyFilesTable = ({ fileData }) => {
                                 <BsCheck />
                               </div>
                               <div className={styles.addFeed} title="Give Feedback"
-                                // onClick={(event) => openGiveFeed(event, curElem)}
-                                // onClick={(event) => {
-                                //   event.stopPropagation();
-                                //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
-                                //   getFileFeedback({ container: curElem, file: curElem.fileDetails[0] })
-                                // }}
+                              // onClick={(event) => openGiveFeed(event, curElem)}
+                              // onClick={(event) => {
+                              //   event.stopPropagation();
+                              //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
+                              //   getFileFeedback({ container: curElem, file: curElem.fileDetails[0] })
+                              // }}
                               >
                                 <RiChatNewLine />
                               </div>
                             </div>
                           ) : openedFeedback && openedFeedback._id === curElem._id ? (
                             <RiChatQuoteFill fontSize={18} className={styles.commentButton}
-                              // onClick={(event) => openFeedbacks(event, curElem)}
-                              // onClick={(event) => {
-                              //   event.stopPropagation();
-                              //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
-                              // }}
+                            // onClick={(event) => openFeedbacks(event, curElem)}
+                            // onClick={(event) => {
+                            //   event.stopPropagation();
+                            //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
+                            // }}
                             />
                           ) : (
                             <RiChatQuoteLine
                               fontSize={18}
                               className={styles.commentButton}
-                              // onClick={(event) => {
-                              //   openFeedbacks(event, curElem);
-                              //   getFileFeedback(curElem);
-                              //   readFeedback(curElem);
-                              // }}
-                              // onClick={(event) => {
-                              //   event.stopPropagation();
-                              //   getFileFeedback({ container: curElem, file: curElem });
-                              //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
-                              //   readFeedback({ container: curElem, file: curElem });
-                              // }}
+                            // onClick={(event) => {
+                            //   openFeedbacks(event, curElem);
+                            //   getFileFeedback(curElem);
+                            //   readFeedback(curElem);
+                            // }}
+                            // onClick={(event) => {
+                            //   event.stopPropagation();
+                            //   getFileFeedback({ container: curElem, file: curElem });
+                            //   dispatch(handleDetailsVersionBox({ item: { container: curElem, file: curElem }, tab: "feedBack/reply" }));
+                            //   readFeedback({ container: curElem, file: curElem });
+                            // }}
                             />
                           )
                         ) : (
