@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { saveProjectId } from "../../../../Redux/slices/filemanagerSlice";
 import { AiOutlineClose } from "react-icons/ai";
 import moment from "moment";
+import { getUserId } from "../../../../Services/authService";
 
 const FileLanding = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const FileLanding = () => {
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const getProjectFileData = async () => {
     const res = await getReq(
-      `${apiLinks.pmt}/api/file-manager/details-with-project`
+      `${apiLinks.pmt}/api/file-manager/details-with-project?userId=${getUserId()}`
     );
     if (res && !res.error) {
       setProjectFileData([...res.data]);
@@ -130,7 +131,7 @@ const FileLanding = () => {
                         <div>
                           <img src={task} alt="" style={{ marginRight: "0.5rem" }} />
                           <span style={{ fontWeight: 500, fontSize: "12px", color: '#127E96' }}>
-                            <span style={{ paddingRight: '2px' }}> {curElem.approvedFiles}</span>
+                            <span style={{ paddingRight: '2px' }}> {curElem.approval}</span>
                             {"Approval"}
                           </span>
                         </div>

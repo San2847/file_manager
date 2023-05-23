@@ -125,6 +125,7 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                             <hr style={{ margin: 0 }} />
                             <div className={styles.tabsContainer}>
                                 {feedbackTempArr.map((item, inx) => {
+                                    console.log(feedbackTempArr)
                                     return (
                                         <>
                                             {
@@ -132,14 +133,20 @@ const FileFeedbackReply = ({ feedData, currentVer, name, containerAndFile, uploa
                                                     <div>
                                                         <div className={styles.newVersionText}>
                                                             <h5> Uploaded {item?.fileName} file</h5>
-                                                            <p>{moment(item.versionDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(new Date(item.versionDateTime ? item.versionDateTime : item.createdDateTime), "HH:mm:ss").format("LT")}</p>
+                                                            <p>{moment(item.createdDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;
+                                                                {moment(item.versionDateTime ? item.versionDateTime : item.createdDateTime, "HH:mm:ss").format("LT")}
+                                                                {/* {moment(item.createdDateTime ? item.createdDateTime : "", "HH:mm:ss").format("LT")} */}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                     :
                                                     <div>
                                                         <div className={styles.newVersionText}>
                                                             <h5> version updated to {item?.fileName}</h5>
-                                                            <p>{moment(item.versionDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;{moment(new Date(item.versionDateTime ? item.versionDateTime : item.createdDateTime), "HH:mm:ss").format("LT")}</p>
+                                                            <p>{moment(item.versionDateTime).format(` MMMM DD, yyyy`)}&nbsp;{'-'}&nbsp;
+                                                                {moment(item.versionDateTime ? item.versionDateTime : item.createdDateTime, "HH:mm:ss").format("LT")}
+                                                                {/* {moment(item.createdDateTime ? item.createdDateTime : "", "HH:mm:ss").format("LT")} */}
+                                                            </p>
                                                         </div>
                                                     </div>
                                             }
