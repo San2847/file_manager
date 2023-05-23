@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { saveProjectId } from "../../../../Redux/slices/filemanagerSlice";
 import { AiOutlineClose } from "react-icons/ai";
+import moment from "moment";
 
 const FileLanding = () => {
   const dispatch = useDispatch();
@@ -121,20 +122,33 @@ const FileLanding = () => {
                       <td className="d-flex justify-content-between">
                         <div>
                           <img src={rate_review} alt="" style={{ marginRight: "0.5rem" }} />
-                          <span style={{ fontWeight: 500, fontSize: "12px" }}>
-                            <span style={{ paddingRight: '2px' }}>{curElem.inExecution}</span>
+                          <span style={{ fontWeight: 500, fontSize: "12px", color: '#127E96' }}>
+                            <span style={{ paddingRight: '2px' }}>{curElem.totalFeedback}</span>
                             {"Feedback"}
                           </span>
                         </div>
                         <div>
                           <img src={task} alt="" style={{ marginRight: "0.5rem" }} />
-                          <span style={{ fontWeight: 500, fontSize: "12px" }}>
-                            <span style={{ paddingRight: '2px' }}> {curElem.inExecution}</span>
+                          <span style={{ fontWeight: 500, fontSize: "12px", color: '#127E96' }}>
+                            <span style={{ paddingRight: '2px' }}> {curElem.approvedFiles}</span>
                             {"Approval"}
                           </span>
                         </div>
                       </td>
-                      <td style={{ textAlign: 'center' }}>{curElem.inExecution}</td>
+                      <td style={{ textAlign: 'center' }}><span
+                        style={{
+
+                          width: '83px',
+                          height: '17px',
+                          fontFamily: 'Inter',
+                          fontStyle: 'normal',
+                          fontWeight: 500,
+                          fontSize: '14px',
+                          lineHeight: '17px',
+                          color: '#8F8F8F',
+
+                        }}
+                      >{moment(new Date(curElem.latestUpdateTime)).format(` MMMM DD, yyyy`)}</span></td>
                     </tr>
                   );
                 })}
@@ -142,7 +156,7 @@ const FileLanding = () => {
           </Table>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

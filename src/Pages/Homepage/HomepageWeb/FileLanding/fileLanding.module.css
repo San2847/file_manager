@@ -70,8 +70,8 @@
   border-radius: 6px;
   cursor: pointer;
 }
-::placeholder{
+/* ::placeholder{
 padding-top: 20px;
 padding-left: 20px;
 
-}
+} */

@@ -193,7 +193,8 @@ const FileDetailsAndVersion = () => {
               <Spinner animation="border" />
             </div>
           ) : (
-            versionData.map((curElem) => {
+                versionData.map((curElem) => {
+              console.log(curElem)
               return (
                 <div className={styles.notifBox}>
                   <div className={styles.notifHead}>
