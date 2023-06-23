@@ -13,7 +13,7 @@ import runningbill from "./InnerSidebarIcons/runningbill.svg";
 import design_quotation_icon from "./InnerSidebarIcons/design_quotation_icon.svg";
 
 let projectId = localStorage.getItem("projectId");
-let BASE_URL = "https://erp.essentiaenvironments.com";
+let BASE_URL = "https://pro.idesign.market";
 export const innerLinks = [
   {
     label: "Project Dashboard",
@@ -30,7 +30,7 @@ export const innerLinks = [
     icon: <img src={updates} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `pmt/project-discussion`,
+    href: `pmt-beta/project-discussion`,
     accessName: "pmt",
   },
   {
@@ -39,7 +39,7 @@ export const innerLinks = [
     icon: <img src={files} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: true,
-    href: `file-manager/`,
+    href: `file-beta/`,
     accessName: "fileManager",
   },
   {
@@ -62,7 +62,7 @@ export const innerLinks = [
     ),
     visible: true,
     active: false,
-    href: `quotation/enterprise-landing-page/inner/`,
+    href: `quo-beta/enterprise-landing-page/inner/`,
     accessName: "quotation",
   },
   {
@@ -71,7 +71,7 @@ export const innerLinks = [
     icon: <img src={quotation} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `quotation/`,
+    href: `quo-beta/`,
     accessName: "quotation",
   },
   {
@@ -80,7 +80,7 @@ export const innerLinks = [
     icon: <img src={timeline} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `timeline/timeline/`,
+    href: `timeline-beta/timeline/`,
     accessName: "timelines",
   },
   {
@@ -89,7 +89,7 @@ export const innerLinks = [
     icon: <img src={taskmanager} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `timeline/task-manager/`,
+    href: `timeline-beta/task-manager/`,
     accessName: "taskManager",
   },
   {
@@ -98,7 +98,7 @@ export const innerLinks = [
     icon: <img src={accounts} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `account/account/`,
+    href: `accounts-beta/account/`,
     accessName: "accounts",
   },
   {
@@ -115,7 +115,7 @@ export const innerLinks = [
     icon: <img src={po} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `po/single-project/`,
+    href: `po-beta/single-project/`,
     accessName: "purchaseOrder",
   },
 
@@ -135,7 +135,7 @@ export const innerLinks = [
     icon: <img src={reports} style={{ height: "28.8px", width: "28.8px" }} />,
     visible: true,
     active: false,
-    href: `timeline/dpr/`,
+    href: `timeline-beta/dpr/`,
     accessName: "reports",
   },
 ];

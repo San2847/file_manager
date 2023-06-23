@@ -15,10 +15,10 @@ export const routingArray = [
 
 export const apiLinks = {
   s3api: "https://s3-service.idesign.market",
-  pmt: "https://pmt-api.essentiaenvironments.com",
-  crm: "https://crm-api.essentiaenvironments.com",
+  pmt: "https://pmt.idesign.market",
+  crm: "https://pro-api.idesign.market",
 };
 
-export const BASE_URL = "https://erp.essentiaenvironments.com";
+export const BASE_URL = "https://pro.idesign.market";
 
 export const monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

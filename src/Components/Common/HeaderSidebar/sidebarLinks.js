@@ -6,7 +6,7 @@ import { RiChat1Line } from "react-icons/ri";
 import { FaMoneyCheckAlt } from "react-icons/fa";
 import design_quo_icon from "../AllProjectListPanel/InnerSidebarIcons/design_quo_icon.svg";
 
-let BASE_URL = "https://erp.essentiaenvironments.com";
+let BASE_URL = "https://pro.idesign.market";
 export const sidebarLinks = [
   {
     label: "Dashboard",
@@ -77,7 +77,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/pmt/`,
+    href: `${BASE_URL}/pmt-beta/`,
     accessName: "pmt",
   },
   {
@@ -101,7 +101,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/quotation/enterprise-landing-page`,
+    href: `${BASE_URL}/quo-beta/enterprise-landing-page`,
     accessName: "quotation",
   },
   {
@@ -125,7 +125,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/quotation/`,
+    href: `${BASE_URL}/quo-beta/`,
     accessName: "quotation",
   },
   {
@@ -149,7 +149,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: true,
-    href: `${BASE_URL}/file-manager/`,
+    href: `${BASE_URL}/file-beta/`,
     accessName: "fileManager",
   },
   {
@@ -173,7 +173,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/timeline-dashboard`,
+    href: `${BASE_URL}/timeline-beta/timeline-dashboard`,
     accessName: "timelines",
   },
   {
@@ -197,7 +197,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/task-manager-dashboard`,
+    href: `${BASE_URL}/timeline-beta/task-manager-dashboard`,
     accessName: "taskManager",
   },
   {
@@ -270,7 +270,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/po/`,
+    href: `${BASE_URL}/po-beta/`,
     accessName: "purchaseOrder",
   },
 
@@ -295,7 +295,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/account/`,
+    href: `${BASE_URL}/accounts-beta/`,
     accessName: "accounts",
   },
   {
@@ -342,7 +342,7 @@ export const sidebarLinks = [
     ),
     visible: true,
     active: false,
-    href: `${BASE_URL}/timeline/dpr`,
+    href: `${BASE_URL}/timeline-beta/dpr`,
     accessName: "reports",
   },
   {

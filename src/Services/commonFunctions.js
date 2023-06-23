@@ -191,7 +191,7 @@ export const getFileStatus = (file) => {
 };
 
 export const getTeamMembers = async () => {
-  const res = await getReq(`${apiLinks.crm}/api/enterprise/get-team-member`);
+  const res = await getReq(`${apiLinks.crm}/api/enterprise/get-team-member?userId=${localStorage.getItem("userId")}`);
   if (res && !res.error) {
     store.dispatch(saveTeamMemberArray([...res.data.data]));
   } else {

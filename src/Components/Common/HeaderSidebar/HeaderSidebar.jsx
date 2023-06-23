@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./headerSidebar.module.css";
-import logo from "../../../Assets/comp_logo.svg";
+import logo from "./SidebarAssets/idesign_logo.svg";
 import { AiOutlineShoppingCart, AiOutlinePlus, AiOutlineBell } from "react-icons/ai";
 import { BsBell, BsChevronDown } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
@@ -104,72 +104,72 @@ const [unreadCount, setUnreadCount] = useState("")
   let idArray = [];
   // const userIdData = localStorage.getItem("userId")
 
-  const getNotifications = async () => {
-    const getNotify = await axios.get(
-      `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
-        "userId"
-      )}`
-    );
-    setData(getNotify.data.slice(0, 9));
-  };
+  // const getNotifications = async () => {
+  //   const getNotify = await axios.get(
+  //     `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
+  //       "userId"
+  //     )}`
+  //   );
+  //   setData(getNotify.data.slice(0, 9));
+  // };
 
-  const readBy = async () => {
-    readAll.ids = [...idArray];
-    readAll.userId = localStorage.getItem("userId");
-    return await axios
-      .post(
-        "https://notify-api.essentiaenvironments.com/api/notifications/add-readedBy",
-        readAll
-      )
-      .then((res) => getNotifications())
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getNotifications();
-  }, []);
-  const loadMore = async () => {
-    const getNotify = await axios.get(
-      `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
-        "userId"
-      )}`
-    );
-    setData(getNotify.data);
-  };
+  // const readBy = async () => {
+  //   readAll.ids = [...idArray];
+  //   readAll.userId = localStorage.getItem("userId");
+  //   return await axios
+  //     .post(
+  //       "https://notify-api.essentiaenvironments.com/api/notifications/add-readedBy",
+  //       readAll
+  //     )
+  //     .then((res) => getNotifications())
+  //     .catch((err) => console.log(err));
+  // };
+  // useEffect(() => {
+  //   getNotifications();
+  // }, []);
+  // const loadMore = async () => {
+  //   const getNotify = await axios.get(
+  //     `https://notify-api.essentiaenvironments.com/api/notifications/get-notifications?userId=${localStorage.getItem(
+  //       "userId"
+  //     )}`
+  //   );
+  //   setData(getNotify.data);
+  // };
 
-  const unread = async () => {
-    const getUnread = await axios.get(
-      `https://notify-api.essentiaenvironments.com/api/notifications/get-unread-notification-count?userId=${localStorage.getItem(
-        "userId"
-      )}`
-    );
-    setUnreadCount(getUnread.data.unreadNotification)
-  };
-  useEffect(() => {
-    unread()
-  }, [])
-  const getTime = (date) => {
-    if (date === undefined) {
-      return "-";
-    } else if (typeof date === "string") {
-      date = new Date(date);
-    }
+  // const unread = async () => {
+  //   const getUnread = await axios.get(
+  //     `https://notify-api.essentiaenvironments.com/api/notifications/get-unread-notification-count?userId=${localStorage.getItem(
+  //       "userId"
+  //     )}`
+  //   );
+  //   setUnreadCount(getUnread.data.unreadNotification)
+  // };
+  // useEffect(() => {
+  //   unread()
+  // }, [])
+  // const getTime = (date) => {
+  //   if (date === undefined) {
+  //     return "-";
+  //   } else if (typeof date === "string") {
+  //     date = new Date(date);
+  //   }
 
-    let day = date.getDate();
-    let month = date.toLocaleDateString("default", { month: "short" });
-    let year = date.getFullYear() % 100;
-    let ans = "";
-    ans += day + "-";
-    ans += month + "-";
-    ans += year;
-    return ans;
-  };
+  //   let day = date.getDate();
+  //   let month = date.toLocaleDateString("default", { month: "short" });
+  //   let year = date.getFullYear() % 100;
+  //   let ans = "";
+  //   ans += day + "-";
+  //   ans += month + "-";
+  //   ans += year;
+  //   return ans;
+  // };
 
 
   return (
     <div className={styles.container} style={{ zIndex: isDropdownOpen || isNotification ? "999" : "0" }}>
       <div className={styles.header}>
         <div className={styles.logobox} onClick={gotohome}>
-          <img src={logo} alt="" />
+          <img src={logo} alt="" height="28"/>
         </div>
         {/* <div className={styles.menubox}>
           <div className={styles.eachHeaderLink}>
@@ -186,62 +186,13 @@ const [unreadCount, setUnreadCount] = useState("")
           </div>
         </div> */}
         <div className={styles.profilebox}>
-          {/* <div className={styles.notification}>
+           <div className={styles.notification}>
             <BsBell />
           </div>
-          <div className={styles.cart}>
+        {/*  <div className={styles.cart}>
             <AiOutlineShoppingCart />
           </div> */}
-          <div className={styles.notification} >
-          <Dropdown style={{ background: "#fff" }}>
-            <Dropdown.Toggle style={{ background: "#fff", border: "none" }}>
-              <span className={styles.unreadCount}>{unreadCount}</span>
-              <AiOutlineBell className={styles.bellIcon} onClick={handleButtonClickNotification}/>
-            </Dropdown.Toggle>
-            {isNotification && (
-              <Dropdown.Menu style={{ borderColor: "white" }}>
-                <div className={styles.notifyContainer}>
-                  <div className={styles.headingContainer}>
-                    <div className={styles.notifyHeading}>Notifications</div>
-                    <div className={styles.readUnreadHead} onClick={readBy}>
-                      Mark as read
-                    </div>
-                  </div>
-                  <div className={styles.adminName}>
-                    {data.map((curelem, i) => {
-                      {
-                        idArray.push(curelem._id);
-                      }
-
-                      return (
-                        <>
-                          <div className={styles.singleAdmin} key={i}>
-                            <div href="#/action-1" className={styles.profile}>
-                              <CgProfile />
-                            </div>
-
-                            <div className={styles.adminAndStatus} key={i}>
-                              {/* <div className={styles.taskname}>Feature Name : {curelem.featureName}</div> */}
-                              <div className={styles.taskname}>
-                                {curelem.notification}
-                              </div>
-                              <div className={styles.status}>
-                                {getTime(curelem.updatedAt)}
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      );
-                    })}
-                  </div>
-                  <div className={styles.seeAll} onClick={loadMore}>
-                    Load More
-                  </div>
-                </div>
-              </Dropdown.Menu>
-            )}
-          </Dropdown>
-        </div>
+         
           <div className={styles.profileNameBox} onClick={handleButtonClick}>
             <div className={styles.profileName}>
               {profileData.fullName} <BsChevronDown style={{ marginLeft: "0.25rem" }} />
